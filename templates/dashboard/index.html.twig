@@ -1,0 +1,85 @@
+{# templates/dashboard/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard - BetterMind{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="mb-4">Tableau de Bord</h1>
+
+    <!-- Statistiques Globales -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Utilisateurs</div>
+                <div class="card-body">
+                    <h5 class="card-title">0</h5>
+                    <p class="card-text">Total des utilisateurs inscrits</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Articles</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ articleCount }}</h5>
+                    <p class="card-text">Articles publiés</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Réservations</div>
+                <div class="card-body">
+                    <h5 class="card-title">0</h5>
+                    <p class="card-text">RDV planifiés</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header">Consultations</div>
+                <div class="card-body">
+                    <h5 class="card-title">0</h5>
+                    <p class="card-text">Consultations effectuées</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section pour les graphiques -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">Statistiques</div>
+                <div class="card-body">
+                    <canvas id="dashboardChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script pour le Graphique -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var ctx = document.getElementById('dashboardChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+            datasets: [{
+                label: 'Activité',
+                data: [0, 0, 0, 0, 0, 0, 0],
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
+{% endblock %}

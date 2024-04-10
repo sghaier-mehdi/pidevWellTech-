@@ -1,0 +1,84 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}{{ article.title }} - BetterMind{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2>{{ article.title }}</h2>
+            {% if article.tags is empty %}
+                <p class="text-muted">Aucun tag disponible pour cet article.</p>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Publié le {{ article.createdAt|date('d/m/Y H:i') }}</p>
+            <hr>
+
+        {% if article.tags is not empty %}
+                <div class="mb-3">
+                   
+                    {% for tag in article.tags %}
+                        Tag : <span class="badge bg-secondary">{{ tag.name }}</span>
+                    {% endfor %}
+                </div>
+                <hr>
+            {% endif %}
+
+            <p>{{ article.content|nl2br }}</p>
+
+            <!-- Affichage du média (image ou vidéo) -->
+            {% if article.type == 'image' %}
+                <img src="{{ asset('uploads/' ~ article.media) }}" class="img-fluid mt-3" alt="{{ article.title }}">
+            {% elseif article.type == 'video' %}
+                <video class="w-100 mt-3" controls>
+                    <source src="{{ asset('uploads/' ~ article.media) }}" type="video/mp4">
+                    Votre navigateur ne supporte pas la lecture de vidéos.
+                </video>
+            {% endif %}
+        </div>
+        <div class="card-footer">
+            <a href="{{ path('app_article_index') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Retour aux articles
+            </a>
+            <a href="{{ path('app_article_edit', { id: article.id }) }}" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Modifier
+            </a>
+            <form action="{{ path('app_article_delete', { id: article.id }) }}" method="post" class="d-inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
+                    <i class="bi bi-trash"></i> Supprimer
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Section des commentaires -->
+    <div class="mt-4">
+        <h3><i class="bi bi-chat-left-text"></i> Commentaires</h3>
+        {% for comment in article.comments %}
+            <div class="card my-2">
+                <div class="card-body d-flex align-items-start">
+                    <!-- Icône du commentaire -->
+                    <i class="bi bi-person-circle fs-3 text-primary me-2"></i>
+                    <div class="flex-grow-1">
+                        <p class="mb-1">{{ comment.content }}</p>
+                        <small class="text-muted">Posté le {{ comment.createdAt|date('d/m/Y H:i') }}</small>
+                        <div class="mt-2">
+                            <!-- Bouton Supprimer -->
+                            <form action="{{ path('app_comment_delete', { id: comment.id }) }}" method="post" class="d-inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ comment.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');">
+                                    <i class="bi bi-trash"></i> Supprimer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-muted">Aucun commentaire pour cet article.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

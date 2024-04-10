@@ -1,0 +1,15 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Edit Objective{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Edit Objective</h1>
+
+        {{ include('objective/_form.html.twig', {'button_label': 'Update'}) }}
+
+        <a href="{{ path('objective_index') }}" class="btn btn-secondary mt-3">Back to list</a>
+
+        {{ include('objective/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

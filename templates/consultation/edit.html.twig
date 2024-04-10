@@ -1,0 +1,18 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Modifier la Consultation{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Modifier la Date de Consultation</h1>
+
+    {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.consultationDate) }}
+            {{ form_widget(form.consultationDate, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+        <a href="{{ path('index_consultation') }}" class="btn btn-secondary">Annuler</a>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

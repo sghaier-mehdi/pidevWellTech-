@@ -1,0 +1,10 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Créer un article{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Créer un article</h1>
+        {{ include('article/_form.html.twig') }}
+    </div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Mes Consultations{% endblock %}
+
+{%block header%}
+        <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand" href="#page-top">Start Bootstrap</a>
+                <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/add_consultation">Rendez-Vous</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/consultation">Consultation</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact">Contact</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="/login">Log In</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <br><br><br><br><br><br>
+{%endblock%}
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Mes Consultations</h1>
+
+    {% if consultations is empty %}
+        <p class="text-center">Vous n'avez aucune consultation.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Psychiatre</th>
+                    <th>Date de Consultation</th>
+                    <th>Créé le</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for consultation in consultations %}
+                    <tr>
+                        <td>{{ consultation.psychiatrist.email }}</td>
+                        <td>{{ consultation.consultationDate|date('Y-m-d H:i') }}</td>
+                        <td>{{ consultation.createdAt|date('Y-m-d H:i') }}</td>
+                        <td>
+                            <span class="badge {% if consultation.statut == 'accepté' %}bg-success{% elseif consultation.statut == 'refusé' %}bg-danger{% else %}bg-warning{% endif %}">
+                                {{ consultation.statut | capitalize }}
+                            </span>
+                        </td>
+                        <td>
+    <a href="{{ path('consultation_edit', {'id': consultation.id}) }}" class="btn btn-warning">Modifier</a>
+    <a href="/add_consultation" class="btn btn-warning">Rendez-vous</a>
+    <form action="{{ path('consultation_delete', {'id': consultation.id}) }}" method="post" class="d-inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette consultation ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ consultation.id) }}">
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+        
+    </form>
+          
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}

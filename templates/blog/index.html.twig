@@ -1,0 +1,36 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Blog - BetterMind{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1 class="mb-4">Keep up with Our Most Recent Medical News.</h1>
+
+
+    <div class="row">
+        {% for article in articles %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    {% if article.type == 'image' %}
+                        <img src="{{ asset('uploads/' ~ article.media) }}" class="card-img-top" alt="{{ article.title }}">
+                    {% elseif article.type == 'video' %}
+                        <video class="w-100" controls>
+                            <source src="{{ asset('uploads/' ~ article.media) }}" type="video/mp4">
+                        </video>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ article.title }}</h5>
+                        <p class="card-text">{{ article.content|slice(0, 100) }}...</p>
+                        <a href="{{ path('app_blog_show', { id: article.id }) }}" class="btn btn-info btn-sm">
+                            <i class="bi bi-eye"></i> Voir
+                        </a>
+                      
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-muted text-center">Aucun article disponible.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

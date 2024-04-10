@@ -1,0 +1,11 @@
+
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Nouvelle Réponse{% endblock %}
+
+{% block body %}
+    <h1>Nouvelle Réponse</h1>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+{% endblock %}

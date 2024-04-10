@@ -1,0 +1,82 @@
+{# templates/tag/_form.html.twig #}
+
+<style>
+    /* Form container */
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Form group styling */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    /* Label styling */
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    /* Input and textarea styling */
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group input[type="email"]:focus,
+    .form-group input[type="password"]:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    /* Button styling */
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        border: none;
+        color: #fff;
+        background-color: #007bff;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    /* Error message styling */
+    .form-group .form-error {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+</style>
+
+<div class="form-container">
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+</div>

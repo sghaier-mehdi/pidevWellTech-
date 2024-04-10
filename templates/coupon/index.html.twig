@@ -1,0 +1,46 @@
+{% extends 'back/base.html.twig' %}
+{% block title %}Coupon index{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Coupon index</h1>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Discount Percentage</th>
+                    <th>Code</th>
+                    <th>Is Active</th>
+                    <th>Expiration Date</th>
+                    <th>Usage Count</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for coupon in coupons %}
+                <tr>
+                    <td>{{ coupon.id }}</td>
+                    <td>{{ coupon.name }}</td>
+                    <td>{{ coupon.discountPercentage }}</td>
+                    <td>{{ coupon.code }}</td>
+                    <td>{{ coupon.isActive ? 'Yes' : 'No' }}</td>
+                    <td>{{ coupon.expirationDate ? coupon.expirationDate|date('Y-m-d') : 'N/A' }}</td>
+                    <td>{{ coupon.usageCount }}</td>
+                    <td>
+                        <a href="{{ path('app_coupon_show', {'id': coupon.id}) }}" class="btn btn-info btn-sm">Show</a>
+                        <a href="{{ path('app_coupon_edit', {'id': coupon.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">No records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('app_coupon_new') }}" class="btn btn-success mt-3">Create new</a>
+    </div>
+{% endblock %}

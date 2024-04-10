@@ -1,0 +1,13 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}New Coupon{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Create new Coupon</h1>
+
+        {{ include('coupon/_form.html.twig') }}
+
+        <a href="{{ path('app_coupon_index') }}" class="btn btn-secondary mt-3">Back to list</a>
+    </div>
+{% endblock %}

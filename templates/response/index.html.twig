@@ -1,0 +1,22 @@
+
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Reclamations{% endblock %}
+
+{% block body %}
+    <h1>Reclamations</h1>
+    <a href="{{ path('reclamation_new') }}" class="btn btn-primary">Créer une nouvelle réclamation</a>
+    <ul>
+        {% for reclamation in reclamations %}
+            <li>
+                <a href="{{ path('reclamation_show', {id: reclamation.id}) }}">{{ reclamation.title }}</a> - {{ reclamation.createdAt|date('Y-m-d H:i') }}
+                <a href="{{ path('reclamation_edit', {id: reclamation.id}) }}" class="btn btn-secondary">Modifier</a>
+                <form method="post" action="{{ path('reclamation_delete', {id: reclamation.id}) }}" style="display:inline-block;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reclamation.id) }}">
+                    <button class="btn btn-danger">Supprimer</button>
+                </form>
+                <a href="{{ path('response_new', {id: reclamation.id}) }}" class="btn btn-success">Répondre</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

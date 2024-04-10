@@ -1,0 +1,16 @@
+
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Reclamations{% endblock %}
+
+{% block body %}
+    <h1>Reclamations</h1>
+    <a href="{{ path('reclamation_new') }}" class="btn btn-primary">Créer une nouvelle réclamation</a>
+    <ul>
+        {% for reclamation in reclamations %}
+            <li>
+                <a href="{{ path('reclamation_show', {id: reclamation.id}) }}">{{ reclamation.title }}</a> - {{ reclamation.createdAt|date('Y-m-d H:i') }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

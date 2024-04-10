@@ -1,0 +1,11 @@
+
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Nouvelle Réclamation{% endblock %}
+
+{% block body %}
+    <h1>Nouvelle Réclamation</h1>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+{% endblock %}

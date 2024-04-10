@@ -1,0 +1,46 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}{{ status }} Consultations{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">{{ status }} Consultations</h1>
+
+    <div class="mb-4 text-center">
+        <a href="{{ path('psychiatrist_consultations_by_status', {'status': 'accepted'}) }}" class="btn btn-success">Voir acceptés</a>
+        <a href="{{ path('psychiatrist_consultations_by_status', {'status': 'declined'}) }}" class="btn btn-danger">Voir refusés</a>
+    </div>
+
+    {% if consultations is empty %}
+        <p class="text-center">Aucune consultation  {{ status | lower }} trouvée.</p>
+    {% else %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Date de Consultation</th>
+                    <th>Date de Création</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for consultation in consultations %}
+                    <tr>
+                        <td>{{ consultation.patient.email ?? 'No patient' }}</td>
+                        <td>{{ consultation.consultationDate ? consultation.consultationDate|date('Y-m-d H:i') : 'No date' }}</td>
+                        <td>{{ consultation.createdAt ? consultation.createdAt|date('Y-m-d H:i') : 'No date' }}</td>
+                        <td>
+                            <span class="badge {% if status == 'Accepted' %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ status }}
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+    <div class="mb-4 text-center">
+        <a href="{{ path('psychiatrist_consultations') }}" class="btn btn-primary">Voir les consultations en attentes</a>
+    </div>
+{% endblock %}

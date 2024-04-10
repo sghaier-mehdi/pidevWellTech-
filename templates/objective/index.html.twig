@@ -1,0 +1,39 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Objective index{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Objective index</h1>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Number of Consultations</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for objective in objectives %}
+                <tr>
+                    <td>{{ objective.id }}</td>
+                    <td>{{ objective.nbrConsultation }}</td>
+                    <td>{{ objective.status }}</td>
+                    <td>
+                        <a href="{{ path('objective_show', {'id': objective.id}) }}" class="btn btn-info btn-sm">Show</a>
+                        <a href="{{ path('objective_edit', {'id': objective.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('objective_new') }}" class="btn btn-success mt-3">Create new</a>
+    </div>
+{% endblock %}

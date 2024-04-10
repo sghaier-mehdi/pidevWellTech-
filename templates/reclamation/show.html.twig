@@ -1,0 +1,19 @@
+
+{% extends 'back/base.html.twig' %}
+
+
+{% block title %}Réclamation{% endblock %}
+
+{% block body %}
+    <h1>{{ reclamation.title }}</h1>
+    <p>{{ reclamation.description }}</p>
+    <p>Créée le {{ reclamation.createdAt|date('Y-m-d H:i') }}</p>
+    <p>Utilisateur : {{ reclamation.user.email }}</p>
+
+    <h2>Réponses</h2>
+    <ul>
+        {% for response in reclamation.responses %}
+            <li>{{ response.content }} - {{ response.createdAt|date('Y-m-d H:i') }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
