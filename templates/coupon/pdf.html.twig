@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Coupon Poster</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .coupon {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px;
+        }
+        .coupon h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .coupon p {
+            font-size: 16px;
+            color: #555;
+            margin: 10px 0;
+        }
+        .coupon .discount {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .coupon .code {
+            font-size: 18px;
+            color: #2ecc71;
+        }
+        .coupon .expiration {
+            font-size: 14px;
+            color: #888;
+        }
+        .coupon .usage {
+            font-size: 16px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        .coupon .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <div class="coupon">
+        <h1>{{ coupon.name }}</h1>
+        <p class="discount">Discount: {{ coupon.discountPercentage }}%</p>
+        <p class="code">Code: {{ coupon.code }}</p>
+        <p class="expiration">Expiration Date: {{ coupon.expirationDate ? coupon.expirationDate|date('Y-m-d') : 'N/A' }}</p>
+        <div class="footer">
+            Valid until expiration date. Terms and conditions apply.
+        </div>
+    </div>
+</body>
+</html>
