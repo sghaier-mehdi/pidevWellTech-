@@ -27,6 +27,7 @@
                                 <td>{{ user.roles|join(',') }}</td>
                                 <td>
                                     <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+                                    <a href="{{ path('user_logs', {'id': user.id}) }}" class="btn btn-info btn-sm">Logs</a>
                                     {% if app.user.id != user.id %}
                                         <a href="{{ path('user_delete', {'id': user.id}) }}" class="btn btn-danger btn-sm">Delete</a>
                                     {% endif %}

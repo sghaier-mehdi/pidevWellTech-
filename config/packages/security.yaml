@@ -28,7 +28,7 @@ security:
         - { path: ^/logout, roles: PUBLIC_ACCESS }  # Allow access to login page for everyone # Allow access to login page for everyone
         - { path: ^/front, roles: PUBLIC_ACCESS }
         
-        - { path: ^/users, roles: ROLE_ADMIN }
+       # - { path: ^/users, roles: ROLE_ADMIN }
         - { path: ^/, roles: PUBLIC_ACCESS  }  # This should be the last rule
 
 when@test:

@@ -103,4 +103,9 @@ class Coupon
         $this->usageCount = $usageCount;
         return $this;
     }
+    public function __toString(): string
+{
+    return $this->getName(); 
+}
+
 }

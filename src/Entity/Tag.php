@@ -13,14 +13,14 @@ class Tag
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: "integer")]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: "string", length: 50, unique: true)]
     #[Assert\NotBlank(message: "Le nom du tag est requis.")]
-    private $name;
+    private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Article::class, mappedBy: "tags")]
-    private $articles;
+    private Collection $articles;
 
     public function __construct()
     {
@@ -50,6 +50,6 @@ class Tag
 
     public function __toString(): string
     {
-        return $this->name; // Assurez-vous que 'name' existe dans votre entité
+        return $this->name; // Make sure 'name' exists in your entity
     }
 }

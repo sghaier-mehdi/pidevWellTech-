@@ -12,6 +12,7 @@
                     <th>Id</th>
                     <th>Number of Consultations</th>
                     <th>Status</th>
+                    <th>User</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -21,6 +22,8 @@
                     <td>{{ objective.id }}</td>
                     <td>{{ objective.nbrConsultation }}</td>
                     <td>{{ objective.status }}</td>
+                    <td>{{ objective.user }}</td>
+
                     <td>
                         <a href="{{ path('objective_show', {'id': objective.id}) }}" class="btn btn-info btn-sm">Show</a>
                         <a href="{{ path('objective_edit', {'id': objective.id}) }}" class="btn btn-primary btn-sm">Edit</a>
@@ -36,4 +39,27 @@
 
         <a href="{{ path('objective_new') }}" class="btn btn-success mt-3">Create new</a>
     </div>
+    <div class="container-fluid px-4">
+        <h1 class="mt-4">Statistics</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Objective Statistics</li>
+        </ol>
+        <div class="row">
+        </div>
+        <div class="row">
+
+            <div class="col-xl-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        User / Objective  Statistics
+                    </div>
+                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var chartData = {{ chartData|raw }};
+    </script>
 {% endblock %}

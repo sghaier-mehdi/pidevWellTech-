@@ -31,6 +31,7 @@
                     <td>
                         <a href="{{ path('app_coupon_show', {'id': coupon.id}) }}" class="btn btn-info btn-sm">Show</a>
                         <a href="{{ path('app_coupon_edit', {'id': coupon.id}) }}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{{ path('app_coupon_pdf', {'id': coupon.id}) }}" class="btn btn-secondary btn-sm">PDF</a>
                     </td>
                 </tr>
             {% else %}

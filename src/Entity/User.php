@@ -36,6 +36,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $tel = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -122,4 +128,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->consultations;
     }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getTel(): ?string
+    {
+        return $this->tel;
+    }
+
+    public function setTel(?string $tel): self
+    {
+        $this->tel = $tel;
+        return $this;
+    }
+    public function __toString(): string
+{
+    return $this->getName();
+}
+
 }

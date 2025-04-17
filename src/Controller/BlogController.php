@@ -4,20 +4,34 @@ namespace App\Controller;
 
 use App\Repository\ArticleRepository;
 use App\Entity\Article;
-use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Comment;
+use App\Entity\LikeDislike;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\CommentType;
 
+#[Route('/blog')]
 class BlogController extends AbstractController
 {
-    #[Route('/blog', name: 'app_blog_index', methods: ['GET'])]
-    public function index(ArticleRepository $articleRepo): Response
+    #[Route('/', name: 'app_blog_index', methods: ['GET'])]
+    public function index(Request $request, ArticleRepository $articleRepository): Response
     {
-        $articles = $articleRepo->findBy([], ['createdAt' => 'DESC']);
+        $query = $request->query->get('q', ''); // Get the search query from the URL
+
+        if ($query) {
+            $articles = $articleRepository->createQueryBuilder('a')
+                ->where('a.title LIKE :query OR a.content LIKE :query')
+                ->setParameter('query', '%' . $query . '%')
+                ->orderBy('a.createdAt', 'DESC')
+                ->getQuery()
+                ->getResult();
+        } else {
+            $articles = $articleRepository->findBy([], ['createdAt' => 'DESC']);
+        }
 
         return $this->render('blog/index.html.twig', [
             'articles' => $articles,
@@ -52,4 +66,34 @@ class BlogController extends AbstractController
     {
         return $this->render('blog/home.html.twig');
     }
-}
+
+    #[Route('/{id}/comment', name: 'app_blog_comment', methods: ['POST'])]
+    public function addComment(Request $request, Article $article, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $content = $data['content'] ?? null;
+
+        if (!$content) {
+            return $this->json(['success' => false, 'error' => 'Comment content cannot be empty'], 400);
+        }
+
+        $comment = new Comment();
+        $comment->setContent($content);
+        $comment->setCreatedAt(new \DateTimeImmutable());
+        $comment->setArticle($article);
+
+        // Optionally, set the user if your app has authentication
+        // $comment->setUser($this->getUser());
+
+        $entityManager->persist($comment);
+        $entityManager->flush();
+
+        return $this->json([
+            'success' => true,
+            'comment' => [
+                'content' => $comment->getContent(),
+                'createdAt' => $comment->getCreatedAt()->format('d/m/Y H:i'),
+            ]
+        ]);
+    }
+}   

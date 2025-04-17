@@ -36,7 +36,7 @@ class CommentController extends AbstractController
 
         return $this->render('comment/new.html.twig', [
             'comment' => $comment,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -62,7 +62,7 @@ class CommentController extends AbstractController
 
         return $this->render('comment/edit.html.twig', [
             'comment' => $comment,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -75,4 +75,5 @@ class CommentController extends AbstractController
 
         return $this->redirectToRoute('app_comment_index', [], Response::HTTP_SEE_OTHER);
     }
+    
 }

@@ -3,78 +3,235 @@
 {% block title %}{{ article.title }} - BetterMind{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h2>{{ article.title }}</h2>
-        </div>
-        <div class="card-body">
-            <p class="text-muted">Publié le {{ article.createdAt|date('d/m/Y H:i') }}</p>
-            <hr>
-
-            <!-- Affichage des tags -->
-            {% if article.tags is not empty %}
-                <div class="mb-3">
-                   
-                    {% for tag in article.tags %}
-                        Tag : <span class="badge bg-secondary">{{ tag.name }}</span>
-                    {% endfor %}
+<div class="container-fluid py-5 bg-light-green" style="min-height: 100vh;">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-green-gradient text-white p-4">
+                    <h1 class="display-4 fw-bold text-shadow">{{ article.title }}</h1>
                 </div>
-                <hr>
-            {% endif %}
+                <div class="card-body p-5 bg-white">
+                    <p class="text-muted lead fw-medium mb-4">
+                        <i class="bi bi-calendar-check me-2"></i> Published on {{ article.createdAt|date('d/m/Y H:i') }}
+                    </p>
+                    <hr class="border-green border-2 opacity-75">
 
-            <!-- Formulaire d'ajout de commentaire -->
-            <div class="mt-4">
-                <h3>Ajouter un commentaire</h3>
-                {{ form_start(commentForm) }}
-                    {{ form_row(commentForm.content) }}
-                    <button type="submit" class="btn btn-primary">Envoyer</button>
-                {{ form_end(commentForm) }}
-            </div>
-                </div>
-                <hr>
-       
-
-            <p>{{ article.content|nl2br }}</p>
-
-            <!-- Affichage du média (image ou vidéo) -->
-            {% if article.type == 'image' %}
-                <img src="{{ asset('uploads/' ~ article.media) }}" class="img-fluid mt-3" alt="{{ article.title }}">
-            {% elseif article.type == 'video' %}
-                <video class="w-100 mt-3" controls>
-                    <source src="{{ asset('uploads/' ~ article.media) }}" type="video/mp4">
-                    Votre navigateur ne supporte pas la lecture de vidéos.
-                </video>
-            {% endif %}
-        </div>
-        <div class="card-footer">
-            <a href="{{ path('app_blog_index') }}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Retour aux articles
-            </a>
-          
-        </div>
-    </div>
-
-    <!-- Section des commentaires -->
-    <div class="mt-4">
-        <h3><i class="bi bi-chat-left-text"></i> Commentaires</h3>
-        {% for comment in article.comments %}
-            <div class="card my-2">
-                <div class="card-body d-flex align-items-start">
-                    <!-- Icône du commentaire -->
-                    <i class="bi bi-person-circle fs-3 text-primary me-2"></i>
-                    <div class="flex-grow-1">
-                        <p class="mb-1">{{ comment.content }}</p>
-                        <small class="text-muted">Posté le {{ comment.createdAt|date('d/m/Y H:i') }}</small>
-                        <div class="mt-2">
-                         
+                    <!-- Tags Section -->
+                    {% if article.tags is not empty %}
+                        <div class="mb-4">
+                            {% for tag in article.tags %}
+                                <span class="badge bg-light-green text-dark fw-semibold px-3 py-2 me-2 rounded-pill shadow-sm">
+                                    <i class="bi bi-tag me-1"></i> {{ tag.name }}
+                                </span>
+                            {% endfor %}
                         </div>
+                        <hr class="border-green border-2 opacity-75">
+                    {% endif %}
+
+                    <!-- Comment Form -->
+                    <div class="mb-5">
+                        <h2 class="h3 fw-bold text-green mb-4"><i class="bi bi-chat-heart me-2"></i> Share Your Thoughts</h2>
+                        {{ form_start(commentForm) }}
+                            <div class="form-group mb-3">
+                                {{ form_widget(commentForm.content, { 
+                                    'attr': {
+                                        'class': 'form-control form-control-lg border-0 shadow-sm rounded-3 p-3',
+                                        'rows': '4',
+                                        'placeholder': 'What are your thoughts on this? Let’s support each other...',
+                                        'style': 'background-color: #f8faf9;',
+                                    }
+                                }) }}
+                            </div>
+                            <button type="submit" class="btn btn-green btn-lg fw-bold px-4 py-2 rounded-pill shadow">
+                                <i class="bi bi-send-check me-1"></i> Submit
+                            </button>
+                        {{ form_end(commentForm) }}
+                    </div>
+
+                    <!-- Article Content -->
+                    <p class="article-content fs-5 text-dark lh-lg fw-normal mb-5" style="line-height: 1.8;">
+                        <i class="bi bi-brain me-2 text-green opacity-75"></i> {{ article.content|nl2br }}
+                    </p>
+
+                    <!-- Media (Image or Video) -->
+                    {% if article.type == 'image' %}
+                        <div class="mb-5">
+                            <img src="{{ asset('uploads/' ~ article.media) }}" class="img-fluid rounded-3 shadow-lg" alt="{{ article.title }}" style="max-height: 500px; object-fit: cover;">
+                        </div>
+                    {% elseif article.type == 'video' %}
+                        <div class="mb-5">
+                            <video class="w-100 rounded-3 shadow-lg" controls style="max-height: 500px;">
+                                <source src="{{ asset('uploads/' ~ article.media) }}" type="video/mp4">
+                                Your browser does not support video playback.
+                            </video>
+                        </div>
+                    {% endif %}
+
+                    <!-- Comments Section -->
+                    <div class="mt-5">
+                        <h2 class="h3 fw-bold text-green mb-4"><i class="bi bi-chat-dots me-2"></i> Comments</h2>
+                        {% if article.comments is not empty %}
+                            {% for comment in article.comments %}
+                                <div class="card mb-3 shadow-sm border-0 rounded-3">
+                                    <div class="card-body p-4 bg-light-green">
+                                        <p class="mb-2 fs-6 text-dark fw-medium">
+                                            <i class="bi bi-person-circle me-2 text-green opacity-75"></i> {{ comment.content }}
+                                        </p>
+                                        <small class="text-muted">
+                                            <i class="bi bi-clock me-1"></i> Posted on {{ comment.createdAt|date('d/m/Y H:i') }}
+                                        </small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">No comments yet. Be the first to share your thoughts!</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer bg-light-green p-4 d-flex justify-content-between align-items-center border-top-0">
+                    <a href="{{ path('app_blog_index') }}" class="btn btn-outline-green btn-lg fw-bold px-4 py-2 rounded-pill shadow">
+                        <i class="bi bi-arrow-left-circle me-1"></i> Back to Articles
+                    </a>
+                    <!-- Like/Dislike Section -->
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Like Button -->
+                        <button class="btn btn-outline-green btn-lg fw-bold px-4 py-2 rounded-pill shadow btn-like" onclick="handleLike({{ article.id }})">
+                            <i class="bi bi-heart-fill me-1 text-success"></i>
+                            <span id="like-count" class="fw-medium">{{ article.likesCount }}</span>
+                        </button>
+
+                        <!-- Dislike Button -->
+                        <button class="btn btn-outline-green btn-lg fw-bold px-4 py-2 rounded-pill shadow btn-dislike" onclick="handleDislike({{ article.id }})">
+                            <i class="bi bi-heartbreak-fill me-1 text-danger"></i>
+                            <span id="dislike-count" class="fw-medium">{{ article.dislikesCount }}</span>
+                        </button>
                     </div>
                 </div>
             </div>
-        {% else %}
-            <p class="text-muted">Aucun commentaire pour cet article.</p>
-        {% endfor %}
+        </div>
     </div>
 </div>
+
+<!-- Script for likes/dislikes (you can keep this or remove if you want to avoid JavaScript entirely) -->
+<script>
+function handleLike(articleId) {
+    fetch(`/blog/${articleId}/like`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('like-count').innerText = data.likes;
+            document.getElementById('dislike-count').innerText = data.dislikes;
+            const likeButton = document.querySelector('.btn-like');
+            likeButton.classList.toggle('active', data.likes > 0);
+            const dislikeButton = document.querySelector('.btn-dislike');
+            dislikeButton.classList.remove('active');
+        });
+}
+
+function handleDislike(articleId) {
+    fetch(`/blog/${articleId}/dislike`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('like-count').innerText = data.likes;
+            document.getElementById('dislike-count').innerText = data.dislikes;
+            const dislikeButton = document.querySelector('.btn-dislike');
+            dislikeButton.classList.toggle('active', data.dislikes > 0);
+            const likeButton = document.querySelector('.btn-like');
+            likeButton.classList.remove('active');
+        });
+}
+</script>
+<style>
+    /* Light Green Color Scheme */
+    :root {
+        --light-green: #d4edda;
+        --medium-green: #c3e6cb;
+        --bright-green: #90ee90;
+        --soft-green: #f8faf9;
+    }
+
+    .bg-light-green {
+        background-color: var(--light-green) !important;
+    }
+
+    .bg-green-gradient {
+        background: linear-gradient(45deg, var(--medium-green), var(--bright-green)) !important;
+    }
+
+    .text-green {
+        color: var(--bright-green) !important;
+    }
+
+    .border-green {
+        border-color: var(--medium-green) !important;
+    }
+
+    .btn-green {
+        background-color: var(--bright-green) !important;
+        border-color: var(--bright-green) !important;
+        color: #fff !important;
+    }
+
+    .btn-green:hover {
+        background-color: var(--medium-green) !important;
+        border-color: var(--medium-green) !important;
+        color: #fff !important;
+    }
+
+    .btn-outline-green {
+        border-color: var(--bright-green) !important;
+        color: var(--bright-green) !important;
+    }
+
+    .btn-outline-green:hover {
+        background-color: var(--bright-green) !important;
+        color: #fff !important;
+    }
+
+    .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .article-content {
+        padding: 25px;
+        background-color: var(--soft-green);
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--light-green);
+    }
+
+    .btn-like, .btn-dislike {
+        transition: all 0.3s ease;
+        border-radius: 20px;
+        padding: 10px 20px;
+    }
+
+    .btn-like:hover, .btn-like.active {
+        background-color: #28a745 !important;
+        color: white !important;
+        box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-dislike:hover, .btn-dislike.active {
+        background-color: #dc3545 !important;
+        color: white !important;
+        box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
+    }
+
+    .shadow-lg {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    @media (max-width: 768px) {
+        .card {
+            margin: 0 15px;
+        }
+        .btn-lg {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        .article-content {
+            padding: 15px;
+        }
+    }
+</style>
 {% endblock %}

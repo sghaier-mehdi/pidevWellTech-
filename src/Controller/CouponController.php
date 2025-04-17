@@ -4,12 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Coupon;
 use App\Form\CouponType;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 #[Route('/coupon')]
 final class CouponController extends AbstractController
@@ -81,5 +82,31 @@ final class CouponController extends AbstractController
         }
 
         return $this->redirectToRoute('app_coupon_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/pdf', name: 'app_coupon_pdf', methods: ['GET'])]
+    public function pdf(Coupon $coupon): Response
+    {
+        $html = $this->renderView('coupon/pdf.html.twig', [
+            'coupon' => $coupon,
+        ]);
+
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $pdfContent = $dompdf->output();
+
+        return new Response(
+            $pdfContent,
+            200,
+            [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename="coupon_' . $coupon->getId() . '.pdf"',
+            ]
+        );
     }
 }

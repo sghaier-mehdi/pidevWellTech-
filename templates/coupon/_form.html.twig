@@ -1,8 +1,42 @@
 {% extends 'back/base.html.twig' %}
 {% block body %}
-
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'needs-validation custom-form', 'novalidate': 'novalidate', 'method': 'POST'}}) }}
+    <div class="mb-3">
+        {{ form_widget(form) }}
+    </div>
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-save"></i> {{ button_label|default('Save') }}
+    </button>
 {{ form_end(form) }}
+<style>
+    .custom-form {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .custom-form h3 {
+        color: #007bff;
+        font-weight: bold;
+    }
+    .custom-form .form-control {
+        border-radius: 10px;
+        border: 1px solid #ced4da;
+    }
+    .custom-form button {
+        border-radius: 5px;
+        padding: 10px 20px;
+    }
+    .custom-form .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+    .custom-form .btn-success:hover {
+        background-color: #218838;
+    }
+    .custom-form .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+    }
+</style>
 {% endblock %}

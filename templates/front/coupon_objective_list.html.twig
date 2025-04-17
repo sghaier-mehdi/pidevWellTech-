@@ -6,38 +6,6 @@
     <div class="container mt-4">
         <h1 class="mb-4">Coupons and Objectives</h1>
 
-        <h2>Coupons</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Discount Percentage</th>
-                    <th>Code</th>
-                    <th>Is Active</th>
-                    <th>Expiration Date</th>
-                    <th>Usage Count</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for coupon in coupons %}
-                <tr>
-                    <td>{{ coupon.id }}</td>
-                    <td>{{ coupon.name }}</td>
-                    <td>{{ coupon.discountPercentage }}</td>
-                    <td>{{ coupon.code }}</td>
-                    <td>{{ coupon.isActive ? 'Yes' : 'No' }}</td>
-                    <td>{{ coupon.expirationDate ? coupon.expirationDate|date('Y-m-d') : 'N/A' }}</td>
-                    <td>{{ coupon.usageCount }}</td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="7">No coupons found</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
         <h2>Objectives</h2>
         <table class="table table-striped">
             <thead>
@@ -49,11 +17,13 @@
             </thead>
             <tbody>
             {% for objective in objectives %}
-                <tr>
-                    <td>{{ objective.id }}</td>
-                    <td>{{ objective.nbrConsultation }}</td>
-                    <td>{{ objective.status }}</td>
-                </tr>
+                {% if objective.user.id == app.user.id %}
+                    <tr>
+                        <td>{{ objective.id }}</td>
+                        <td>{{ objective.nbrConsultation }}</td>
+                        <td>{{ objective.status }}</td>
+                    </tr>
+                {% endif %}
             {% else %}
                 <tr>
                     <td colspan="3">No objectives found</td>
@@ -61,5 +31,44 @@
             {% endfor %}
             </tbody>
         </table>
+
+        {% set completedObjectives = objectives|filter(objective => objective.status == 'completed' and objective.user.id == app.user.id) %}
+        {% if completedObjectives|length > 0 %}
+            <h2>Coupons</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Discount Percentage</th>
+                        <th>Code</th>
+                        <th>Is Active</th>
+                        <th>Expiration Date</th>
+                        <th>Usage Count</th>
+                        <th>QR Code</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for coupon in coupons %}
+                    <tr>
+                        <td>{{ coupon.id }}</td>
+                        <td>{{ coupon.name }}</td>
+                        <td>{{ coupon.discountPercentage }}</td>
+                        <td>{{ coupon.code }}</td>
+                        <td>{{ coupon.isActive ? 'Yes' : 'No' }}</td>
+                        <td>{{ coupon.expirationDate ? coupon.expirationDate|date('Y-m-d') : 'N/A' }}</td>
+                        <td>{{ coupon.usageCount }}</td>
+                        <td>
+                        <img src="{{ qr_code_data_uri(coupon.code) }}" alt="QR Code">
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8">No coupons found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     </div>
 {% endblock %}

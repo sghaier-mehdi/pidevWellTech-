@@ -3,34 +3,328 @@
 {% block title %}Blog - BetterMind{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-    <h1 class="mb-4">Keep up with Our Most Recent Medical News.</h1>
+<div class="container-fluid py-6 bg-gradient-light-green d-flex flex-column min-vh-100 position-relative overflow-hidden">
+    <!-- Background Animation (Subtle Particles or Waves) -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="z-index: 0;">
+        <svg class="wave" width="100%" height="100%" viewBox="0 0 1440 320" style="position: absolute; bottom: 0; left: 0;">
+            <path fill="var(--light-green)" fill-opacity="0.3" d="M0,128L48,138.7C96,149,192,171,288,181.3C384,192,480,192,576,186.7C672,181,768,171,864,165.3C960,160,1056,160,1152,170.7C1248,181,1344,203,1392,213.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
 
-
-    <div class="row">
-        {% for article in articles %}
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    {% if article.type == 'image' %}
-                        <img src="{{ asset('uploads/' ~ article.media) }}" class="card-img-top" alt="{{ article.title }}">
-                    {% elseif article.type == 'video' %}
-                        <video class="w-100" controls>
-                            <source src="{{ asset('uploads/' ~ article.media) }}" type="video/mp4">
-                        </video>
-                    {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title">{{ article.title }}</h5>
-                        <p class="card-text">{{ article.content|slice(0, 100) }}...</p>
-                        <a href="{{ path('app_blog_show', { id: article.id }) }}" class="btn btn-info btn-sm">
-                            <i class="bi bi-eye"></i> Voir
-                        </a>
-                      
+    <div class="row justify-content-center flex-grow-1 position-relative z-1">
+        <div class="col-lg-10">
+            <!-- Search Bar (Ultra-Creative, Glowing Effect) -->
+            <div class="search-bar-container mb-6 d-flex justify-content-center animate__animated animate__fadeInDown">
+                <form action="{{ path('app_blog_index') }}" method="GET" class="w-100 max-w-lg">
+                    <div class="input-group input-group-lg rounded-5 shadow-lg">
+                        <span class="input-group-text bg-transparent border-0 text-green" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(15px);">
+                            <i class="bi bi-search-heart fs-4"></i>
+                        </span>
+                        <input type="text" name="q" value="{{ app.request.get('q') }}" class="form-control form-control-lg border-0 bg-transparent text-dark placeholder-green" placeholder="Search mental health insights..." style="backdrop-filter: blur(15px);">
+                        <button type="submit" class="btn btn-green fw-bold px-4 py-2 rounded-end-5 shadow-md" style="transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);">
+                            <i class="bi bi-search fs-4"></i>
+                        </button>
                     </div>
-                </div>
+                </form>
             </div>
-        {% else %}
-            <p class="text-muted text-center">Aucun article disponible.</p>
-        {% endfor %}
+
+            <h1 class="display-3 fw-bold text-green text-center mb-6 text-shadow animate__animated animate__bounceIn">
+                <i class="bi bi-journal-medical me-2 fs-3"></i> Discover Our Latest Mental Health Insights
+            </h1>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5">
+                {% for article in articles %}
+                    <div class="col">
+                        <div class="card h-100 glass-card shadow-xl border-0 rounded-5 overflow-hidden animate__animated animate__flipInX" style="backface-visibility: hidden;">
+                            <div class="card-img-container position-relative">
+                                {% if article.type == 'image' %}
+                                    <img src="{{ asset('uploads/' ~ article.media) }}" class="card-img-top w-100" alt="{{ article.title }}" style="object-fit: cover; height: 350px; border-top-left-radius: 20px; border-top-right-radius: 20px; transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);">
+                                {% elseif article.type == 'video' %}
+                                    <video class="w-100" controls style="height: 350px; border-top-left-radius: 20px; border-top-right-radius: 20px; transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);">
+                                        <source src="{{ asset('uploads/' ~ article.media) }}" type="video/mp4">
+                                        Your browser does not support video playback.
+                                    </video>
+                                {% endif %}
+                                <div class="card-overlay position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(to top, rgba(144, 238, 144, 0.5), transparent); opacity: 0; transition: opacity 0.5s ease;"></div>
+                            </div>
+                            <div class="card-body p-5 bg-white position-relative">
+                                <div class="tags d-flex flex-wrap gap-2 mb-3">
+                                    {% for tag in article.tags %}
+                                        <span class="badge bg-light-green text-dark fw-semibold px-3 py-2 rounded-pill shadow-sm animate__animated animate__pulse">
+                                            <i class="bi bi-tag-fill me-1 text-green"></i> {{ tag.name }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                                <h5 class="card-title fs-2 fw-bold text-dark mb-4 position-relative z-2">
+                                    <i class="bi bi-brain me-2 text-green opacity-75 fs-3"></i> {{ article.title }}
+                                </h5>
+                                <p class="card-text text-muted lh-lg position-relative z-2">
+                                    {{ article.content|slice(0, 150) }}...
+                                </p>
+                                <a href="{{ path('app_blog_show', { id: article.id }) }}" class="btn btn-green fw-bold px-5 py-3 rounded-4 shadow-lg position-relative z-2 d-inline-flex align-items-center gap-2 animate__animated animate__bounceIn">
+                                    <i class="bi bi-eye-fill me-2 fs-4"></i> Explore
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-12 text-center">
+                        <p class="text-muted fs-3 fw-medium animate__animated animate__zoomIn">No articles available yet. Stay tuned for updates!</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination (Compact, Ultra-Elegant, Glowing Effect) -->
+            {% if articles|length > 0 %}
+                <div class="mt-4 text-center">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center gap-2 align-items-center flex-nowrap">
+                            <li class="page-item">
+                                <a class="page-link btn-elegant-green fw-medium px-2 py-1 rounded-4 shadow-md glow" href="#" aria-label="Previous" style="transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);">
+                                    <i class="bi bi-arrow-left fs-6"></i>
+                                </a>
+                            </li>
+                            <li class="page-item"><a class="page-link btn-elegant-green fw-medium px-2 py-1 rounded-4 shadow-md glow" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link btn-elegant-green fw-medium px-2 py-1 rounded-4 shadow-md glow" href="#">2</a></li>
+                            <li class="page-item">
+                                <a class="page-link btn-elegant-green fw-medium px-2 py-1 rounded-4 shadow-md glow" href="#" aria-label="Next" style="transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);">
+                                    <i class="bi bi-arrow-right fs-6"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Subtle Particle Animation (Optional, for Ultra-Creative Effect) -->
+    <div class="position-fixed top-0 start-0 w-100 h-100" style="z-index: -1; pointer-events: none;">
+        <div class="particle" style="position: absolute; top: 20%; left: 10%; width: 10px; height: 10px; background: var(--bright-green); border-radius: 50%; opacity: 0.5; animation: float 6s infinite ease-in-out;"></div>
+        <div class="particle" style="position: absolute; top: 40%; left: 70%; width: 8px; height: 8px; background: var(--medium-green); border-radius: 50%; opacity: 0.5; animation: float 8s infinite ease-in-out;"></div>
+        <div class="particle" style="position: absolute; top: 70%; left: 30%; width: 12px; height: 12px; background: var(--bright-green); border-radius: 50%; opacity: 0.5; animation: float 7s infinite ease-in-out;"></div>
     </div>
 </div>
+
+<!-- Animation and Modern Libraries -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+<style>
+    /* Ultra-Modern Glassmorphism and Enhanced Styles */
+    .bg-gradient-light-green {
+        background: linear-gradient(135deg, var(--light-green), var(--soft-green)) !important;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(144, 238, 144, 0.4);
+        transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.5s ease, background 0.5s ease;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-15px) scale(1.05);
+        box-shadow: 0 25px 50px rgba(144, 238, 144, 0.4);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .card-img-container {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .card-img-container img, .card-img-container video {
+        transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .glass-card:hover .card-img-container img,
+    .glass-card:hover .card-img-container video {
+        transform: scale(1.15);
+    }
+
+    .card-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top, rgba(144, 238, 144, 0.5), transparent);
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
+
+    .glass-card:hover .card-overlay {
+        opacity: 1;
+    }
+
+    .card-body {
+        position: relative;
+        z-index: 2;
+    }
+
+    .shadow-xl {
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .shadow-md {
+        box-shadow: 0 10px 25px rgba(144, 238, 144, 0.3) !important;
+    }
+
+    .shadow-lg {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .btn-green {
+        background-color: var(--bright-green) !important;
+        border-color: var(--bright-green) !important;
+        color: white !important;
+        transition: background-color 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .btn-green:hover {
+        background-color: var(--medium-green) !important;
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px var(--shadow-green);
+    }
+
+    .btn-outline-green {
+        border-color: var(--bright-green) !important;
+        color: var(--bright-green) !important;
+        transition: background-color 0.5s ease, color 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .btn-outline-green:hover {
+        background-color: var(--bright-green) !important;
+        color: white !important;
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px var(--shadow-green);
+    }
+
+    .btn-elegant-green {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid var(--bright-green);
+        color: var(--bright-green) !important;
+        font-size: 0.8rem !important;
+        transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+        position: relative;
+        overflow: hidden;
+        line-height: 1.2;
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .btn-elegant-green:hover {
+        background: rgba(144, 238, 144, 0.8) !important;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(144, 238, 144, 0.3) !important;
+        color: white !important;
+    }
+
+    .btn-elegant-green::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(144, 238, 144, 0.3);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.5s ease, height 0.5s ease;
+        z-index: 0;
+    }
+
+    .btn-elegant-green:hover::before {
+        width: 150px;
+        height: 150px;
+    }
+
+    .btn-elegant-green .bi {
+        transition: transform 0.5s ease;
+    }
+
+    .btn-elegant-green:hover .bi {
+        transform: scale(1.1);
+    }
+
+    .glow {
+        box-shadow: 0 0 15px var(--bright-green), 0 0 30px var(--bright-green) !important;
+        transition: box-shadow 0.5s ease !important;
+    }
+
+    .glow:hover {
+        box-shadow: 0 0 25px var(--bright-green), 0 0 50px var(--bright-green) !important;
+    }
+
+    .search-bar-container {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 25px;
+        padding: 1rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .placeholder-green::placeholder {
+        color: var(--bright-green) !important;
+        opacity: 0.8;
+    }
+
+    .animate__animated {
+        --animate-duration: 1s;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .particle {
+        animation-delay: calc(var(--order) * 1s);
+    }
+
+    /* Pagination Layout Adjustments for Horizontal Compactness */
+    .pagination {
+        flex-wrap: nowrap !important;
+        display: inline-flex !important;
+    }
+
+    .pagination .page-item {
+        margin: 0 !important;
+    }
+
+    /* Responsive Adjustments for Smaller Screens */
+    @media (max-width: 768px) {
+        .display-3 {
+            font-size: 2.5rem;
+        }
+        .card {
+            margin: 0 15px;
+        }
+        .card-img-top, .card-img-container video {
+            height: 200px;
+        }
+        .btn-green, .btn-outline-green {
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        .search-bar-container {
+            padding: 0.5rem;
+        }
+        .btn-elegant-green {
+            font-size: 0.7rem !important;
+            padding: 1px 2rem !important;
+            min-width: 35px !important;
+        }
+
+        .btn-elegant-green .bi {
+            font-size: 0.8rem !important;
+        }
+
+        .pagination {
+            gap: 1px !important;
+        }
+    }
+</style>
 {% endblock %}

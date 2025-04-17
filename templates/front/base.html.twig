@@ -1,289 +1,364 @@
-<!doctype html>
-<html class="no-js" lang="zxx">
-    <head>
-        <!-- Meta Tags -->
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="keywords" content="Site keywords here">
-		<meta name="description" content="">
-		<meta name='copyright' content=''>
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-		<!-- Title -->
-        <title>Bettermind </title>
-		
-		<!-- Favicon -->
-        <link rel="icon" href="{{ asset('front/assets/logo.png') }}">
-		
-		<!-- Google Fonts -->
-		<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+	<!doctype html>
+	<html class="no-js" lang="zxx">
+		<head>
+			<!-- Meta Tags -->
+			<meta charset="utf-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<meta name="keywords" content="Site keywords here">
+			<meta name="description" content="">
+			<meta name='copyright' content=''>
+			<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+			<meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+			<!-- Title -->
+			<title>Bettermind </title>
+			
+			<!-- Favicon -->
+			<link rel="icon" href="{{ asset('front/assets/logo.png') }}">
+			
+			<!-- Google Fonts -->
+			<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+	<!-- Bootstrap CSS -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		<!-- Bootstrap Icons -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+			<!-- Bootstrap CSS -->
+			<link rel="stylesheet" href="{{ asset('front/css/bootstrap.min.css') }}">
+			<!-- Nice Select CSS -->
+			<link rel="stylesheet" href="{{ asset('front/css/nice-select.css') }}">
+			<!-- Font Awesome CSS -->
+			<link rel="stylesheet" href="{{ asset('front/css/font-awesome.min.css') }}">
+			<!-- icofont CSS -->
+			<link rel="stylesheet" href="{{ asset('front/css/icofont.css') }}">
+			<!-- Slicknav -->
+			<link rel="stylesheet" href="{{ asset('front/css/slicknav.min.css') }}">
+			<!-- Owl Carousel CSS -->
+			<link rel="stylesheet" href="{{ asset('front/css/owl-carousel.css') }}">
+			<!-- Datepicker CSS -->
+			<link rel="stylesheet" href="{{ asset('front/css/datepicker.css') }}">
+			<!-- Animate CSS -->
+			<link rel="stylesheet" href="{{ asset('front/css/animate.min.css') }}">
+			<!-- Magnific Popup CSS -->
+			<link rel="stylesheet" href="{{ asset('front/css/magnific-popup.css') }}">
+			
+			<!-- Medipro CSS -->
+			<link rel="stylesheet" href="{{ asset('front/css/normalize.css') }}">
+			<link rel="stylesheet" href="{{ asset('front/style.css') }}">
+			<link rel="stylesheet" href="{{ asset('front/css/responsive.css') }}">
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="{{ asset('front/css/bootstrap.min.css') }}">
-		<!-- Nice Select CSS -->
-		<link rel="stylesheet" href="{{ asset('front/css/nice-select.css') }}">
-		<!-- Font Awesome CSS -->
-        <link rel="stylesheet" href="{{ asset('front/css/font-awesome.min.css') }}">
-		<!-- icofont CSS -->
-        <link rel="stylesheet" href="{{ asset('front/css/icofont.css') }}">
-		<!-- Slicknav -->
-		<link rel="stylesheet" href="{{ asset('front/css/slicknav.min.css') }}">
-		<!-- Owl Carousel CSS -->
-        <link rel="stylesheet" href="{{ asset('front/css/owl-carousel.css') }}">
-		<!-- Datepicker CSS -->
-		<link rel="stylesheet" href="{{ asset('front/css/datepicker.css') }}">
-		<!-- Animate CSS -->
-        <link rel="stylesheet" href="{{ asset('front/css/animate.min.css') }}">
-		<!-- Magnific Popup CSS -->
-        <link rel="stylesheet" href="{{ asset('front/css/magnific-popup.css') }}">
-		
-		<!-- Medipro CSS -->
-        <link rel="stylesheet" href="{{ asset('front/css/normalize.css') }}">
-        <link rel="stylesheet" href="{{ asset('front/style.css') }}">
-        <link rel="stylesheet" href="{{ asset('front/css/responsive.css') }}">
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-  
-    </head>
-    <body>
 	
-		<!-- Preloader -->
-        <div class="preloader">
-            <div class="loader">
-                <div class="loader-outter"></div>
-                <div class="loader-inner"></div>
-
-                <div class="indicator"> 
-                    <svg width="16px" height="12px">
-                        <polyline id="back" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
-                        <polyline id="front" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
-                    </svg>
-                </div>
-            </div>
-        </div>
-        <!-- End Preloader -->
+		</head>
+		<body>
 		
-		<!-- Get Pro Button -->
-		<ul class="pro-features">
-			<a class="get-pro" href="#">Get Pro</a>
-			<li class="big-title">Pro Version Available on Themeforest</li>
-			<li class="title">Pro Version Features</li>
-			<li>2+ premade home pages</li>
-			<li>20+ html pages</li>
-			<li>Color Plate With 12+ Colors</li>
-			<li>Sticky Header / Sticky Filters</li>
-			<li>Working Contact Form With Google Map</li>
-			<div class="button">
-				<a href="http://preview.themeforest.net/item/mediplus-medical-and-doctor-html-template/full_screen_preview/26665910?_ga=2.145092285.888558928.1591971968-344530658.1588061879" target="_blank" class="btn">Pro Version Demo</a>
-				<a href="https://themeforest.net/item/mediplus-medical-and-doctor-html-template/26665910" target="_blank" class="btn">Buy Pro Version</a>
+			<!-- Preloader -->
+			<div class="preloader">
+				<div class="loader">
+					<div class="loader-outter"></div>
+					<div class="loader-inner"></div>
+
+					<div class="indicator"> 
+						<svg width="16px" height="12px">
+							<polyline id="back" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+							<polyline id="front" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+						</svg>
+					</div>
+				</div>
 			</div>
+			<!-- End Preloader -->
+			
+			<!-- Get Pro Button -->
+			<ul class="pro-features">
+				<a class="get-pro" href="#">Get Pro</a>
+				<li class="big-title">Pro Version Available on Themeforest</li>
+				<li class="title">Pro Version Features</li>
+				<li>2+ premade home pages</li>
+				<li>20+ html pages</li>
+				<li>Color Plate With 12+ Colors</li>
+				<li>Sticky Header / Sticky Filters</li>
+				<li>Working Contact Form With Google Map</li>
+				<div class="button">
+					<a href="http://preview.themeforest.net/item/mediplus-medical-and-doctor-html-template/full_screen_preview/26665910?_ga=2.145092285.888558928.1591971968-344530658.1588061879" target="_blank" class="btn">Pro Version Demo</a>
+					<a href="https://themeforest.net/item/mediplus-medical-and-doctor-html-template/26665910" target="_blank" class="btn">Buy Pro Version</a>
+				</div>
+			</ul>
+		
+			<!-- Header Area -->
+			<header class="header" >
+				<!-- Topbar -->
+				<div class="topbar">
+					<div class="container">
+						<div class="row">
+							<div class="col-lg-6 col-md-5 col-12">
+								<!-- Contact -->
+								<ul class="top-link">
+									<li><a href="#">About</a></li>
+				
+									<li><a href="#">Contact</a></li>
+									<li><a href="#">FAQ</a></li>
+								</ul>
+								<!-- End Contact -->
+							</div>
+							<div class="col-lg-6 col-md-7 col-12">
+								<!-- Top Contact -->
+								<ul class="top-contact">
+									<li><i class="fa fa-phone"></i>+216 93566801</li>
+									<li><i class="fa fa-envelope"></i><a href="mailto:support@yourmail.com">bettermind@esprit.tn</a></li>
+								</ul>
+								<!-- End Top Contact -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- End Topbar -->
+				<!-- Header Inner -->
+				<div class="header-inner">
+					<div class="container">
+						<div class="inner">
+							<div class="row">
+								<div class="col-lg-3 col-md-3 col-12">
+									<!-- Start Logo -->
+									<div class="logo">
+										<a href="{{ path('index_front') }}"><img src="assets/logo.png" alt="#"></a>
+									</div>
+									<!-- End Logo -->
+									<!-- Mobile Nav -->
+									<div class="mobile-nav"></div>
+									<!-- End Mobile Nav -->
+								</div>
+								<div class="col-lg-7 col-md-9 col-12">
+									<!-- Main Menu -->
+									<div class="main-menu">
+										<nav class="navigation">
+											<ul class="nav menu">
+												
+												<li><a href="{{ path('coupon_objective_list') }}">coupon</a></li>
+												<li><a href="#">nos produit </a></li>
+												<li><a href="{{ path('reclamation_index') }}">reclamation</i></a>
+												<li class="nav-item dropdown">
+		<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+			Consultation
+		</a>
+		<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+			<li><a class="dropdown-item" href="{{ path('index_consultation') }}">View Consultations</a></li>
+			<li><a class="dropdown-item" href="{{ path('add_consultation') }}">Add Consultation</a></li>
 		</ul>
-	
-		<!-- Header Area -->
-		<header class="header" >
-			<!-- Topbar -->
-			<div class="topbar">
+	</li>
+												</li>
+												<li><a href="{{ path('app_blog_index') }}">Blog</a></li>
+												</li>
+											
+											</ul>
+										</nav>
+									</div>
+									<!--/ End Main Menu -->
+								</div>
+								<div class="col-lg-2 col-12">
+									<div class="get-quote">
+									<a href="/{{app.user ? 'logout' : 'login'}}" class="btn">{{app.user ? 'logout' : 'login'}}</a>
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--/ End Header Inner -->
+			</header>
+			<!-- End Header Area -->
+			
+			<!-- Start Schedule Area -->
+			
+			<!--/End Start schedule Area -->
+
+			<!-- Start Feautes -->
+			
+			<!--/ End Feautes -->
+			
+			<!-- Start Fun-facts -->
+			<div id="fun-facts" class="fun-facts section overlay" style="position: fixed; left: 0; bottom: 0; width: 100%; background-color: red; color: white; text-align: center;">
 				<div class="container">
 					<div class="row">
-						<div class="col-lg-6 col-md-5 col-12">
-							<!-- Contact -->
-							<ul class="top-link">
-								<li><a href="#">About</a></li>
+						<div class="col-lg-3 col-md-6 col-12">
+							<!-- Start Single Fun -->
+							<div class="single-fun">
+								<i class="icofont icofont-home"></i>
+								<div class="content">
+									<span class="counter">3468</span>
+									<p>Accessible Anywhere</p>
+								</div>
+							</div>
+							<!-- End Single Fun -->
+						</div>
+						<div class="col-lg-3 col-md-6 col-12">
+							<!-- Start Single Fun -->
+							<div class="single-fun">
+								<i class="icofont icofont-user-alt-3"></i>
+								<div class="content">
+									<span class="counter">500</span>
+									<p>Mental Health Experts</p>
+								</div>
+							</div>
+							<!-- End Single Fun -->
+						</div>
+						<div class="col-lg-3 col-md-6 col-12">
+							<!-- Start Single Fun -->
+							<div class="single-fun">
+								<i class="icofont-simple-smile"></i>
+								<div class="content">
+									<span class="counter">4379</span>
+									<p>Happy Patients</p>
+								</div>
+							</div>
+							<!-- End Single Fun -->
+						</div>
+						<div class="col-lg-3 col-md-6 col-12">
+							<!-- Start Single Fun -->
+							<div class="single-fun">
+								<i class="icofont icofont-table"></i>
+								<div class="content">
+									<span class="counter">32</span>
+									<p>Years of Experience</p>
+								</div>
+							</div>
+							<!-- End Single Fun -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/ End Fun-facts -->
 			
-								<li><a href="#">Contact</a></li>
-								<li><a href="#">FAQ</a></li>
-							</ul>
-							<!-- End Contact -->
-						</div>
-						<div class="col-lg-6 col-md-7 col-12">
-							<!-- Top Contact -->
-							<ul class="top-contact">
-								<li><i class="fa fa-phone"></i>+216 93566801</li>
-								<li><i class="fa fa-envelope"></i><a href="mailto:support@yourmail.com">bettermind@esprit.tn</a></li>
-							</ul>
-							<!-- End Top Contact -->
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- End Topbar -->
-			<!-- Header Inner -->
-			<div class="header-inner">
-				<div class="container">
-					<div class="inner">
-						<div class="row">
-							<div class="col-lg-3 col-md-3 col-12">
-								<!-- Start Logo -->
-								<div class="logo">
-									<a href="{{ path('index_front') }}"><img src="assets/logo.png" alt="#"></a>
-								</div>
-								<!-- End Logo -->
-								<!-- Mobile Nav -->
-								<div class="mobile-nav"></div>
-								<!-- End Mobile Nav -->
-							</div>
-							<div class="col-lg-7 col-md-9 col-12">
-								<!-- Main Menu -->
-								<div class="main-menu">
-									<nav class="navigation">
-										<ul class="nav menu">
-											
-											<li><a href="{{ path('coupon_objective_list') }}">coupon</a></li>
-											<li><a href="#">nos produit </a></li>
-											<li><a href="{{ path('reclamation_index') }}">reclamation</i></a>
-											<li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Consultation
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-        <li><a class="dropdown-item" href="{{ path('index_consultation') }}">View Consultations</a></li>
-        <li><a class="dropdown-item" href="{{ path('add_consultation') }}">Add Consultation</a></li>
-    </ul>
-</li>
-											</li>
-											<li><a href="{{ path('app_blog_index') }}">Blog</a></li>
-											</li>
-										
-										</ul>
-									</nav>
-								</div>
-								<!--/ End Main Menu -->
-							</div>
-							<div class="col-lg-2 col-12">
-								<div class="get-quote">
-								<a href="/{{app.user ? 'logout' : 'login'}}" class="btn">{{app.user ? 'logout' : 'login'}}</a>
+			
+			
+			<!-- Start Call to action -->
 
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!--/ End Header Inner -->
-		</header>
-		<!-- End Header Area -->
+			<!--/ End Call to action -->
+			
+			
+			<!--/ End portfolio -->
+			
 		
-		<!-- Start Schedule Area -->
-		
-		<!--/End Start schedule Area -->
+			<!--/ End Pricing Table -->
+			
+			<style>
+			/* Add or update in front/base.html.twig <style> or assets/css/style.css */
+.bg-gradient-light-green {
+    background: linear-gradient(135deg, var(--light-green), var(--soft-green)) !important;
+}
 
-		<!-- Start Feautes -->
-		
-		<!--/ End Feautes -->
-		
-		<!-- Start Fun-facts -->
-		<div id="fun-facts" class="fun-facts section overlay" style="position: fixed; left: 0; bottom: 0; width: 100%; background-color: red; color: white; text-align: center;">
+.bg-light-green {
+    background-color: var(--light-green) !important;
+}
+
+.text-green {
+    color: var(--bright-green) !important;
+}
+
+.btn-green {
+    background-color: var(--bright-green) !important;
+    border-color: var(--bright-green) !important;
+    color: white !important;
+    transition: background-color 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.btn-green:hover {
+    background-color: var(--medium-green) !important;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px var(--shadow-green);
+}
+
+.btn-outline-green {
+    border-color: var(--bright-green) !important;
+    color: var(--bright-green) !important;
+    transition: background-color 0.5s ease, color 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.btn-outline-green:hover {
+    background-color: var(--bright-green) !important;
+    color: white !important;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px var(--shadow-green);
+}
+
+.glow {
+    box-shadow: 0 0 15px var(--bright-green), 0 0 30px var(--bright-green) !important;
+    transition: box-shadow 0.5s ease !important;
+}
+
+.glow:hover {
+    box-shadow: 0 0 25px var(--bright-green), 0 0 50px var(--bright-green) !important;
+}
+
+.text-shadow {
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.shadow-xl {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+.shadow-md {
+    box-shadow: 0 10px 25px rgba(144, 238, 144, 0.3) !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+:root {
+    --light-green: #d4edda;
+    --medium-green: #c3e6cb;
+    --bright-green: #90ee90;
+    --soft-green: #f8faf9;
+    --shadow-green: rgba(144, 238, 144, 0.2);
+}
+			</style>
+			
+
+
 			<div class="container">
-				<div class="row">
-					<div class="col-lg-3 col-md-6 col-12">
-						<!-- Start Single Fun -->
-						<div class="single-fun">
-							<i class="icofont icofont-home"></i>
-							<div class="content">
-								<span class="counter">3468</span>
-								<p>Accessible Anywhere</p>
-							</div>
-						</div>
-						<!-- End Single Fun -->
-					</div>
-					<div class="col-lg-3 col-md-6 col-12">
-						<!-- Start Single Fun -->
-						<div class="single-fun">
-							<i class="icofont icofont-user-alt-3"></i>
-							<div class="content">
-								<span class="counter">500</span>
-								<p>Mental Health Experts</p>
-							</div>
-						</div>
-						<!-- End Single Fun -->
-					</div>
-					<div class="col-lg-3 col-md-6 col-12">
-						<!-- Start Single Fun -->
-						<div class="single-fun">
-							<i class="icofont-simple-smile"></i>
-							<div class="content">
-								<span class="counter">4379</span>
-								<p>Happy Patients</p>
-							</div>
-						</div>
-						<!-- End Single Fun -->
-					</div>
-					<div class="col-lg-3 col-md-6 col-12">
-						<!-- Start Single Fun -->
-						<div class="single-fun">
-							<i class="icofont icofont-table"></i>
-							<div class="content">
-								<span class="counter">32</span>
-								<p>Years of Experience</p>
-							</div>
-						</div>
-						<!-- End Single Fun -->
-					</div>
-				</div>
+				{% block body %}{% endblock %}
 			</div>
 		</div>
-		<!--/ End Fun-facts -->
-		
-		
-		
-		<!-- Start Call to action -->
-
-		<!--/ End Call to action -->
-		
-		
-		<!--/ End portfolio -->
-		
-	
-		<!--/ End Pricing Table -->
-		
-		
-		
-
-
-		<div class="container">
-            {% block body %}{% endblock %}
-        </div>
-    </div>
-		
-		<!-- jquery Min JS -->
-        <script src="{{ asset('front/js/jquery.min.js') }}"></script>
-		<!-- jquery Migrate JS -->
-		<script src="{{ asset('front/js/jquery-migrate-3.0.0.js') }}"></script>
-		<!-- jquery Ui JS -->
-		<script src="{{ asset('front/js/jquery-ui.min.js') }}"></script>
-		<!-- Easing JS -->
-        <script src="{{ asset('front/js/easing.js') }}"></script>
-		<!-- Color JS -->
-		<script src="{{ asset('front/js/colors.js') }}"></script>
-		<!-- Popper JS -->
-		<script src="{{ asset('front/js/popper.min.js') }}"></script>
-		<!-- Bootstrap Datepicker JS -->
-		<script src="{{ asset('front/js/bootstrap-datepicker.js') }}"></script>
-		<!-- Jquery Nav JS -->
-        <script src="{{ asset('front/js/jquery.nav.js') }}"></script>
-		<!-- Slicknav JS -->
-		<script src="{{ asset('front/js/slicknav.min.js') }}"></script>
-		<!-- ScrollUp JS -->
-        <script src="{{ asset('front/js/jquery.scrollUp.min.js') }}"></script>
-		<!-- Niceselect JS -->
-		<script src="{{ asset('front/js/niceselect.js') }}"></script>
-		<!-- Tilt Jquery JS -->
-		<script src="{{ asset('front/js/tilt.jquery.min.js') }}"></script>
-		<!-- Owl Carousel JS -->
-        <script src="{{ asset('front/js/owl-carousel.js') }}"></script>
-		<!-- counterup JS -->
-		<script src="{{ asset('front/js/jquery.counterup.min.js') }}"></script>
-		<!-- Steller JS -->
-		<script src="{{ asset('front/js/steller.js') }}"></script>
-		<!-- Wow JS -->
-		<script src="{{ asset('front/js/wow.min.js') }}"></script>
-		<!-- Magnific Popup JS -->
-		<script src="{{ asset('front/js/jquery.magnific-popup.min.js') }}"></script>
-		<!-- Counter Up CDN JS -->
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
-		<!-- Bootstrap JS -->
-		<script src="{{ asset('front/js/bootstrap.min.js') }}"></script>
-		<!-- Main JS -->
-		<script src="{{ asset('front/js/main.js') }}"></script>
-    </body>
-</html>
+			
+			<!-- jquery Min JS -->
+			<script src="{{ asset('front/js/jquery.min.js') }}"></script>
+			<!-- jquery Migrate JS -->
+			<script src="{{ asset('front/js/jquery-migrate-3.0.0.js') }}"></script>
+			<!-- jquery Ui JS -->
+			<script src="{{ asset('front/js/jquery-ui.min.js') }}"></script>
+			<!-- Easing JS -->
+			<script src="{{ asset('front/js/easing.js') }}"></script>
+			<!-- Color JS -->
+			<script src="{{ asset('front/js/colors.js') }}"></script>
+			<!-- Popper JS -->
+			<script src="{{ asset('front/js/popper.min.js') }}"></script>
+			<!-- Bootstrap Datepicker JS -->
+			<script src="{{ asset('front/js/bootstrap-datepicker.js') }}"></script>
+			<!-- Jquery Nav JS -->
+			<script src="{{ asset('front/js/jquery.nav.js') }}"></script>
+			<!-- Slicknav JS -->
+			<script src="{{ asset('front/js/slicknav.min.js') }}"></script>
+			<!-- ScrollUp JS -->
+			<script src="{{ asset('front/js/jquery.scrollUp.min.js') }}"></script>
+			<!-- Niceselect JS -->
+			<script src="{{ asset('front/js/niceselect.js') }}"></script>
+			<!-- Tilt Jquery JS -->
+			<script src="{{ asset('front/js/tilt.jquery.min.js') }}"></script>
+			<!-- Owl Carousel JS -->
+			<script src="{{ asset('front/js/owl-carousel.js') }}"></script>
+			<!-- counterup JS -->
+			<script src="{{ asset('front/js/jquery.counterup.min.js') }}"></script>
+			<!-- Steller JS -->
+			<script src="{{ asset('front/js/steller.js') }}"></script>
+			<!-- Wow JS -->
+			<script src="{{ asset('front/js/wow.min.js') }}"></script>
+			<!-- Magnific Popup JS -->
+			<script src="{{ asset('front/js/jquery.magnific-popup.min.js') }}"></script>
+			<!-- Counter Up CDN JS -->
+			<script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+			<!-- Bootstrap JS -->
+			<script src="{{ asset('front/js/bootstrap.min.js') }}"></script>
+			<!-- Main JS -->
+			<script src="{{ asset('front/js/main.js') }}"></script>
+		</body>
+	</html>
