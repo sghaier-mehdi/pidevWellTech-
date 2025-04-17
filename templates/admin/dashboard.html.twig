@@ -1,0 +1,136 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="text-center fw-bold mb-4" style="color: #72c472; text-shadow: 2px 2px 10px rgba(114, 196, 114, 0.6);">
+        <i class="fas fa-chart-line"></i> Dashboard Statistics
+    </h1>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <div class="row g-4">
+        <!-- Total Likes -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4" style="background: linear-gradient(135deg, #d4f8d4, #b3e6b3);">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-success fw-bold"><i class="fas fa-thumbs-up"></i> Total Likes</h5>
+                    <p class="card-text display-3 fw-bold text-dark">{{ totalLikes }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Dislikes -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4" style="background: linear-gradient(135deg, #f8d4d4, #e6b3b3);">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-danger fw-bold"><i class="fas fa-thumbs-down"></i> Total Dislikes</h5>
+                    <p class="card-text display-3 fw-bold text-dark">{{ totalDislikes }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Likes/Dislikes Per Article -->
+    <div class="card mt-5 shadow-sm border-0 rounded-4">
+        <div class="card-body">
+            <h5 class="card-title text-center text-success fw-bold">
+                <i class="fas fa-book-open"></i> Like/Dislike Statistics Per Article
+            </h5>
+            <table class="table table-hover text-center mt-3">
+                <thead class="table-light">
+                    <tr class="bg-light text-success">
+                        <th>Article</th>
+                        <th><i class="fas fa-thumbs-up"></i> Likes</th>
+                        <th><i class="fas fa-thumbs-down"></i> Dislikes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in articleStats %}
+                        <tr>
+                            <td class="fw-bold text-dark">{{ stat.article_title }}</td>
+                            <td class="text-success fw-bold">{{ stat.total_likes }}</td>
+                            <td class="text-danger fw-bold">{{ stat.total_dislikes }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Graph -->
+    <div class="card mt-5 shadow-sm border-0 rounded-4">
+        <div class="card-body">
+            <h5 class="card-title text-center text-success fw-bold">
+                <i class="fas fa-chart-bar"></i> Likes & Dislikes Chart
+            </h5>
+            <canvas id="likesChart" class="mt-3"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const ctx = document.getElementById('likesChart').getContext('2d');
+    const chartData = {
+        labels: [{% for stat in articleStats %}"{{ stat.article_title }}",{% endfor %}],
+        datasets: [
+            {
+                label: "Likes",
+                data: [{% for stat in articleStats %}{{ stat.total_likes }},{% endfor %}],
+                backgroundColor: "rgba(114, 196, 114, 0.8)",
+                borderColor: "rgba(114, 196, 114, 1)",
+                borderWidth: 2,
+                borderRadius: 5
+            },
+            {
+                label: "Dislikes",
+                data: [{% for stat in articleStats %}{{ stat.total_dislikes }},{% endfor %}],
+                backgroundColor: "rgba(230, 137, 137, 0.8)",
+                borderColor: "rgba(230, 137, 137, 1)",
+                borderWidth: 2,
+                borderRadius: 5
+            }
+        ]
+    };
+
+    new Chart(ctx, {
+        type: "bar",
+        data: chartData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                }
+            },
+            animation: {
+                duration: 2000,
+                easing: "easeOutQuad"
+            }
+        }
+    });
+});
+</script>
+
+<style>
+    .card {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        border-radius: 12px;
+    }
+    .card:hover {
+        transform: scale(1.03);
+        box-shadow: 0px 6px 25px rgba(114, 196, 114, 0.5);
+    }
+    table tbody tr:hover {
+        background-color: rgba(114, 196, 114, 0.2);
+    }
+</style>
+
+{% endblock %}

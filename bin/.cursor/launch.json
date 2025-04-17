@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "WellTech Psychiatry Platform",
+      "request": "launch",
+      "mainClass": "com.welltech.WellTechApplication",
+      "vmArgs": "--module-path \"${env:JAVAFX_HOME}/lib\" --add-modules javafx.controls,javafx.fxml",
+      "projectName": "welltech-psychiatry"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{% extends 'back/base.html.twig' %}
+
+{% block title %}User Logs{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="mb-4">User Logs for {{ user.email }}</h1>
+
+        <h2>Login Attempts</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for attempt in loginAttempts %}
+                <tr>
+                    <td>{{ attempt.date|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ attempt.status }}</td>
+                    <td>{{ attempt.ipAddress }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">No login attempts found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Edit History</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Field</th>
+                    <th>Old Value</th>
+                    <th>New Value</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for edit in editHistory %}
+                <tr>
+                    <td>{{ edit.date|date('Y-m-d H:i:s') }}</td>
+                    <td>{{ edit.field }}</td>
+                    <td>{{ edit.oldValue }}</td>
+                    <td>{{ edit.newValue }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">No edit history found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

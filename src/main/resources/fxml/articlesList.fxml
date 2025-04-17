@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?> <!-- Added for potential title styling -->
+
+<BorderPane prefHeight="768.0" prefWidth="1366.0" styleClass="main-container" stylesheets="@../css/styles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.ArticlesListController">
+   <left>
+      <!-- YOUR EXISTING SIDEBAR VBOX GOES HERE -->
+      <VBox alignment="TOP_CENTER" prefHeight="768.0" prefWidth="200.0" spacing="10.0" styleClass="sidebar">
+         <children>
+            <Label styleClass="logo" text="WellTech Psychiatry" />
+            <Button fx:id="dashboardButton" maxWidth="1.7976931348623157E308" onAction="#navigateToDashboard" styleClass="sidebar-button" text="Dashboard" />
+            <Button fx:id="articlesButton" maxWidth="1.7976931348623157E308" styleClass="sidebar-button-active" text="Articles" />
+            <Button fx:id="profileButton" maxWidth="1.7976931348623157E308" onAction="#navigateToProfile" styleClass="sidebar-button" text="Profile" />
+            <!-- Add other sidebar buttons -->
+         </children>
+         <padding>
+            <Insets top="20.0" />
+         </padding>
+      </VBox>
+      <!-- END OF YOUR SIDEBAR VBOX -->
+   </left>
+   <top>
+      <!-- YOUR EXISTING HEADER HBOX GOES HERE -->
+      <HBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="200.0" spacing="20.0" styleClass="header">
+         <children>
+            <Label fx:id="userNameLabel" text="Welcome, User Name" />
+            <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogout" styleClass="button-danger" text="Logout" />
+         </children>
+         <padding>
+            <Insets right="20.0" />
+         </padding>
+      </HBox>
+      <!-- END OF YOUR HEADER HBOX -->
+   </top>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+         <children>
+            <Label styleClass="view-title" text="Articles Management" />
+            <!-- YOUR EXISTING SEARCH/FILTER/CREATE HBOX -->
+            <HBox alignment="CENTER_LEFT" spacing="15.0">
+               <children>
+                  <Button fx:id="createArticleButton" mnemonicParsing="false" onAction="#handleCreateArticle" styleClass="button-success" text="Create New Article" />
+                  <TextField fx:id="searchField" promptText="Search Articles..." HBox.hgrow="ALWAYS" />
+                  <Label text="Filter:" />
+                  <ComboBox fx:id="filterComboBox" prefWidth="150.0" promptText="All" />
+                  <Label fx:id="statusLabel" text="Status..." /> <!-- Moved status label here maybe? -->
+               </children>
+            </HBox>
+            <!-- END OF SEARCH/FILTER/CREATE HBOX -->
+
+            <!-- *** NEW SECTION FOR CARD VIEW *** -->
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
+               <content>
+                  <!-- FlowPane arranges cards left-to-right, top-to-bottom -->
+                  <FlowPane fx:id="articleContainer" hgap="15.0" prefWrapLength="1100.0" styleClass="flow-pane-container" vgap="15.0">
+                     <padding>
+                        <Insets bottom="15.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </FlowPane>
+               </content>
+            </ScrollPane>
+            <!-- *** END OF NEW SECTION FOR CARD VIEW *** -->
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

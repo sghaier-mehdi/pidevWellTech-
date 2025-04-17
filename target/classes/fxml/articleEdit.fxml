@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?> <!-- Changed from javafx.scene.control.Button etc. -->
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<!-- Ensure fx:controller points to your updated controller -->
+<BorderPane stylesheets="@../css/styles.css" prefHeight="750.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.ArticleEditController">
+   <top>
+      <!-- YOUR TOP NAVBAR HBOX -->
+      <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="header"> <!-- Use header style class -->
+         <children>
+            <Label styleClass="logo" text="WellTech Psychiatry" /> <!-- Use logo style class -->
+            <HBox alignment="CENTER_RIGHT" spacing="10.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="userNameLabel" text="Welcome, [User]" />
+                  <Button fx:id="logoutButton" onAction="#handleLogout" styleClass="button-danger" text="Logout" /> <!-- Use button-danger style -->
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+         </padding>
+      </HBox>
+      <!-- END OF TOP NAVBAR HBOX -->
+   </top>
+   <left>
+      <!-- YOUR LEFT SIDEBAR VBOX -->
+      <VBox prefWidth="200.0" spacing="10.0" styleClass="sidebar"> <!-- Use sidebar style -->
+         <children>
+            <Button fx:id="dashboardButton" maxWidth="1.7976931348623157E308" onAction="#navigateToDashboard" styleClass="sidebar-button" text="Dashboard" />
+            <Button fx:id="articlesButton" maxWidth="1.7976931348623157E308" onAction="#navigateToArticles" styleClass="sidebar-button-active" text="Articles" /> <!-- Use active style -->
+            <Button fx:id="profileButton" maxWidth="1.7976931348623157E308" onAction="#navigateToProfile" styleClass="sidebar-button" text="Profile" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+         </padding>
+      </VBox>
+      <!-- END OF LEFT SIDEBAR VBOX -->
+   </left>
+   <center>
+      <!-- Use VBox for overall center content -->
+      <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="main-content-area"> <!-- Style the content area -->
+         <padding>
+            <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
+         </padding>
+         <children>
+            <Text fx:id="pageTitle" styleClass="view-title" text="Create New Article" /> <!-- Style the title -->
+
+            <!-- Form Container (e.g., using VBox or GridPane) -->
+            <VBox maxWidth="700.0" spacing="18.0" styleClass="form-container" VBox.vgrow="ALWAYS"> <!-- Style the form area -->
+
+               <!-- Title Field -->
+               <VBox spacing="5.0">
+                  <children>
+                     <Label text="Title *" styleClass="form-label"/>
+                     <TextField fx:id="titleField" promptText="Enter article title" styleClass="form-input"/>
+                     <Label fx:id="titleError" styleClass="error-message" minHeight="-Infinity"/>
+                  </children>
+               </VBox>
+
+               <!-- Category ComboBox and Add Button -->
+               <VBox spacing="5.0">
+                  <children>
+                     <Label text="Category" styleClass="form-label"/>
+                     <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <children>
+                           <!-- ComboBox now holds Category objects -->
+                           <ComboBox fx:id="categoryComboBox" promptText="Select category" styleClass="form-input" HBox.hgrow="ALWAYS" />
+                           <!-- *** ADDED: Add Category Button *** -->
+                           <Button fx:id="addCategoryButton" mnemonicParsing="false" onAction="#handleAddCategory" styleClass="button-outline" text="Add New" />
+                        </children>
+                     </HBox>
+                     <!-- Optional: Add a Label for category errors if needed -->
+                     <!-- <Label fx:id="categoryError" styleClass="error-message" minHeight="-Infinity"/> -->
+                  </children>
+               </VBox>
+
+               <!-- *** ADDED: Image URL Field *** -->
+               <VBox spacing="5.0">
+                  <children>
+                     <Label text="Image URL (Optional)" styleClass="form-label"/>
+                     <TextField fx:id="imageUrlField" promptText="https://example.com/image.png" styleClass="form-input"/>
+                     <!-- Optional: Add a Label for image URL errors if needed -->
+                     <!-- <Label fx:id="imageUrlError" styleClass="error-message" minHeight="-Infinity"/> -->
+                  </children>
+               </VBox>
+
+               <!-- Content Area -->
+               <VBox spacing="5.0" VBox.vgrow="ALWAYS">
+                  <children>
+                     <Label text="Content *" styleClass="form-label"/>
+                     <TextArea fx:id="contentArea" prefHeight="250.0" promptText="Enter article content..." styleClass="form-input" wrapText="true" VBox.vgrow="ALWAYS"/>
+                     <Label fx:id="contentError" styleClass="error-message" minHeight="-Infinity"/>
+                  </children>
+               </VBox>
+
+               <!-- Publish CheckBox -->
+               <HBox alignment="CENTER_LEFT" spacing="10.0">
+                  <children>
+                     <CheckBox fx:id="publishCheckBox" text="Publish immediately" />
+                  </children>
+               </HBox>
+
+               <!-- Action Buttons -->
+               <HBox alignment="CENTER" spacing="20.0">
+                  <children>
+                     <Button fx:id="saveButton" onAction="#handleSave" styleClass="button-primary" text="Save Article" /> <!-- Use primary style -->
+                     <Button fx:id="cancelButton" onAction="#handleCancel" styleClass="button-secondary" text="Cancel" /> <!-- Use secondary style -->
+                  </children>
+                  <padding>
+                     <Insets top="15.0" />
+                  </padding>
+               </HBox>
+
+               <!-- Status Message -->
+               <Label fx:id="statusMessage" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="status-message" wrapText="true"/>
+
+            </VBox> <!-- End of form container -->
+         </children>
+      </VBox> <!-- End of center VBox -->
+   </center>
+</BorderPane>
