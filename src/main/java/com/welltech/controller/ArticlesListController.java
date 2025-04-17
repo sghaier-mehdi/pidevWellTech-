@@ -5,7 +5,6 @@ import com.welltech.WellTechApplication;
 import com.welltech.dao.ArticleDAO;
 import com.welltech.dao.CategoryDAO;
 import com.welltech.model.Article;
-import com.welltech.model.Category;
 import com.welltech.model.User;
 // JavaFX Imports
 import javafx.application.Platform;
@@ -28,6 +27,12 @@ import javafx.scene.shape.Rectangle; // Import for clip shape
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.Scene;
+import javafx.fxml.FXMLLoader;     // For loading the detail FXML
+import javafx.scene.Scene;         // For creating the scene for the new window
+import javafx.stage.Modality;      // For setting the detail window modality
+import javafx.stage.Stage;         // For creating the new window
+import java.io.IOException;      // For handling potential FXML loading errors
 // Other Imports
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
@@ -351,25 +356,76 @@ public class ArticlesListController implements Initializable {
     // View Article Dialog
     private void viewArticle(Article article) {
         if (article == null) return;
-        Alert viewAlert = new Alert(Alert.AlertType.INFORMATION);
-        viewAlert.setTitle("View Article");
-        viewAlert.setHeaderText(article.getTitle());
-        VBox contentBox = new VBox(10);
-        Label metaLabel = new Label("By: " + article.getAuthorName() +
-                " | Category: " + (article.getCategory() != null ? article.getCategory().getName() : "None") +
-                " | Status: " + (article.isPublished() ? "Published" : "Draft"));
-        metaLabel.setStyle("-fx-font-style: italic; -fx-text-fill: #555;");
-        TextArea contentArea = new TextArea(article.getContent());
-        contentArea.setWrapText(true);
-        contentArea.setEditable(false);
-        contentArea.setPrefRowCount(15);
-        contentArea.setMaxWidth(Double.MAX_VALUE);
-        contentBox.getChildren().addAll(metaLabel, contentArea);
-        viewAlert.getDialogPane().setContent(contentBox);
-        viewAlert.setResizable(true);
-        viewAlert.getDialogPane().setPrefSize(600, 450);
-        viewAlert.showAndWait();
+        System.out.println("Viewing article: " + article.getTitle() + " (ID: " + article.getId() + ")");
         clearSelection();
+
+        String fxmlPath = "/fxml/ArticleDetailView.fxml"; // Define path once
+
+        try {
+            // Get the URL resource for the FXML file
+            URL location = getClass().getResource(fxmlPath);
+
+            // *** Check if the FXML file was found ***
+            if (location == null) {
+                System.err.println("ERROR: FXML file not found at path: " + fxmlPath);
+                // Show a more specific error message
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Error");
+                errorAlert.setHeaderText("Resource Loading Error");
+                errorAlert.setContentText("Could not find the required layout file:\n" + fxmlPath);
+                errorAlert.showAndWait();
+                return; // Stop execution if FXML not found
+            }
+
+            // Create the FXMLLoader *without* the constructor URL first
+            FXMLLoader loader = new FXMLLoader();
+            // *** Explicitly set the location ***
+            loader.setLocation(location);
+
+            // Now load the FXML root element
+            BorderPane detailRoot = loader.load(); // Or your correct root type
+
+            // Get the controller instance
+            ArticleDetailController detailController = loader.getController();
+            if (detailController == null) {
+                // This should not happen if fx:controller is set correctly in FXML
+                System.err.println("ERROR: Controller not found for " + fxmlPath);
+                throw new Exception("Controller instance is null after FXML load.");
+            }
+
+            // Pass the selected article data
+            detailController.setArticle(article);
+
+            // Create and configure the new stage
+            Stage detailStage = new Stage();
+            detailStage.setTitle("View Article: " + article.getTitle());
+            detailStage.initModality(Modality.APPLICATION_MODAL);
+            // detailStage.initOwner(articleContainer.getScene().getWindow()); // Optional
+
+            Scene detailScene = new Scene(detailRoot);
+            detailStage.setScene(detailScene);
+            detailStage.setMinWidth(600);
+            detailStage.setMinHeight(500);
+
+            detailStage.showAndWait(); // Show and wait
+
+        } catch (IOException e) { // Catch specific FXML loading errors
+            System.err.println("IOException loading Article Detail View FXML ("+fxmlPath+"): " + e.getMessage());
+            e.printStackTrace();
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setTitle("Loading Error");
+            errorAlert.setHeaderText("Could not open article view.");
+            errorAlert.setContentText("Failed to load the required layout resources. Check logs for details.");
+            errorAlert.showAndWait();
+        } catch (Exception e) { // Catch other unexpected errors
+            System.err.println("An unexpected error occurred while showing article detail: " + e.getMessage());
+            e.printStackTrace();
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setTitle("Error");
+            errorAlert.setHeaderText("Could not display article.");
+            errorAlert.setContentText("An unexpected error occurred: " + e.getMessage());
+            errorAlert.showAndWait();
+        }
     }
 
     // Edit Article Navigation

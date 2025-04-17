@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane stylesheets="@../css/styles.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.PsychiatristDashboardController">
+<BorderPane stylesheets="@../css/style.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.PsychiatristDashboardController">
    <top>
       <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="navbar">
          <children>
@@ -47,7 +47,7 @@
          <children>
             <Text styleClass="page-title" text="Psychiatrist Dashboard" />
             <Label text="Welcome to your psychiatrist dashboard!" />
-            
+
             <VBox spacing="10.0" styleClass="dashboard-card">
                <children>
                   <Label styleClass="card-title" text="Today's Appointments" />
@@ -65,7 +65,7 @@
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
             </VBox>
-            
+
             <HBox spacing="20.0">
                <children>
                   <VBox spacing="10.0" styleClass="dashboard-card" HBox.hgrow="ALWAYS">
@@ -98,7 +98,7 @@
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                      </padding>
                   </VBox>
-                  
+
                   <VBox spacing="10.0" styleClass="dashboard-card" HBox.hgrow="ALWAYS">
                      <children>
                         <Label styleClass="card-title" text="Messages" />
@@ -117,4 +117,4 @@
          </padding>
       </VBox>
    </center>
-</BorderPane> 
+</BorderPane>

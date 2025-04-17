@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane stylesheets="@../css/styles.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.PatientDashboardController">
+<BorderPane stylesheets="@../css/style.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.PatientDashboardController">
    <top>
       <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="navbar">
          <children>
@@ -46,7 +46,7 @@
             <Text styleClass="page-title" text="Patient Dashboard" />
             <Label text="Welcome to your patient dashboard!" />
             <Text text="You can book appointments, view your consultation history, and message your psychiatrist from here." />
-            
+
             <VBox alignment="CENTER" spacing="15.0" styleClass="dashboard-card">
                <children>
                   <Label styleClass="card-title" text="Upcoming Appointments" />
@@ -57,7 +57,7 @@
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                </padding>
             </VBox>
-            
+
             <VBox alignment="CENTER" spacing="15.0" styleClass="dashboard-card">
                <children>
                   <Label styleClass="card-title" text="Recent Messages" />
@@ -74,4 +74,4 @@
          </padding>
       </VBox>
    </center>
-</BorderPane> 
+</BorderPane>

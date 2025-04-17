@@ -6,6 +6,7 @@ com\welltech\util\DatabaseConnection.class
 com\welltech\WellTechApplication.class
 com\welltech\dao\UserDAO.class
 com\welltech\controller\AdminDashboardController.class
+com\welltech\controller\ArticleDetailController.class
 com\welltech\controller\LoginController$1.class
 com\welltech\model\Category.class
 com\welltech\controller\PsychiatristDashboardController.class

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane stylesheets="@../css/styles.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.AdminDashboardController">
+<BorderPane stylesheets="@../css/style.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.AdminDashboardController">
    <top>
       <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="navbar">
          <children>
@@ -50,7 +50,7 @@
          <children>
             <Text styleClass="page-title" text="Admin Dashboard" />
             <Label text="System administration and management" />
-            
+
             <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
               <tabs>
                 <Tab text="Users">
@@ -155,4 +155,4 @@
          </padding>
       </VBox>
    </center>
-</BorderPane> 
+</BorderPane>

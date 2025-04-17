@@ -15,13 +15,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane stylesheets="@../css/styles.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.RegisterController">
+<BorderPane stylesheets="@../css/style.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.RegisterController">
    <center>
       <VBox alignment="CENTER" maxWidth="500.0" styleClass="form-container">
          <children>
             <Text styleClass="form-title" text="Create New Account" />
             <Text styleClass="form-subtitle" text="Join the WellTech Psychiatry Platform" />
-            
+
             <GridPane hgap="10.0" vgap="10.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -38,19 +38,19 @@
                <children>
                   <Label text="Username" />
                   <TextField fx:id="usernameField" promptText="Enter username" GridPane.columnIndex="1" />
-                  
+
                   <Label text="Password" GridPane.rowIndex="1" />
                   <PasswordField fx:id="passwordField" promptText="Enter password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  
+
                   <Label text="Confirm Password" GridPane.rowIndex="2" />
                   <PasswordField fx:id="confirmPasswordField" promptText="Confirm password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  
+
                   <Label text="Full Name" GridPane.rowIndex="3" />
                   <TextField fx:id="fullNameField" promptText="Enter full name" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  
+
                   <Label text="Email" GridPane.rowIndex="4" />
                   <TextField fx:id="emailField" promptText="Enter email address" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  
+
                   <Label text="Phone Number" GridPane.rowIndex="5" />
                   <TextField fx:id="phoneField" promptText="Enter phone number" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                </children>
@@ -58,7 +58,7 @@
                   <Insets top="20.0" />
                </VBox.margin>
             </GridPane>
-            
+
             <HBox alignment="CENTER_LEFT" spacing="10.0">
                <children>
                   <Label text="User Role" />
@@ -68,10 +68,10 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </HBox>
-            
+
             <Label fx:id="errorMessageLabel" styleClass="error-message" />
             <Label fx:id="successMessageLabel" styleClass="success-message" />
-            
+
             <HBox alignment="CENTER" spacing="10.0">
                <children>
                   <Button fx:id="registerButton" mnemonicParsing="false" onAction="#handleRegister" styleClass="button" text="Register" />
@@ -81,7 +81,7 @@
                   <Insets top="20.0" />
                </VBox.margin>
             </HBox>
-            
+
             <HBox alignment="CENTER" spacing="5.0">
                <children>
                   <Label text="Already have an account?" />
@@ -97,4 +97,4 @@
          </padding>
       </VBox>
    </center>
-</BorderPane> 
+</BorderPane>
