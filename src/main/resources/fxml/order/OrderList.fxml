@@ -37,7 +37,6 @@
         <Button text="View Details" onAction="#handleViewDetails" style="-fx-background-color: #0288d1; -fx-text-fill: white; -fx-background-radius: 5;"/>
         <Button text="Update Status" onAction="#handleUpdateStatus" style="-fx-background-color: #f57c00; -fx-text-fill: white; -fx-background-radius: 5;"/>
         <Button text="Delete" onAction="#handleDelete" style="-fx-background-color: #d32f2f; -fx-text-fill: white; -fx-background-radius: 5;"/>
-        <Button text="Download Invoice" onAction="#handleDownloadInvoice" style="-fx-background-color: #0288d1; -fx-text-fill: white; -fx-background-radius: 5;"/>
     </HBox>
 
 </VBox>
