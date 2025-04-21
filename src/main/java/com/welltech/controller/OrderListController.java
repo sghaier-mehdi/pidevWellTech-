@@ -9,13 +9,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,19 +23,7 @@ import java.util.stream.Collectors;
 
 public class OrderListController {
     @FXML
-    private TableView<Order> orderTable;
-    @FXML
-    private TableColumn<Order, Long> idColumn;
-    @FXML
-    private TableColumn<Order, String> userColumn;
-    @FXML
-    private TableColumn<Order, BigDecimal> totalAmountColumn;
-    @FXML
-    private TableColumn<Order, String> statusColumn;
-    @FXML
-    private TableColumn<Order, String> paymentStatusColumn;
-    @FXML
-    private TableColumn<Order, LocalDateTime> createdAtColumn;
+    private FlowPane orderFlowPane;
     @FXML
     private TextField searchField;
     @FXML
@@ -50,28 +38,16 @@ public class OrderListController {
     private OrderDAO orderDAO;
     private ObservableList<Order> orders = FXCollections.observableArrayList();
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private Order selectedOrder; // To track the selected order
 
     @FXML
     public void initialize() {
-        // Initialize table columns
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        userColumn.setCellValueFactory(cellData -> 
-            new SimpleStringProperty(cellData.getValue().getUser().getUsername()));
-        totalAmountColumn.setCellValueFactory(new PropertyValueFactory<>("totalAmount"));
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-        paymentStatusColumn.setCellValueFactory(new PropertyValueFactory<>("paymentStatus"));
-        createdAtColumn.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
-        createdAtColumn.setCellFactory(column -> new TableCell<Order, LocalDateTime>() {
-            @Override
-            protected void updateItem(LocalDateTime item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.format(dateFormatter));
-                }
-            }
-        });
+        // Set the FlowPane width to fit 4 cards per row
+        double cardWidth = 220; // Card width
+        double hgap = 15; // Horizontal gap from FlowPane
+        int cardsPerRow = 4;
+        double totalWidth = (cardWidth * cardsPerRow) + (hgap * (cardsPerRow - 1));
+        orderFlowPane.setPrefWidth(totalWidth);
 
         // Initialize status filter
         statusFilter.setItems(FXCollections.observableArrayList(
@@ -96,8 +72,6 @@ public class OrderListController {
         endDate.valueProperty().addListener((observable, oldValue, newValue) -> {
             handleSearch();
         });
-
-        orderTable.setItems(orders);
     }
 
     public void setOrderDAO(OrderDAO orderDAO) {
@@ -108,6 +82,8 @@ public class OrderListController {
     private void loadOrders() {
         orders.clear();
         orders.addAll(orderDAO.findAll());
+        orderFlowPane.getChildren().clear();
+        orders.forEach(this::addOrderCard);
     }
 
     @FXML
@@ -136,11 +112,113 @@ public class OrderListController {
                 return matchesSearch && matchesStatus && matchesDateRange;
             })
             .collect(Collectors.toList()));
+
+        orderFlowPane.getChildren().clear();
+        orders.forEach(this::addOrderCard);
+    }
+
+    private void addOrderCard(Order order) {
+        VBox card = new VBox(8);
+        card.setStyle("-fx-background-color: #ffffff; " +
+                      "-fx-border-color: #e0e0e0; " +
+                      "-fx-border-radius: 10; " +
+                      "-fx-background-radius: 10; " +
+                      "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2); " +
+                      "-fx-padding: 15;");
+        card.setPrefWidth(220);
+        card.setPrefHeight(250); // Fixed height for uniformity
+
+        // Hover effect
+        card.setOnMouseEntered(event -> card.setStyle("-fx-background-color: #f5f5f5; " +
+                                                     "-fx-border-color: #e0e0e0; " +
+                                                     "-fx-border-radius: 10; " +
+                                                     "-fx-background-radius: 10; " +
+                                                     "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 3); " +
+                                                     "-fx-padding: 15;"));
+        card.setOnMouseExited(event -> {
+            if (order != selectedOrder) {
+                card.setStyle("-fx-background-color: #ffffff; " +
+                              "-fx-border-color: #e0e0e0; " +
+                              "-fx-border-radius: 10; " +
+                              "-fx-background-radius: 10; " +
+                              "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2); " +
+                              "-fx-padding: 15;");
+            }
+        });
+
+        Text id = new Text("Order ID: " + order.getId());
+        id.setStyle("-fx-font-size: 16; -fx-font-weight: bold; -fx-fill: #333333;");
+        
+        Text user = new Text("User: " + order.getUser().getUsername());
+        user.setStyle("-fx-font-size: 12; -fx-fill: #666666;");
+        
+        Text totalAmount = new Text("Total: $" + order.getTotalAmount());
+        totalAmount.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-fill: #2e7d32;");
+        
+        Text status = new Text("Status: " + order.getStatus());
+        status.setStyle("-fx-font-size: 12; -fx-fill: #0288d1;");
+        
+        Text paymentStatus = new Text("Payment: " + order.getPaymentStatus());
+        paymentStatus.setStyle("-fx-font-size: 12; -fx-fill: " + (order.getPaymentStatus().equals("PAID") ? "#2e7d32;" : "#d32f2f;"));
+        
+        Text createdAt = new Text("Created: " + (order.getCreatedAt() != null ? dateFormatter.format(order.getCreatedAt()) : "N/A"));
+        createdAt.setStyle("-fx-font-size: 11; -fx-fill: #999999;");
+
+        Button payButton = new Button(order.getPaymentStatus().equals("PAID") ? "Paid" : "Pay Now");
+        payButton.setDisable(order.getPaymentStatus().equals("PAID"));
+        payButton.setStyle("-fx-background-color: " + (order.getPaymentStatus().equals("PAID") ? "#cccccc;" : "#1976d2;") +
+                           "-fx-text-fill: white; " +
+                           "-fx-font-weight: bold; " +
+                           "-fx-background-radius: 5;");
+        payButton.setOnAction(event -> handlePay(order));
+        if (!order.getPaymentStatus().equals("PAID")) {
+            payButton.setOnMouseEntered(event -> payButton.setStyle("-fx-background-color: #1565c0; " +
+                                                                    "-fx-text-fill: white; " +
+                                                                    "-fx-font-weight: bold; " +
+                                                                    "-fx-background-radius: 5;"));
+            payButton.setOnMouseExited(event -> payButton.setStyle("-fx-background-color: #1976d2; " +
+                                                                   "-fx-text-fill: white; " +
+                                                                   "-fx-font-weight: bold; " +
+                                                                   "-fx-background-radius: 5;"));
+        }
+
+        card.getChildren().addAll(id, user, totalAmount, status, paymentStatus, createdAt, payButton);
+
+        // Highlight selected card
+        card.setOnMouseClicked(event -> {
+            selectedOrder = order;
+            orderFlowPane.getChildren().forEach(node -> node.setStyle("-fx-background-color: #ffffff; " +
+                                                                      "-fx-border-color: #e0e0e0; " +
+                                                                      "-fx-border-radius: 10; " +
+                                                                      "-fx-background-radius: 10; " +
+                                                                      "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2); " +
+                                                                      "-fx-padding: 15;"));
+            card.setStyle("-fx-background-color: #e3f2fd; " +
+                          "-fx-border-color: #1976d2; " +
+                          "-fx-border-radius: 10; " +
+                          "-fx-background-radius: 10; " +
+                          "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 3); " +
+                          "-fx-padding: 15;");
+        });
+
+        orderFlowPane.getChildren().add(card);
+    }
+
+    private void handlePay(Order order) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Payment");
+        alert.setHeaderText(null);
+        alert.setContentText("Proceeding to payment for Order ID: " + order.getId() + "\nTotal: $" + order.getTotalAmount());
+        alert.showAndWait();
+        // Simulate payment success
+        order.setPaymentStatus("PAID");
+        orderDAO.update(order);
+        loadOrders();
+        // Add actual payment logic here (e.g., integrate with a payment API)
     }
 
     @FXML
     private void handleViewDetails() {
-        Order selectedOrder = orderTable.getSelectionModel().getSelectedItem();
         if (selectedOrder != null) {
             try {
                 URL location = getClass().getResource("/fxml/order/OrderDetails.fxml");
@@ -158,7 +236,6 @@ public class OrderListController {
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
                 
-                // Refresh the order list after viewing details
                 loadOrders();
             } catch (IOException e) {
                 showError("Error", "Could not open order details", e);
@@ -171,7 +248,6 @@ public class OrderListController {
 
     @FXML
     private void handleUpdateStatus() {
-        Order selectedOrder = orderTable.getSelectionModel().getSelectedItem();
         if (selectedOrder != null) {
             try {
                 URL location = getClass().getResource("/fxml/order/OrderStatusUpdate.fxml");
@@ -190,7 +266,6 @@ public class OrderListController {
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
                 
-                // Refresh the order list after status update
                 loadOrders();
             } catch (IOException e) {
                 showError("Error", "Could not open status update dialog", e);
@@ -203,7 +278,6 @@ public class OrderListController {
 
     @FXML
     private void handleDelete() {
-        Order selectedOrder = orderTable.getSelectionModel().getSelectedItem();
         if (selectedOrder != null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirm Delete");
@@ -234,7 +308,6 @@ public class OrderListController {
             stage.setScene(new Scene(root));
             stage.show();
             
-            // Refresh the order list when the create window is closed
             stage.setOnCloseRequest(event -> loadOrders());
         } catch (IOException e) {
             showError("Error", "Could not open the create order window", e);
@@ -261,4 +334,4 @@ public class OrderListController {
         alert.setContentText(content + "\n" + e.getMessage());
         alert.showAndWait();
     }
-} 
+}

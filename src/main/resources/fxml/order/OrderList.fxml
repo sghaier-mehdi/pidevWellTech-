@@ -7,40 +7,35 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.welltech.controller.OrderListController"
-      spacing="10">
+      spacing="15">
     <padding>
-        <Insets top="10" right="10" bottom="10" left="10"/>
+        <Insets top="15" right="15" bottom="15" left="15"/>
     </padding>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
         <Label text="Search:" />
-        <TextField fx:id="searchField" promptText="Search by order ID or username" HBox.hgrow="ALWAYS" />
+        <TextField fx:id="searchField" promptText="Search by order ID or username" HBox.hgrow="ALWAYS" style="-fx-background-radius: 5;"/>
         
         <Label text="Status:" />
-        <ComboBox fx:id="statusFilter" prefWidth="150" />
+        <ComboBox fx:id="statusFilter" prefWidth="150" style="-fx-background-radius: 5;"/>
         
         <Label text="Date Range:" />
-        <DatePicker fx:id="startDate" promptText="Start Date" />
-        <DatePicker fx:id="endDate" promptText="End Date" />
+        <DatePicker fx:id="startDate" promptText="Start Date" style="-fx-background-radius: 5;"/>
+        <DatePicker fx:id="endDate" promptText="End Date" style="-fx-background-radius: 5;"/>
     </HBox>
 
-    <TableView fx:id="orderTable" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="idColumn" text="Order ID" prefWidth="100" />
-            <TableColumn fx:id="userColumn" text="User" prefWidth="150" />
-            <TableColumn fx:id="totalAmountColumn" text="Total Amount" prefWidth="120" />
-            <TableColumn fx:id="statusColumn" text="Status" prefWidth="100" />
-            <TableColumn fx:id="paymentStatusColumn" text="Payment Status" prefWidth="120" />
-            <TableColumn fx:id="createdAtColumn" text="Created At" prefWidth="200" />
-        </columns>
-    </TableView>
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: #f5f5f5;">
+        <content>
+            <FlowPane fx:id="orderFlowPane" hgap="15" vgap="15" alignment="TOP_CENTER" style="-fx-background-color: #f5f5f5; -fx-padding: 10;"/>
+        </content>
+    </ScrollPane>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
-        <Button fx:id="createOrderButton" text="Create Order" onAction="#handleCreateOrder" />
-        <Button fx:id="refreshButton" text="Refresh" onAction="#handleRefresh" />
-        <Button text="View Details" onAction="#handleViewDetails" />
-        <Button text="Update Status" onAction="#handleUpdateStatus" />
-        <Button text="Delete" onAction="#handleDelete" />
+        <Button fx:id="createOrderButton" text="Create Order" onAction="#handleCreateOrder" style="-fx-background-color: #388e3c; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        <Button fx:id="refreshButton" text="Refresh" onAction="#handleRefresh" style="-fx-background-color: #1976d2; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        <Button text="View Details" onAction="#handleViewDetails" style="-fx-background-color: #0288d1; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        <Button text="Update Status" onAction="#handleUpdateStatus" style="-fx-background-color: #f57c00; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        <Button text="Delete" onAction="#handleDelete" style="-fx-background-color: #d32f2f; -fx-text-fill: white; -fx-background-radius: 5;"/>
     </HBox>
 
-</VBox> 
+</VBox>

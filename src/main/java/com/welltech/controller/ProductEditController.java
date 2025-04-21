@@ -4,8 +4,10 @@ import com.welltech.dao.ProductDAO;
 import com.welltech.model.Product;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -19,9 +21,11 @@ public class ProductEditController {
     @FXML
     private TextField stockField;
     @FXML
-    private TextField imageUrlField;
+    private TextField imageUrlField; // The "Image URL" field
     @FXML
     private CheckBox activeCheckBox;
+    @FXML
+    private Button uploadImageButton; // Button for uploading the image
 
     private ProductDAO productDAO;
     private Product product;
@@ -77,6 +81,35 @@ public class ProductEditController {
     @FXML
     private void handleCancel() {
         closeWindow();
+    }
+
+    @FXML
+    private void handleUploadImage() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Image");
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+
+        // Open the file chooser dialog
+        File selectedFile = fileChooser.showOpenDialog(uploadImageButton.getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                // Simulate uploading the image to a server
+                String uploadedImageUrl = uploadImageToServer(selectedFile);
+
+                // Set the uploaded image URL in the "Image URL" field
+                imageUrlField.setText(uploadedImageUrl);
+            } catch (Exception e) {
+                showError("Upload Failed", "Could not upload the image.", e);
+            }
+        }
+    }
+
+    private String uploadImageToServer(File file) throws Exception {
+        // Simulate uploading the file to a server and returning the URL
+        // Replace this with actual upload logic (e.g., HTTP POST request to your server)
+        return "http://yourserver.com/uploads/" + file.getName();
     }
 
     private boolean validateInput() {
@@ -140,4 +173,4 @@ public class ProductEditController {
         alert.setContentText(content + "\n" + e.getMessage());
         alert.showAndWait();
     }
-} 
+}
