@@ -7,7 +7,10 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.welltech.controller.OrderDetailsController"
-      spacing="10" padding="10">
+      spacing="10">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
 
     <GridPane hgap="10" vgap="10">
         <Label text="Order ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />

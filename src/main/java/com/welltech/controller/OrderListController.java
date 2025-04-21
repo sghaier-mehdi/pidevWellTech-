@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
@@ -142,7 +143,11 @@ public class OrderListController {
         Order selectedOrder = orderTable.getSelectionModel().getSelectedItem();
         if (selectedOrder != null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/order/OrderDetails.fxml"));
+                URL location = getClass().getResource("/fxml/order/OrderDetails.fxml");
+                if (location == null) {
+                    throw new IOException("Could not find OrderDetails.fxml");
+                }
+                FXMLLoader loader = new FXMLLoader(location);
                 Parent root = loader.load();
                 OrderDetailsController controller = loader.getController();
                 controller.setOrder(selectedOrder);
@@ -157,6 +162,7 @@ public class OrderListController {
                 loadOrders();
             } catch (IOException e) {
                 showError("Error", "Could not open order details", e);
+                e.printStackTrace();
             }
         } else {
             showError("Error", "Please select an order to view details");
@@ -168,7 +174,11 @@ public class OrderListController {
         Order selectedOrder = orderTable.getSelectionModel().getSelectedItem();
         if (selectedOrder != null) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/order/OrderStatusUpdate.fxml"));
+                URL location = getClass().getResource("/fxml/order/OrderStatusUpdate.fxml");
+                if (location == null) {
+                    throw new IOException("Could not find OrderStatusUpdate.fxml");
+                }
+                FXMLLoader loader = new FXMLLoader(location);
                 Parent root = loader.load();
                 OrderStatusUpdateController controller = loader.getController();
                 controller.setOrder(selectedOrder);
@@ -184,6 +194,7 @@ public class OrderListController {
                 loadOrders();
             } catch (IOException e) {
                 showError("Error", "Could not open status update dialog", e);
+                e.printStackTrace();
             }
         } else {
             showError("Error", "Please select an order to update status");
