@@ -56,11 +56,77 @@ public class DatabaseConnection {
                         + "role ENUM('PATIENT', 'PSYCHIATRIST', 'ADMIN') NOT NULL,"
                         + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
                         + "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-                        + ")";
+                        + ") ENGINE=InnoDB";
                 stmt.executeUpdate(createUserTableSQL);
                 System.out.println("Users table created or already exists");
                 
-                // More tables can be added here as needed
+                // Create products table
+                String createProductTableSQL = "CREATE TABLE IF NOT EXISTS products ("
+                        + "id INT PRIMARY KEY AUTO_INCREMENT,"
+                        + "name VARCHAR(100) NOT NULL,"
+                        + "description TEXT,"
+                        + "price DECIMAL(10,2) NOT NULL,"
+                        + "stock INT NOT NULL DEFAULT 0,"
+                        + "image_url VARCHAR(255),"
+                        + "active BOOLEAN NOT NULL DEFAULT TRUE,"
+                        + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                        + "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+                        + ") ENGINE=InnoDB";
+                stmt.executeUpdate(createProductTableSQL);
+                System.out.println("Products table created or already exists");
+                
+                // Create orders table
+                String createOrderTableSQL = "CREATE TABLE IF NOT EXISTS orders ("
+                        + "id INT PRIMARY KEY AUTO_INCREMENT,"
+                        + "user_id INT NOT NULL,"
+                        + "total_amount DECIMAL(10,2) NOT NULL,"
+                        + "shipping_address TEXT,"
+                        + "payment_method VARCHAR(50),"
+                        + "status ENUM('PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',"
+                        + "payment_status ENUM('UNPAID', 'PAID', 'REFUNDED') NOT NULL DEFAULT 'UNPAID',"
+                        + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                        + "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+                        + ") ENGINE=InnoDB";
+                stmt.executeUpdate(createOrderTableSQL);
+                System.out.println("Orders table created or already exists");
+                
+                // Add foreign key constraint separately
+                try {
+                    String addForeignKeySQL = "ALTER TABLE orders ADD CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id)";
+                    stmt.executeUpdate(addForeignKeySQL);
+                    System.out.println("Foreign key constraint added to orders table");
+                } catch (SQLException e) {
+                    System.out.println("Foreign key constraint already exists or could not be added: " + e.getMessage());
+                }
+                
+                // Create order_items table for order details
+                String createOrderItemsTableSQL = "CREATE TABLE IF NOT EXISTS order_items ("
+                        + "id INT PRIMARY KEY AUTO_INCREMENT,"
+                        + "order_id INT NOT NULL,"
+                        + "product_id INT NOT NULL,"
+                        + "quantity INT NOT NULL,"
+                        + "price_per_unit DECIMAL(10,2) NOT NULL,"
+                        + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+                        + ") ENGINE=InnoDB";
+                stmt.executeUpdate(createOrderItemsTableSQL);
+                System.out.println("Order items table created or already exists");
+                
+                // Add foreign key constraints separately
+                try {
+                    String addOrderForeignKeySQL = "ALTER TABLE order_items ADD CONSTRAINT fk_order_items_order FOREIGN KEY (order_id) REFERENCES orders(id)";
+                    stmt.executeUpdate(addOrderForeignKeySQL);
+                    System.out.println("Foreign key constraint for order_id added to order_items table");
+                } catch (SQLException e) {
+                    System.out.println("Foreign key constraint for order_id already exists or could not be added: " + e.getMessage());
+                }
+                
+                try {
+                    String addProductForeignKeySQL = "ALTER TABLE order_items ADD CONSTRAINT fk_order_items_product FOREIGN KEY (product_id) REFERENCES products(id)";
+                    stmt.executeUpdate(addProductForeignKeySQL);
+                    System.out.println("Foreign key constraint for product_id added to order_items table");
+                } catch (SQLException e) {
+                    System.out.println("Foreign key constraint for product_id already exists or could not be added: " + e.getMessage());
+                }
             }
         } catch (ClassNotFoundException e) {
             throw new SQLException("Database driver not found", e);

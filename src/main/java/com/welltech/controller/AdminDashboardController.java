@@ -1,16 +1,20 @@
 package com.welltech.controller;
 
 import com.welltech.WellTechApplication;
+import com.welltech.dao.OrderDAO;
+import com.welltech.dao.ProductDAO;
 import com.welltech.dao.UserDAO;
 import com.welltech.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -41,27 +45,14 @@ public class AdminDashboardController implements Initializable {
     private Button settingsButton;
     
     @FXML
-    private TableView<User> usersTable;
+    private Button productsButton;
     
     @FXML
-    private TableColumn<User, Integer> userIdColumn;
-    
-    @FXML
-    private TableColumn<User, String> usernameColumn;
-    
-    @FXML
-    private TableColumn<User, String> nameColumn;
-    
-    @FXML
-    private TableColumn<User, String> emailColumn;
-    
-    @FXML
-    private TableColumn<User, User.UserRole> roleColumn;
-    
-    @FXML
-    private TableColumn<User, Void> actionsColumn;
+    private Button ordersButton;
     
     private final UserDAO userDAO = new UserDAO();
+    private final ProductDAO productDAO = new ProductDAO();
+    private final OrderDAO orderDAO = new OrderDAO();
     
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -78,9 +69,6 @@ public class AdminDashboardController implements Initializable {
             
             // Set dashboard button as active
             dashboardButton.getStyleClass().add("active");
-            
-            // Initialize users table (in a real app, we would set cell value factories and populate data)
-            // For now, we're just setting up the structure
             
             System.out.println("AdminDashboardController initialized");
         } catch (Exception e) {
@@ -114,5 +102,69 @@ public class AdminDashboardController implements Initializable {
     private void navigateToArticles(ActionEvent event) {
         System.out.println("Navigating to articles");
         WellTechApplication.loadFXML("articlesList");
+    }
+    
+    @FXML
+    private void handleProducts(ActionEvent event) {
+        try {
+            URL location = AdminDashboardController.class.getResource("/fxml/product/ProductList.fxml");
+            if (location == null) {
+                throw new IOException("Could not find ProductList.fxml");
+            }
+            FXMLLoader loader = new FXMLLoader(location);
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setTitle("Product Management");
+            stage.setScene(scene);
+            
+            ProductListController controller = loader.getController();
+            controller.setProductDAO(productDAO);
+            
+            stage.show();
+        } catch (Exception e) {
+            showError("Error", "Could not open product management window", e);
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
+    private void handleOrders(ActionEvent event) {
+        try {
+            URL location = AdminDashboardController.class.getResource("/fxml/order/OrderList.fxml");
+            if (location == null) {
+                throw new IOException("Could not find OrderList.fxml");
+            }
+            FXMLLoader loader = new FXMLLoader(location);
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setTitle("Order Management");
+            stage.setScene(scene);
+            
+            OrderListController controller = loader.getController();
+            controller.setOrderDAO(orderDAO);
+            
+            stage.show();
+        } catch (Exception e) {
+            showError("Error", "Could not open order management window", e);
+            e.printStackTrace();
+        }
+    }
+    
+    private void showError(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+    
+    private void showError(String title, String content, Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content + "\n" + e.getMessage());
+        alert.showAndWait();
     }
 } 

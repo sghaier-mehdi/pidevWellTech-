@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.welltech.controller.ProductListController"
+      spacing="10">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="searchField" promptText="Search products..." HBox.hgrow="ALWAYS"/>
+        <Button text="Search" onAction="#handleSearch"/>
+        <Button text="Add New" onAction="#handleAddNew"/>
+    </HBox>
+
+    <TableView fx:id="productTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="nameColumn" text="Name" prefWidth="200"/>
+            <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="300"/>
+            <TableColumn fx:id="priceColumn" text="Price" prefWidth="100"/>
+            <TableColumn fx:id="stockColumn" text="Stock" prefWidth="100"/>
+            <TableColumn fx:id="activeColumn" text="Status" prefWidth="100"/>
+            <TableColumn fx:id="createdAtColumn" text="Created At" prefWidth="150"/>
+            <TableColumn fx:id="updatedAtColumn" text="Updated At" prefWidth="150"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Edit" onAction="#handleEdit"/>
+        <Button text="Delete" onAction="#handleDelete"/>
+    </HBox>
+
+</VBox> 
