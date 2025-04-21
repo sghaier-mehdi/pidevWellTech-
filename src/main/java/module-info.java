@@ -2,6 +2,7 @@ module com.welltech {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires stripe.java; // Ensure the correct module name matches the library
     
     opens com.welltech to javafx.fxml;
     opens com.welltech.controller to javafx.fxml;
@@ -11,4 +12,4 @@ module com.welltech {
     exports com.welltech.model;
     exports com.welltech.dao;
     exports com.welltech.db;
-} 
+}

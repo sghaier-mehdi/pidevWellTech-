@@ -2,6 +2,10 @@ package com.welltech.controller;
 
 import com.welltech.dao.ProductDAO;
 import com.welltech.model.Product;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -25,6 +30,9 @@ public class ProductListController {
     private ProductDAO productDAO;
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private Product selectedProduct; // To track the selected product
+
+    private static final String STRIPE_PUBLISHABLE_KEY = "pk_test_51RGS2eIVlAFxxphB2AVnhV5xia7POVEqgmCk8J6UDUqZ9xdYCU3zMR5vCtcHTQu2HzBafMLmC0mt0j1PYaDENZ2g00POTN56ew";
+    private static final String STRIPE_SECRET_KEY = "sk_test_51RGS2eIVlAFxxphB6rdKqy1KsraPWwsl4ApwIQwjY3pilDxIjVkQXFhB3nPoFb5P9vWCLt1RHNwqHLcufNOX4XK700BmH4iJTP";
 
     public void setProductDAO(ProductDAO productDAO) {
         this.productDAO = productDAO;
@@ -220,12 +228,51 @@ public class ProductListController {
     }
 
     private void handlePayNow(Product product) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Payment");
-        alert.setHeaderText(null);
-        alert.setContentText("Proceeding to payment for: " + product.getName() + "\nPrice: $" + product.getPrice());
-        alert.showAndWait();
-        // Add actual payment logic here (e.g., open a payment window or integrate with a payment API)
+        Stripe.apiKey = STRIPE_SECRET_KEY;
+
+        try {
+            SessionCreateParams params = SessionCreateParams.builder()
+                .setMode(SessionCreateParams.Mode.PAYMENT)
+                .setSuccessUrl("http://localhost:8080/success") // Replace with your success URL
+                .setCancelUrl("http://localhost:8080/cancel")   // Replace with your cancel URL
+                .addLineItem(
+                    SessionCreateParams.LineItem.builder()
+                        .setQuantity(1L)
+                        .setPriceData(
+                            SessionCreateParams.LineItem.PriceData.builder()
+                                .setCurrency("usd")
+                                .setUnitAmount(product.getPrice().multiply(new BigDecimal(100)).longValue()) // Convert to cents
+                                .setProductData(
+                                    SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                        .setName(product.getName())
+                                        .setDescription(product.getDescription())
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
+                )
+                .build();
+
+            Session session = Session.create(params);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Stripe Payment");
+            alert.setHeaderText("Redirecting to Stripe Checkout");
+            alert.setContentText("Please complete the payment in the browser.");
+            alert.showAndWait();
+
+            // Open the Stripe Checkout URL in the default browser
+            javafx.application.HostServices hostServices = new javafx.application.Application() {
+                @Override
+                public void start(Stage primaryStage) {
+                    // No implementation needed
+                }
+            }.getHostServices();
+            hostServices.showDocument(session.getUrl());
+        } catch (StripeException e) {
+            showError("Payment Error", "Failed to initiate payment: " + e.getMessage(), e);
+        }
     }
 
     private void showError(String title, String content) {

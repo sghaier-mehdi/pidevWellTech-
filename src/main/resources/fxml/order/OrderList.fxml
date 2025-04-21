@@ -7,7 +7,8 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.welltech.controller.OrderListController"
-      spacing="15">
+      spacing="15"
+      minHeight="400">
     <padding>
         <Insets top="15" right="15" bottom="15" left="15"/>
     </padding>
@@ -24,7 +25,7 @@
         <DatePicker fx:id="endDate" promptText="End Date" style="-fx-background-radius: 5;"/>
     </HBox>
 
-    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: #f5f5f5;">
+    <ScrollPane fitToWidth="true" prefHeight="300" VBox.vgrow="ALWAYS" style="-fx-background-color: #f5f5f5;">
         <content>
             <FlowPane fx:id="orderFlowPane" hgap="15" vgap="15" alignment="TOP_CENTER" style="-fx-background-color: #f5f5f5; -fx-padding: 10;"/>
         </content>
@@ -36,6 +37,7 @@
         <Button text="View Details" onAction="#handleViewDetails" style="-fx-background-color: #0288d1; -fx-text-fill: white; -fx-background-radius: 5;"/>
         <Button text="Update Status" onAction="#handleUpdateStatus" style="-fx-background-color: #f57c00; -fx-text-fill: white; -fx-background-radius: 5;"/>
         <Button text="Delete" onAction="#handleDelete" style="-fx-background-color: #d32f2f; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        <Button text="Download Invoice" onAction="#handleDownloadInvoice" style="-fx-background-color: #0288d1; -fx-text-fill: white; -fx-background-radius: 5;"/>
     </HBox>
 
 </VBox>
