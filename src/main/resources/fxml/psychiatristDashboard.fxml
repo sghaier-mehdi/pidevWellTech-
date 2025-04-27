@@ -32,8 +32,9 @@
          <children>
             <Button fx:id="dashboardButton" maxWidth="Infinity" styleClass="sidebar-button" text="Dashboard" />
             <Button fx:id="patientsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Patients" />
-            <Button fx:id="appointmentsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Appointments" />
+            <Button fx:id="appointmentsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Appointments" onAction="#navigateToAppointments"/>
             <Button fx:id="articlesButton" maxWidth="Infinity" styleClass="sidebar-button" text="Articles" onAction="#navigateToArticles" />
+            <Button fx:id="chatbotButton" onAction="#navigateToChatbot" styleClass="sidebar-button" text="AI Chatbot" maxWidth="Infinity"/>
             <Button fx:id="messagesButton" maxWidth="Infinity" styleClass="sidebar-button" text="Messages" />
             <Button fx:id="profileButton" maxWidth="Infinity" styleClass="sidebar-button" text="Profile" onAction="#navigateToProfile" />
          </children>

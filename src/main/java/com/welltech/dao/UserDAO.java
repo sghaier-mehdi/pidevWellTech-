@@ -1,7 +1,8 @@
 package com.welltech.dao;
 
 import com.welltech.model.User;
-import com.welltech.util.DatabaseConnection;
+import com.welltech.model.User.UserRole; // *** ADD THIS IMPORT ***
+import com.welltech.db.DatabaseConnection; // Use YOUR DatabaseConnection
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +16,7 @@ import java.util.List;
  * Data Access Object for User-related database operations
  */
 public class UserDAO {
-    
+
     /**
      * Insert a new user into the database
      * @param user User object to insert
@@ -23,36 +24,25 @@ public class UserDAO {
      */
     public int insertUser(User user) {
         String sql = "INSERT INTO users (username, password, full_name, email, phone_number, role) VALUES (?, ?, ?, ?, ?, ?)";
-        
+
         System.out.println("Attempting to insert user: " + user.getUsername());
-        
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        
-        try {
-            // Get connection
-            System.out.println("Getting database connection...");
-            conn = DatabaseConnection.getConnection();
-            System.out.println("Connection successful");
-            
-            // Prepare statement
-            System.out.println("Preparing SQL statement...");
-            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            
-            // Set parameters
+
+        // Using try-with-resources is cleaner and ensures resources are closed
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             System.out.println("Setting parameters...");
             pstmt.setString(1, user.getUsername());
-            pstmt.setString(2, user.getPassword());
+            pstmt.setString(2, user.getPassword()); // Remember to handle hashing in a real app
             pstmt.setString(3, user.getFullName());
             pstmt.setString(4, user.getEmail());
             pstmt.setString(5, user.getPhoneNumber());
-            pstmt.setString(6, user.getRole().toString());
-            
-            // Execute update
+            pstmt.setString(6, user.getRole().name()); // Use name() for enum
+
             System.out.println("Executing SQL: " + sql);
             int affectedRows = pstmt.executeUpdate();
             System.out.println("Update executed. Affected rows: " + affectedRows);
-            
+
             if (affectedRows > 0) {
                 try (ResultSet rs = pstmt.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -62,12 +52,11 @@ public class UserDAO {
                     }
                 }
             }
-            
+
         } catch (SQLException e) {
             System.err.println("SQL Error inserting user: " + e.getMessage());
             e.printStackTrace();
-            
-            // Check for common MySQL error codes
+
             if (e.getErrorCode() == 1062) {
                 System.err.println("Duplicate entry error - username or email already exists");
             } else if (e.getErrorCode() == 1045) {
@@ -77,82 +66,61 @@ public class UserDAO {
             } else if (e.getErrorCode() == 0) {
                 System.err.println("Connection error - ensure MySQL is running");
             }
-        } finally {
-            // Clean up resources
-            try {
-                if (pstmt != null) pstmt.close();
-                // Don't close the connection here as it's managed by DatabaseConnection
-            } catch (SQLException e) {
-                System.err.println("Error closing resources: " + e.getMessage());
-            }
-        }
-        
+            // Don't return -1 inside catch if you rethrow, but here it's a DAO method indicating failure
+        } // try-with-resources handles closing conn and pstmt
+
         System.err.println("User insertion failed");
         return -1;
     }
-    
+
     /**
      * Get a user by their ID
      * @param id User ID
      * @return User object if found, null otherwise
      */
     public User getUserById(int id) {
-        try {
-            // Get database connection
-            Connection connection = DatabaseConnection.getConnection();
-            
-            // Create query
-            String query = "SELECT * FROM users WHERE id = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-            
-            // Execute query
-            ResultSet resultSet = statement.executeQuery();
-            
-            // Process results
-            if (resultSet.next()) {
-                return extractUserFromResultSet(resultSet);
+        String sql = "SELECT * FROM users WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return extractUserFromResultSet(rs); // Use the helper method
+                }
             }
-            
         } catch (SQLException e) {
             System.err.println("Error getting user by ID: " + e.getMessage());
             e.printStackTrace();
         }
-        
         return null;
     }
-    
+
     /**
      * Get a user by their username
      * @param username Username
      * @return User object if found, null otherwise
      */
     public User getUserByUsername(String username) {
-        try {
-            // Get database connection
-            Connection connection = DatabaseConnection.getConnection();
-            
-            // Create query
-            String query = "SELECT * FROM users WHERE username = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, username);
-            
-            // Execute query
-            ResultSet resultSet = statement.executeQuery();
-            
-            // Process results
-            if (resultSet.next()) {
-                return extractUserFromResultSet(resultSet);
+        String sql = "SELECT * FROM users WHERE username = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return extractUserFromResultSet(rs); // Use the helper method
+                }
             }
-            
         } catch (SQLException e) {
             System.err.println("Error getting user by username: " + e.getMessage());
             e.printStackTrace();
         }
-        
         return null;
     }
-    
+
     /**
      * Get all users from the database
      * @return List of User objects
@@ -160,53 +128,49 @@ public class UserDAO {
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users";
-        
+
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            
+
             while (rs.next()) {
-                User user = extractUserFromResultSet(rs);
+                User user = extractUserFromResultSet(rs); // Use the helper method
                 users.add(user);
             }
-            
+
         } catch (SQLException e) {
             System.err.println("Error getting all users: " + e.getMessage());
         }
-        
+
         return users;
     }
-    
+
     /**
      * Update a user in the database
      * @param user User object to update
      * @return true if successful, false otherwise
      */
     public boolean updateUser(User user) {
-        try {
-            // Get database connection
-            Connection connection = DatabaseConnection.getConnection();
-            
-            // Create query
-            String query = "UPDATE users SET full_name = ?, email = ?, phone_number = ? WHERE id = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, user.getFullName());
-            statement.setString(2, user.getEmail());
-            statement.setString(3, user.getPhoneNumber());
-            statement.setInt(4, user.getId());
-            
-            // Execute query
-            int rowsAffected = statement.executeUpdate();
-            
+        String sql = "UPDATE users SET full_name = ?, email = ?, phone_number = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, user.getFullName());
+            pstmt.setString(2, user.getEmail());
+            pstmt.setString(3, user.getPhoneNumber());
+            pstmt.setInt(4, user.getId());
+
+            int rowsAffected = pstmt.executeUpdate();
+
             return rowsAffected > 0;
-            
+
         } catch (SQLException e) {
             System.err.println("Error updating user: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
-    
+
     /**
      * Delete a user from the database
      * @param id User ID
@@ -214,22 +178,23 @@ public class UserDAO {
      */
     public boolean deleteUser(int id) {
         String sql = "DELETE FROM users WHERE id = ?";
-        
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
+
             pstmt.setInt(1, id);
-            
+
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
-            
+
         } catch (SQLException e) {
             System.err.println("Error deleting user: " + e.getMessage());
+            // No print stack trace here for simple delete failure, just error message
         }
-        
+
         return false;
     }
-    
+
     /**
      * Update user password in the database
      * @param userId User ID
@@ -237,40 +202,67 @@ public class UserDAO {
      * @return true if the update was successful
      */
     public boolean updateUserPassword(int userId, String newPassword) {
-        try {
-            // Get database connection
-            Connection connection = DatabaseConnection.getConnection();
-            
-            // Create query
-            String query = "UPDATE users SET password = ? WHERE id = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, newPassword); // In a real app, hash the password
-            statement.setInt(2, userId);
-            
-            // Execute query
-            int rowsAffected = statement.executeUpdate();
-            
+        String sql = "UPDATE users SET password = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, newPassword); // In a real app, hash the password
+            pstmt.setInt(2, userId);
+
+            int rowsAffected = pstmt.executeUpdate();
+
             return rowsAffected > 0;
-            
+
         } catch (SQLException e) {
             System.err.println("Error updating user password: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
-    
+
     /**
      * Helper method to extract a User object from a ResultSet
+     * Ensures correct mapping order to the User constructor.
      */
     private User extractUserFromResultSet(ResultSet rs) throws SQLException {
-        User user = new User();
-        user.setId(rs.getInt("id"));
-        user.setUsername(rs.getString("username"));
-        user.setPassword(rs.getString("password"));
-        user.setFullName(rs.getString("full_name"));
-        user.setEmail(rs.getString("email"));
-        user.setPhoneNumber(rs.getString("phone_number"));
-        user.setRole(User.UserRole.valueOf(rs.getString("role")));
-        return user;
+        // Create User using the constructor that matches the mapping order
+        // Constructor: public User(int id, String username, String password, String fullName, String email, String phoneNumber, UserRole role)
+        return new User(
+                rs.getInt("id"),
+                rs.getString("username"),
+                rs.getString("password"), // Sensitive data, handle with care
+                rs.getString("full_name"),
+                rs.getString("email"), // Order matches constructor
+                rs.getString("phone_number"), // Order matches constructor
+                User.UserRole.valueOf(rs.getString("role"))
+        );
     }
-} 
+
+    /**
+     * Retrieves a list of users based on their role.
+     * Corrected method - removed duplicate definition.
+     */
+    public List<User> getUsersByRole(User.UserRole role) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT id, username, password, full_name, email, phone_number, role FROM users WHERE role = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection(); // Use your DB connection class
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, role.name());
+            System.out.println("Executing query in UserDAO: " + sql + " with role: " + role.name());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    users.add(extractUserFromResultSet(rs)); // Use the helper method
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting users by role " + role + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        System.out.println("UserDAO found " + users.size() + " users for role " + role.name()); // Debug print
+        return users;
+    }
+    // === REMOVED THE DUPLICATE getUsersByRole METHOD THAT WAS HERE ===
+}

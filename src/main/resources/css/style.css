@@ -545,3 +545,127 @@
   -fx-fill: #334155; /* Slate 700 */
   -fx-line-spacing: 5px; /* Increase line spacing */
 }
+.consultation-card {
+  -fx-background-color: #ffffff; /* White card */
+  -fx-border-color: #e2e8f0;  /* Slate 200 */
+  -fx-border-width: 1px;
+  -fx-border-radius: 8px; /* Hardcoded */
+  -fx-background-radius: 8px; /* Hardcoded */
+  -fx-effect: dropshadow(gaussian, rgba(51, 65, 85, 0.06), 12, 0, 0, 3);
+  -fx-cursor: default;
+  -fx-padding: 18px;
+  /* VBox Spacing set in controller */
+  -fx-pref-width: 310px; /* Adjust as needed */
+}
+.consultation-card:hover {
+  -fx-border-color: derive(#cbd5e1, -10%); /* Derived from Slate 300 */
+  -fx-effect: dropshadow(gaussian, rgba(51, 65, 85, 0.1), 16, 0, 0, 5);
+  -fx-translate-y: -4px; /* Optional hover effect */
+}
+.consultation-card-selected {
+  -fx-border-color: #14b8a6; /* Teal 500 */
+  -fx-border-width: 2px;
+  -fx-effect: dropshadow(gaussian, derive(#14b8a6, 50%, 1, 0.3), 15, 0, 0, 0);
+  -fx-translate-y: -2px; /* Adjust hover effect slightly */
+}
+.calendar-grid {
+  -fx-background-color: #ffffff; /* White background */
+  -fx-border-color: #cbd5e1; /* Light border */
+  -fx-border-width: 1px;
+  -fx-border-radius: 6px;
+  -fx-background-radius: 6px;
+  -fx-padding: 5px; /* Inner padding */
+}
+
+.day-cell {
+  -fx-background-color: #f8fafc; /* Slate 50 for day cells */
+  -fx-border-color: #e2e8f0; /* Subtle separator lines */
+  -fx-border-width: 0 1px 1px 0; /* Border bottom and right */
+  /* Top and left border on first row/column can be handled by grid padding or specific styles */
+}
+
+/* Remove right border on the last column */
+.day-cell:right {
+  -fx-border-width: 0 0 1px 0;
+}
+
+/* Remove bottom border on the last row (approx) */
+/* This is tricky in pure CSS for a variable grid, might need code or ignore */
+.day-cell:bottom {
+  -fx-border-width: 0 1px 0 0; /* Border only right */
+}
+
+
+.day-label {
+  -fx-font-size: 12px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #334155; /* Slate 700 */
+}
+
+.current-day-label {
+  -fx-text-fill: #14b8a6; /* Teal 500 */
+  /* Optional: add a background circle or border */
+  /* -fx-background-color: derive(#14b8a6, 90%); -fx-background-radius: 12px; -fx-padding: 2px 4px; */
+}
+
+.consultation-entry {
+  -fx-font-size: 10px;
+  -fx-text-fill: #334155; /* Slate 700 */
+  -fx-background-color: #e0f2f7; /* Very light blue/teal */
+  -fx-background-radius: 4px;
+  -fx-padding: 2px 5px;
+  -fx-wrap-text: true;
+  -fx-cursor: hand; /* Indicate clickable */
+}
+
+.consultation-entry:hover {
+  -fx-background-color: derive(#e0f2f7, -10%);
+}
+/* --- Chatbot Styles --- */
+.chat-history-container {
+  /* VBox holding the messages */
+  /* Padding set in FXML */
+}
+
+.chat-bubble {
+  /* Base style for all messages */
+  -fx-background-color: #f8f9fa; /* Light gray */
+  -fx-padding: 8px 12px;
+  -fx-background-radius: 10px; /* Rounded corners */
+  -fx-wrap-text: true;
+  -fx-font-size: 14px;
+  -fx-text-fill: #212529; /* Dark text */
+  /* Max width set in controller */
+}
+
+.user-bubble {
+  /* Style for messages sent by the user */
+  -fx-background-color: #d4edda; /* Light green/success color */
+  -fx-background-radius: 10px 10px 0 10px; /* Round top-left, top-right, bottom-left, flat bottom-right */
+  -fx-text-fill: #155724; /* Darker green text */
+}
+
+.ai-bubble {
+  /* Style for messages from the AI */
+  -fx-background-color: #e9ecef; /* Light gray/info color */
+  -fx-background-radius: 10px 10px 10px 0; /* Round top-left, top-right, bottom-right, flat bottom-left */
+  -fx-text-fill: #212529; /* Dark text */
+}
+
+/* You might also want specific styles for error messages within the chat history */
+.error-bubble {
+  -fx-background-color: #f8d7da; /* Light red/danger color */
+  -fx-text-fill: #721c24; /* Darker red text */
+  -fx-background-radius: 10px; /* Keep round corners */
+}
+
+/* Status label below input */
+.status-message {
+  /* Styles already defined */
+}
+
+/* Add styles for the new chatbot button in sidebar if needed */
+/* .sidebar-button.active { ... } */
+/* .sidebar-button { ... } */
+
+/* Ensure form-input and button-primary styles are defined for input area */
