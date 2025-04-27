@@ -146,8 +146,6 @@ public class OrderListController {
             }
         });
 
-        Text id = new Text("Order ID: " + order.getId());
-        id.setStyle("-fx-font-size: 16; -fx-font-weight: bold; -fx-fill: #333333;");
         
         Text user = new Text("User: " + order.getUser().getUsername());
         user.setStyle("-fx-font-size: 12; -fx-fill: #666666;");
@@ -182,7 +180,7 @@ public class OrderListController {
                                                                    "-fx-background-radius: 5;"));
         }
 
-        card.getChildren().addAll(id, user, totalAmount, status, paymentStatus, createdAt, payButton);
+        card.getChildren().addAll(  user, totalAmount, status, paymentStatus, createdAt, payButton);
 
         // Highlight selected card
         card.setOnMouseClicked(event -> {

@@ -53,7 +53,7 @@
     </TableView>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Download PDF" onAction="#handleDownloadPdf" />
         <Button text="Close" onAction="#handleClose" />
     </HBox>
-
-</VBox> 
+</VBox>
