@@ -1,14 +1,23 @@
 package com.welltech.controller;
 
 import com.welltech.WellTechApplication;
+import com.welltech.dao.*;
+import com.welltech.model.Objective;
+import com.welltech.model.Progression;
 import com.welltech.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -21,7 +30,7 @@ public class PatientDashboardController implements Initializable {
     
     @FXML
     private Button logoutButton;
-    
+
     @FXML
     private Button dashboardButton;
     
@@ -36,7 +45,13 @@ public class PatientDashboardController implements Initializable {
     
     @FXML
     private Button profileButton;
-    
+
+    private final UserDAO userDAO = new UserDAO();
+
+    public PatientDashboardController() throws SQLException {
+    }
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -86,4 +101,9 @@ public class PatientDashboardController implements Initializable {
         System.out.println("Navigating to articles");
         WellTechApplication.loadFXML("articlesList");
     }
+
+
+
+
+
 } 

@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Data Access Object for User-related database operations
  */
@@ -175,6 +176,21 @@ public class UserDAO {
         }
         
         return users;
+    }
+
+    public List<User> getAllPatients() throws SQLException {
+        List<User> patients = new ArrayList<>();
+        String sql = "SELECT * FROM users WHERE role = 'PATIENT'"; // Assuming patients have a specific role
+        try ( Connection conn = DatabaseConnection.getConnection();
+              Statement stmt =conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                User patient = new User();
+                patient.setId(rs.getInt("id"));
+                patient.setFullName(rs.getString("full_name"));
+                patients.add(patient);
+            }
+        }
+        return patients;
     }
     
     /**

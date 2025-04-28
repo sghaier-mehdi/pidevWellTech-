@@ -83,4 +83,29 @@ public class DefiDAO {
             stmt.executeUpdate();
         }
     }
+
+
+    public Defi recupererParId(int id) throws SQLException {
+        String sql = "SELECT * FROM Defi WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Defi(
+                            rs.getInt("id"),
+                            rs.getString("titre"),
+                            rs.getString("description"),
+                            rs.getInt("points"),
+                            rs.getString("statut"),
+                            rs.getDate("date_debut").toLocalDate(),
+                            rs.getDate("date_fin").toLocalDate(),
+                            rs.getString("conditions"),
+                            rs.getString("type")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
 }

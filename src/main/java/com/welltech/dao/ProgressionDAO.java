@@ -50,6 +50,29 @@ public class ProgressionDAO {
         return progressions;
     }
 
+
+    public List<Progression> getProgressionsByUserId(int userId) throws SQLException {
+        List<Progression> progressions = new ArrayList<>();
+        String sql = "SELECT * FROM Progression WHERE user_id = ?"; // Fixed SQL query
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) { // Prepare the statement
+            stmt.setInt(1, userId); // Set the user ID parameter
+            ResultSet rs = stmt.executeQuery(); // Execute the query without passing the SQL string again
+
+            while (rs.next()) { // Iterate through the result set
+                Progression progression = new Progression(); // Create a new Progression object
+                progression.setId(rs.getInt("id")); // Set the ID
+                progression.setUserId(rs.getInt("user_id")); // Set the user ID
+                progression.setDefiId(rs.getInt("defi_id")); // Set the defi ID
+                progression.setStatut(rs.getString("statut")); // Set the status
+                progression.setProgression(rs.getDouble("progression")); // Set the progression value
+                progressions.add(progression); // Add the progression to the list
+            }
+        }
+        return progressions; // Return the list of progressions
+    }
+
+
     // Update
     public void updateProgression(Progression progression) throws SQLException {
         String sql = "UPDATE Progression SET statut=?, progression=? WHERE id=?";

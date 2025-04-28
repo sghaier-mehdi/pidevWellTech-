@@ -1,4 +1,5 @@
 com\welltech\controller\ArticleEditController.class
+com\welltech\dao\ObjectiveDAO.class
 com\welltech\controller\ArticlesListController.class
 com\welltech\model\User$UserRole.class
 com\welltech\controller\RegisterController.class
@@ -12,13 +13,20 @@ com\welltech\model\Category.class
 com\welltech\controller\PsychiatristDashboardController.class
 com\welltech\controller\ProfileController.class
 module-info.class
+com\welltech\dao\DefiDAO.class
 com\welltech\controller\ArticleEditController$1.class
 com\welltech\controller\PatientDashboardController.class
+com\welltech\model\Progression.class
 com\welltech\model\User.class
 com\welltech\controller\LoginController.class
 com\welltech\db\DatabaseConnection.class
+com\welltech\model\Recompense.class
 com\welltech\model\Article.class
 com\welltech\dao\CategoryDAO.class
 com\welltech\controller\ArticlesListController$1.class
 com\welltech\dao\ArticleDAO.class
+com\welltech\model\Defi.class
+com\welltech\dao\RecompenseDAO.class
+com\welltech\model\Objective.class
 com\welltech\controller\ProfileController$1.class
+com\welltech\dao\ProgressionDAO.class
