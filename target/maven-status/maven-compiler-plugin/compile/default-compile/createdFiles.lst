@@ -17,10 +17,12 @@ com\welltech\controller\PatientConsultationsCalendarController$1.class
 com\welltech\model\Article.class
 com\welltech\controller\ConsultationEditController$1.class
 com\welltech\controller\ArticlesListController$1.class
+com\welltech\controller\ChatbotController$2.class
 com\welltech\controller\ConsultationDetailController$1.class
 com\welltech\controller\ArticleEditController.class
 com\welltech\controller\ArticlesListController.class
 com\welltech\dao\UserDAO.class
+com\welltech\util\SimpleTTS.class
 com\welltech\controller\ConsultationEditController.class
 com\welltech\controller\PatientConsultationsCalendarController.class
 module-info.class
@@ -29,6 +31,7 @@ com\welltech\controller\ArticleEditController$1.class
 com\welltech\model\Consultation.class
 com\welltech\controller\PatientDashboardController.class
 com\welltech\dao\ConsultationDAO.class
+com\welltech\controller\ChatbotController$Particle.class
 com\welltech\controller\ConsultationDetailController.class
 com\welltech\model\User.class
 com\welltech\controller\LoginController.class

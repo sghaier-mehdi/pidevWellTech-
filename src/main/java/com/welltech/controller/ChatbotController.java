@@ -1,10 +1,11 @@
 package com.welltech.controller;
+import com.welltech.util.SimpleTTS;
 
 import com.welltech.WellTechApplication;
 import com.welltech.dao.ArticleDAO;
 import com.welltech.model.User;
 import com.welltech.service.ArticleAIService;
-
+import java.io.IOException;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -29,6 +30,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 import javafx.util.Duration;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Paint;
+import javafx.animation.AnimationTimer;
+import org.glassfish.jaxb.runtime.v2.schemagen.xmlschema.Particle;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 // === REMOVE flexmark Imports ===
 // import com.vladsch.flexmark.html.HtmlRenderer;
@@ -66,12 +76,17 @@ public class ChatbotController implements Initializable {
     private Timeline typingAnimation;
     private boolean typingActive = false;
     // --- End Chat UI Injections ---
+    @FXML private Button readButton;
+    private String lastAIResponse = ""; // Save the last AI message
 
     // === REMOVE flexmark Setup fields ===
     // private Parser markdownParser;
     // private HtmlRenderer htmlRenderer;
     // private MutableDataSet flexmarkOptions;
     // ====================================
+    @FXML private Canvas particleCanvas;
+    private List<Particle> particles = new ArrayList<>();
+    private Random random = new Random();
 
     // --- Data ---
     private ArticleAIService articleAIService;
@@ -90,7 +105,9 @@ public class ChatbotController implements Initializable {
             return;
         }
         System.out.println("ChatbotController: Initializing for user: " + currentUser.getUsername()); // Debug
-
+        if (particleCanvas != null) {
+            startParticleAnimation();
+        }
         // === REMOVE flexmark Initialization ===
         // flexmarkOptions = new MutableDataSet();
         // markdownParser = Parser.builder(flexmarkOptions).build();
@@ -182,6 +199,7 @@ public class ChatbotController implements Initializable {
 
                     displayMessage("AI", aiResponse, false); // Show AI response
                     playSound("receive.wav");
+
                     resetInputState(); // Reset input field and send button
                 }, Platform::runLater)
                 .exceptionally(ex -> {
@@ -240,46 +258,53 @@ public class ChatbotController implements Initializable {
                 return;
             }
 
-            // Create container for message
-            HBox messageContainer = new HBox(10); // spacing 10px between icon and text
+            // Container for the whole message (HBox)
+            HBox messageContainer = new HBox(10); // spacing 10px
             messageContainer.setPadding(new Insets(5));
             messageContainer.getStyleClass().add("chat-bubble-container");
 
-            // Create ImageView for user/AI icon
+            // Icon (ImageView)
             ImageView icon = new ImageView();
-            String iconPath = isUser ? "/images/user_icon.png" : "/images/robot_icon.png"; // adjust paths
+            String iconPath = isUser ? "/images/user_icon.png" : "/images/robot_icon.png"; // adjust
             icon.setImage(new javafx.scene.image.Image(getClass().getResourceAsStream(iconPath)));
             icon.setFitHeight(32);
             icon.setFitWidth(32);
             icon.setPreserveRatio(true);
 
-            // Create the message label
+            // Text Message (Label)
             Label messageLabel = new Label(message);
             messageLabel.setWrapText(true);
             messageLabel.getStyleClass().addAll("chat-bubble", isUser ? "user-bubble" : "ai-bubble");
 
-            double maxWidth = 400; // maximum width of the message
+            double maxWidth = 400;
             if (chatHistoryBox.getScene() != null && chatHistoryBox.getScene().getWindow() != null && chatHistoryBox.getScene().getWindow().getWidth() > 0) {
                 maxWidth = chatHistoryBox.getWidth() * 0.65;
             }
             messageLabel.setMaxWidth(maxWidth);
 
-            if (isUser) {
-                messageContainer.setAlignment(Pos.CENTER_RIGHT);
-                messageContainer.getChildren().addAll(messageLabel, icon); // Label first, then icon for user
+            // If AI, add "🔊 Read" button
+            if (!isUser) {
+                Button readButton = new Button("🔊");
+                readButton.setStyle("-fx-background-radius: 15; -fx-background-color: #0d6efd; -fx-text-fill: white;");
+                readButton.setOnAction(e -> {
+                    SimpleTTS.speak(message);
+                });
+                HBox aiBox = new HBox(5, icon, messageLabel, readButton);
+                aiBox.setAlignment(Pos.CENTER_LEFT);
+                messageContainer.getChildren().add(aiBox);
             } else {
-                messageContainer.setAlignment(Pos.CENTER_LEFT);
-                messageContainer.getChildren().addAll(icon, messageLabel); // Icon first, then label for AI
+                messageContainer.setAlignment(Pos.CENTER_RIGHT);
+                messageContainer.getChildren().addAll(messageLabel, icon);
             }
 
             chatHistoryBox.getChildren().add(messageContainer);
 
-
-// === ADD THIS FADE IN ANIMATION ===
+            // Animations
             FadeTransition fadeIn = new FadeTransition(Duration.millis(500), messageContainer);
             fadeIn.setFromValue(0.0);
             fadeIn.setToValue(1.0);
             fadeIn.play();
+
             ScaleTransition scaleUp = new ScaleTransition(Duration.millis(150), messageContainer);
             scaleUp.setFromX(0.8);
             scaleUp.setFromY(0.8);
@@ -292,11 +317,11 @@ public class ChatbotController implements Initializable {
             scaleDown.setToX(1.0);
             scaleDown.setToY(1.0);
 
-// === Play fade + bounce together ===
             SequentialTransition bounceAndFade = new SequentialTransition(fadeIn, scaleUp, scaleDown);
             bounceAndFade.play();
         });
     }
+
 
 
     // === REMOVE convertMarkdownToHtml method ===
@@ -378,6 +403,70 @@ public class ChatbotController implements Initializable {
         tt.setAutoReverse(true);
         tt.play();
     }
+
+    private static class Particle {
+        double x, y, radius, speedY;
+
+        Particle(double x, double y, double radius, double speedY) {
+            this.x = x;
+            this.y = y;
+            this.radius = radius;
+            this.speedY = speedY;
+        }
+    }
+    private void startParticleAnimation() {
+        if (particleCanvas == null) {
+            System.err.println("Particle Canvas is not injected!");
+            return;
+        }
+
+        // Bind canvas size to StackPane parent size
+        particleCanvas.widthProperty().bind(((Region) particleCanvas.getParent()).widthProperty());
+        particleCanvas.heightProperty().bind(((Region) particleCanvas.getParent()).heightProperty());
+
+        // Initialize particles
+        particles.clear();
+        for (int i = 0; i < 100; i++) { // Increase number for more sparkle
+            particles.add(new Particle(
+                    random.nextDouble() * 1000,
+                    random.nextDouble() * 768,
+                    1.5 + random.nextDouble() * 2.5,
+                    0.3 + random.nextDouble() * 0.7
+            ));
+        }
+
+        GraphicsContext gc = particleCanvas.getGraphicsContext2D();
+
+        // Start animation
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                // Soft transparent background (creates ghost trail effect)
+                gc.setFill(Paint.valueOf("rgba(238,245,255,0.2)")); // Light fill
+                gc.fillRect(0, 0, particleCanvas.getWidth(), particleCanvas.getHeight());
+
+                // Draw particles
+                gc.setFill(Paint.valueOf("rgba(150,180,255,0.8)")); // Soft bluish
+                for (ChatbotController.Particle p : particles) {
+                    gc.fillOval(p.x, p.y, p.radius, p.radius);
+                    p.y += p.speedY;
+                    if (p.y > particleCanvas.getHeight()) {
+                        p.y = 0;
+                        p.x = random.nextDouble() * particleCanvas.getWidth();
+                    }
+                }
+            }
+        }.start();
+    }
+    @FXML
+    private void handleReadLastMessage(ActionEvent event) {
+        if (lastAIResponse != null && !lastAIResponse.isEmpty()) {
+            SimpleTTS.speak(lastAIResponse); // Read it aloud
+        } else {
+            SimpleTTS.speak("There is no AI message to read yet.");
+        }
+    }
+
 
 
     // === Navigation Handlers ===

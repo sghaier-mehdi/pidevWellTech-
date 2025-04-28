@@ -1,78 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
+    <?import javafx.scene.canvas.Canvas?>
+    <?import javafx.geometry.Insets?>
+    <?import javafx.scene.control.*?>
+    <?import javafx.scene.layout.*?>
+    <?import javafx.scene.text.Text?>
 
-<BorderPane styleClass="main-container" stylesheets="@../css/style.css" prefHeight="768.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.ChatbotController">
-    <!-- === Header (Top) === -->
-    <top>
-        <HBox styleClass="header">
-            <children>
-                <Label styleClass="logo" text="WellTech Psychiatry" />
-                <Region HBox.hgrow="ALWAYS" />
-                <HBox alignment="CENTER_RIGHT" spacing="10.0">
-                    <children>
-                        <Label fx:id="userNameLabel" text="Welcome, [User]" />
-                        <Button fx:id="logoutButton" onAction="#handleLogout" styleClass="button-danger" text="Logout" />
-                    </children>
-                </HBox>
-            </children>
-        </HBox>
-    </top>
-    <!-- === End Header === -->
-
-    <!-- === Sidebar (Left) === -->
-    <left>
-        <VBox styleClass="sidebar">
-            <children>
-                <Button fx:id="dashboardButton" onAction="#navigateToDashboard" styleClass="sidebar-button" text="Dashboard" />
-                <Button fx:id="articlesButton" onAction="#navigateToArticles" styleClass="sidebar-button" text="Articles" />
-                <Button fx:id="consultationsButton" onAction="#navigateToConsultations" styleClass="sidebar-button" text="Appointments" />
-                <!-- THIS is the active button for this view -->
-                <Button fx:id="chatbotButton" onAction="#navigateToChatbot" styleClass="sidebar-button active" text="AI Chatbot" /> <!-- New Chatbot Button -->
-                <Button fx:id="profileButton" onAction="#navigateToProfile" styleClass="sidebar-button" text="Profile" />
-                <!-- Add other sidebar buttons if applicable -->
-            </children>
-        </VBox>
-    </left>
-    <!-- === End Sidebar === -->
-
-    <!-- === Main Content Area (Center) === -->
-    <center>
-        <VBox spacing="15.0" styleClass="main-content-area">
-            <padding>
-                <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
-            </padding>
-            <children>
-                <!-- View Title -->
-                <Text styleClass="view-title" text="AI Article Chatbot" />
-
-                <!-- Chat History Display -->
-                <ScrollPane fx:id="chatScrollPane" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
-                    <content>
-                        <VBox fx:id="chatHistoryBox" spacing="10" styleClass="chat-history-container">
-                            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-                            <!-- Initial Message -->
-                            <Label text="Hello! Ask me anything about the published articles." style="-fx-background-color: #e9ecef; -fx-padding: 8px 12px; -fx-background-radius: 10px 10px 10px 0; -fx-wrap-text: true; -fx-alignment: center-left;"/>
-                            <!-- Chat messages will be added here dynamically -->
-                        </VBox>
-                    </content>
-                </ScrollPane>
-
-                <!-- Input Area -->
-                <VBox spacing="5">
-                    <ProgressIndicator fx:id="loadingIndicator" visible="false" maxWidth="30"/>
-                    <HBox spacing="10" alignment="CENTER_LEFT">
-                        <TextField fx:id="userInputField" promptText="Type your question here..." HBox.hgrow="ALWAYS" onAction="#handleSendAction" styleClass="form-input"/>
-                        <Button fx:id="sendButton" text="Send" onAction="#handleSendAction" styleClass="button-primary"/>
+    <BorderPane styleClass="main-container" stylesheets="@../css/style.css" prefHeight="768.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.ChatbotController">
+        <!-- === Header (Top) === -->
+        <top>
+            <HBox styleClass="header">
+                <children>
+                    <Label styleClass="logo" text="WellTech Psychiatry" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                        <children>
+                            <Label fx:id="userNameLabel" text="Welcome, [User]" />
+                            <Button fx:id="logoutButton" onAction="#handleLogout" styleClass="button-danger" text="Logout" />
+                        </children>
                     </HBox>
-                    <Label fx:id="typingIndicator" text="AI is typing..." visible="false" styleClass="typing-indicator" />
+                </children>
+            </HBox>
+        </top>
+        <!-- === End Header === -->
 
-                </VBox>
+        <!-- === Sidebar (Left) === -->
+        <left>
+            <VBox styleClass="sidebar">
+                <children>
+                    <Button fx:id="dashboardButton" onAction="#navigateToDashboard" styleClass="sidebar-button" text="Dashboard" />
+                    <Button fx:id="articlesButton" onAction="#navigateToArticles" styleClass="sidebar-button" text="Articles" />
+                    <Button fx:id="consultationsButton" onAction="#navigateToConsultations" styleClass="sidebar-button" text="Appointments" />
+                    <Button fx:id="chatbotButton" onAction="#navigateToChatbot" styleClass="sidebar-button active" text="AI Chatbot" />
+                    <Button fx:id="profileButton" onAction="#navigateToProfile" styleClass="sidebar-button" text="Profile" />
+                </children>
+            </VBox>
+        </left>
+        <!-- === End Sidebar === -->
 
-            </children>
-        </VBox>
-    </center>
-    <!-- ===End Main Content Area === -->
-</BorderPane>
+        <!-- === Main Content Area (Center) === -->
+        <center>
+            <StackPane styleClass="chat-stack">
+                <children>
+
+                    <!-- Canvas for Particles -->
+                    <Canvas fx:id="particleCanvas" style="-fx-opacity: 0.4;" StackPane.alignment="CENTER"/>
+
+
+                    <!-- Foreground Chat Interface -->
+                    <VBox spacing="15.0" styleClass="main-content-area">
+                        <padding>
+                            <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
+                        </padding>
+                        <children>
+
+                            <Text styleClass="view-title" text="AI Article Chatbot" />
+
+                            <ScrollPane fx:id="chatScrollPane" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS" styleClass="scroll-pane">
+                                <content>
+                                    <VBox fx:id="chatHistoryBox" spacing="10" styleClass="chat-history-container">
+                                        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                                        <Label text="Hello! Ask me anything about the published articles." style="-fx-background-color: #e9ecef; -fx-padding: 8px 12px; -fx-background-radius: 10px 10px 10px 0; -fx-wrap-text: true; -fx-alignment: center-left;"/>
+                                    </VBox>
+                                </content>
+                            </ScrollPane>
+
+                            <VBox spacing="5">
+                                <ProgressIndicator fx:id="loadingIndicator" visible="false" maxWidth="30"/>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <TextField fx:id="userInputField" promptText="Type your question here..." HBox.hgrow="ALWAYS" onAction="#handleSendAction" styleClass="form-input"/>
+                                    <Button fx:id="sendButton" text="Send" onAction="#handleSendAction" styleClass="button-primary"/>
+
+
+                                </HBox>
+                                <Label fx:id="typingIndicator" text="AI is typing..." visible="false" styleClass="typing-indicator" />
+                            </VBox>
+
+                        </children>
+                    </VBox>
+
+                </children>
+            </StackPane>
+        </center>
+
+        <!-- === End Main Content Area === -->
+    </BorderPane>

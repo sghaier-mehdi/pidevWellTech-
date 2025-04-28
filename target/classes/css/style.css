@@ -624,97 +624,99 @@
 }
 /* --- Chatbot Styles (Refined) --- */
 
-.chat-history-container {
-  -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #e3f2fd, #ffffff);
-  -fx-padding: 15px;
-  -fx-spacing: 10px;
-  -fx-background-radius: 15px;
-  -fx-border-radius: 15px;
+/* === Main Chat Area === */
+.main-content-area {
+  -fx-background-color: linear-gradient(to bottom right, #eef5ff, #ffffff); /* Soft elegant gradient */
 }
 
-/* Chat Bubble Containers */
+/* === Chat History Container === */
+.chat-history-container {
+  -fx-background-color: transparent;
+}
+
+/* === Chat Bubble Containers === */
 .chat-bubble-container {
   -fx-padding: 5px;
 }
 
-/* Chat Bubbles */
+/* === Chat Bubbles === */
 .chat-bubble {
   -fx-padding: 12px 18px;
   -fx-font-size: 14px;
   -fx-text-fill: #333;
   -fx-background-radius: 18px;
-  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0.1, 0, 2);
 }
 
 .user-bubble {
-  -fx-background-color: #4e73df;
+  -fx-background-color: #0d6efd; /* Bootstrap Primary Color */
   -fx-text-fill: white;
   -fx-background-radius: 18px 18px 0 18px;
 }
 
 .ai-bubble {
-  -fx-background-color: #e2e6ea;
+  -fx-background-color: #f1f3f5;
   -fx-text-fill: #333;
   -fx-background-radius: 18px 18px 18px 0;
 }
 
-/* Input and Send Button */
+/* === Rounded Input Field === */
 .form-input {
-  -fx-background-radius: 10px;
-  -fx-border-radius: 10px;
-  -fx-padding: 8px;
+  -fx-background-color: white;
+  -fx-border-color: #dee2e6;
+  -fx-background-radius: 20px;
+  -fx-border-radius: 20px;
+  -fx-padding: 8px 16px;
   -fx-font-size: 14px;
 }
 
+/* === Send Button === */
 .button-primary {
-  -fx-background-color: #4e73df;
+  -fx-background-color: #0d6efd;
   -fx-text-fill: white;
-  -fx-background-radius: 10px;
-  -fx-padding: 8px 12px;
+  -fx-background-radius: 20px;
+  -fx-padding: 8px 16px;
 }
-
 .button-primary:hover {
-  -fx-background-color: #3659c5;
+  -fx-background-color: #0b5ed7;
+  -fx-scale-x: 1.05;
+  -fx-scale-y: 1.05;
+  -fx-cursor: hand;
 }
 
-/* Progress Indicator */
+/* === ScrollPane Scrollbar === */
+.scroll-pane .viewport {
+  -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+  -fx-pref-width: 6px;
+  -fx-background-color: transparent;
+}
+
+.scroll-pane .thumb {
+  -fx-background-color: #ced4da;
+  -fx-background-radius: 10px;
+}
+
+/* === Loading Spinner === */
 .progress-indicator {
-  -fx-progress-color: #4e73df;
+  -fx-progress-color: #0d6efd;
 }
 
-/* Status Messages */
+/* === Status Message === */
 .status-message {
   -fx-font-size: 12px;
 }
-
-.status-message.success-message {
-  -fx-text-fill: #28a745;
+.status-message.success-message { -fx-text-fill: #28a745; }
+.status-message.error-message { -fx-text-fill: #dc3545; }
+.status-message.info-message { -fx-text-fill: #17a2b8; }
+.chat-history-container {
+  -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #9ebce4, #87d8b0);
 }
-
-.status-message.error-message {
-  -fx-text-fill: #dc3545;
+#particleCanvas {
+  -fx-opacity: 0.3;
 }
-
-.status-message.info-message {
-  -fx-text-fill: #17a2b8;
-}
-.chat-bubble-container ImageView {
-  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 2);
-  -fx-clip: circle(16px at center); /* makes it circular */
-}
-.typing-indicator {
-  -fx-font-style: italic;
-  -fx-font-size: 13px;
-  -fx-text-fill: #6c757d;
-  -fx-padding: 5px;
-  -fx-opacity: 0.8;
-}
-.scroll-pane {
-  -fx-background-color: transparent;
-  -fx-background-insets: 0;
-  -fx-padding: 0;
-}
-
 .scroll-pane .viewport {
   -fx-background-color: transparent;
 }
