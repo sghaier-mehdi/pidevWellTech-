@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<!-- Basic detail view structure - can be integrated into a main layout or shown in a dialog -->
+<BorderPane styleClass="main-content-area" stylesheets="@../css/style.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.ConsultationDetailController">
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="scroll-pane" BorderPane.alignment="CENTER">
+            <content>
+                <VBox spacing="20">
+                    <children>
+                        <!-- QR Code Image Display Area -->
+                        <StackPane fx:id="qrCodeContainer" alignment="CENTER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f0f0f0; -fx-border-color: #ccc; -fx-border-width: 1px;"> <!-- Placeholder style -->
+                            <ImageView fx:id="qrCodeImageView" fitHeight="180.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true" smooth="true"/>
+                        </StackPane>
+
+                        <!-- Consultation Details -->
+                        <VBox spacing="8">
+                            <children>
+                                <Label fx:id="statusLabel" styleClass="card-status-info"/> <!-- Status label, reuse style -->
+                                <Label fx:id="dateTimeLabel" styleClass="article-detail-title"/> <!-- Reuse title style -->
+                                <HBox spacing="15" styleClass="article-meta-box">
+                                    <children>
+                                        <Label fx:id="patientLabel" styleClass="article-detail-meta" text="Patient: Name"/>
+                                        <Label fx:id="psychiatristLabel" styleClass="article-detail-meta" text="Psychiatrist: Name"/>
+                                    </children>
+                                </HBox>
+                                <Label fx:id="purposeLabel" styleClass="article-detail-meta" text="Purpose: ..."/>
+                                <Label fx:id="durationLabel" styleClass="article-detail-meta" text="Duration: ... minutes"/>
+
+                                <Separator/> <!-- Visual separator -->
+
+                                <!-- Notes Section -->
+                                <Label text="Notes:" styleClass="form-label"/> <!-- Reuse form label style -->
+                                <TextFlow fx:id="notesFlow" styleClass="article-content-flow"> <!-- Reuse content flow style -->
+                                    <children>
+                                        <!-- Notes text will be added here -->
+                                        <Text text="Notes content will be displayed here."/>
+                                    </children>
+                                </TextFlow>
+
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
+            <children>
+                <!-- Optional: Add a 'Generate QR Code' Button if not automatic -->
+                <!-- <Button text="Generate QR Code" onAction="#handleGenerateQrCode"/> -->
+                <Button text="Close" onAction="#handleClose" styleClass="button-secondary"/>
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

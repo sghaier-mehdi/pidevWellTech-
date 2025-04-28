@@ -25,6 +25,19 @@
             <version>${javafx.version}</version>
             <classifier>${javafx.classifier}</classifier>
         </dependency>
+        <!-- JavaFX Web Module (Required for WebView) -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>${javafx.version}</version> <!-- Use your project's JavaFX version -->
+            <classifier>${javafx.classifier}</classifier> <!-- Use your project's OS classifier (win/linux/mac) -->
+        </dependency>
+
+        <dependency>
+            <groupId>com.vladsch.flexmark</groupId>
+            <artifactId>flexmark-all</artifactId>
+            <version>0.64.8</version>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>

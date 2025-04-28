@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane stylesheets="@../css/style.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.LoginController">
+   <center>
+      <VBox alignment="CENTER" maxWidth="400.0" styleClass="form-container">
+         <children>
+            <Text styleClass="form-title" text="Login" />
+            <Text styleClass="form-subtitle" text="Welcome to WellTech Psychiatry Platform" />
+
+            <VBox spacing="15.0">
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
+               <children>
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label text="Username" />
+                        <TextField fx:id="usernameField" promptText="Enter your username" />
+                     </children>
+                  </VBox>
+
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label text="Password" />
+                        <PasswordField fx:id="passwordField" promptText="Enter your password" />
+                     </children>
+                  </VBox>
+
+                  <Label fx:id="errorLabel" styleClass="error-message" />
+
+                  <Button fx:id="loginButton" defaultButton="true" onAction="#handleLogin" styleClass="button" text="Login" maxWidth="Infinity" />
+
+                  <HBox alignment="CENTER" spacing="5.0">
+                     <children>
+                        <Label text="Don't have an account?" />
+                        <Hyperlink fx:id="registerLink" onAction="#handleRegisterLink" text="Register here" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+         </padding>
+      </VBox>
+   </center>
+</BorderPane>
