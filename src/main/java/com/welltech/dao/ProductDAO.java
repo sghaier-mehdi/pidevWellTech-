@@ -3,6 +3,7 @@ package com.welltech.dao;
 import com.welltech.model.Product;
 import java.util.List;
 import com.welltech.util.DatabaseConnection;
+import com.welltech.util.GoogleAnalyticsUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -58,6 +59,8 @@ public class ProductDAO {
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     product.setId(generatedKeys.getLong(1));
+                    // Send Google Analytics event
+                    GoogleAnalyticsUtil.sendProductCreatedEvent(product.getName(), String.valueOf(product.getId()));
                 } else {
                     throw new SQLException("Creating product failed, no ID obtained.");
                 }
@@ -92,6 +95,11 @@ public class ProductDAO {
     }
     
     public void delete(Product product) {
+        // First check if the product is referenced in any order_items
+        if (isProductInUse(product.getId())) {
+            throw new IllegalStateException("Cannot delete this product because it is referenced in existing orders. Consider deactivating it instead.");
+        }
+        
         String sql = "DELETE FROM products WHERE id = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
@@ -103,6 +111,31 @@ public class ProductDAO {
             e.printStackTrace();
             throw new RuntimeException("Error deleting product", e);
         }
+    }
+    
+    /**
+     * Check if a product is being used in any orders
+     * @param productId The ID of the product to check
+     * @return true if the product is in use, false otherwise
+     */
+    public boolean isProductInUse(long productId) {
+        String sql = "SELECT COUNT(*) FROM order_items WHERE product_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setLong(1, productId);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error checking if product is in use", e);
+        }
+        return false;
     }
     
     public List<Product> findAll() {

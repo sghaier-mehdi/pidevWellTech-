@@ -8,6 +8,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.paint.Color;
 
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +25,7 @@ import java.io.IOException;
 import javafx.stage.FileChooser;
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import java.awt.image.BufferedImage;
 
 public class OrderDetailsController {
     @FXML
@@ -47,6 +56,12 @@ public class OrderDetailsController {
     private TableColumn<OrderItem, BigDecimal> unitPriceColumn;
     @FXML
     private TableColumn<OrderItem, BigDecimal> subtotalColumn;
+    @FXML
+    private Label locationNameLabel;
+    @FXML
+    private Label cityLabel;
+    @FXML
+    private ImageView qrCodeImageView;
 
     private Order order;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -77,8 +92,40 @@ public class OrderDetailsController {
         createdAtLabel.setText(order.getCreatedAt().format(dateFormatter));
         updatedAtLabel.setText(order.getUpdatedAt().format(dateFormatter));
 
+        // Display location details
+        if (order.getShippingAddress() != null && !order.getShippingAddress().isEmpty()) {
+            locationNameLabel.setText("Shipping Address:");
+            cityLabel.setText(order.getShippingAddress());
+            // Generate and display QR code with shipping address
+            String locationUrl = "https://www.google.com/maps/search/" + order.getShippingAddress().replace(" ", "+");
+            generateQRCode(locationUrl);
+        } else {
+            locationNameLabel.setText("Shipping Address: Not specified");
+            cityLabel.setText("");
+            qrCodeImageView.setImage(null);
+        }
+
         // Display order items
         itemsTable.setItems(FXCollections.observableArrayList(order.getOrderItems()));
+    }
+
+    private void generateQRCode(String content) {
+        try {
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            BitMatrix bitMatrix = qrCodeWriter.encode(content, BarcodeFormat.QR_CODE, 200, 200);
+
+            BufferedImage bufferedImage = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
+            for (int x = 0; x < 200; x++) {
+                for (int y = 0; y < 200; y++) {
+                    bufferedImage.setRGB(x, y, bitMatrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);
+                }
+            }
+
+            Image qrCodeImage = SwingFXUtils.toFXImage(bufferedImage, null);
+            qrCodeImageView.setImage(qrCodeImage);
+        } catch (WriterException e) {
+            showAlert("Error", "Could not generate QR code: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -111,9 +158,6 @@ public class OrderDetailsController {
                 contentStream.setLeading(14.5f);
                 contentStream.newLineAtOffset(50, 750);
 
-                // Debug log
-                System.out.println("Generating PDF for Order ID: " + order.getId());
-
                 // Add order details
                 contentStream.showText("Order Details");
                 contentStream.newLine();
@@ -129,26 +173,10 @@ public class OrderDetailsController {
                 contentStream.newLine();
                 contentStream.showText("Shipping Address: " + order.getShippingAddress());
                 contentStream.newLine();
-                contentStream.showText("Payment Method: " + order.getPaymentMethod());
-                contentStream.newLine();
-                contentStream.showText("Created At: " + order.getCreatedAt().format(dateFormatter));
-                contentStream.newLine();
-                contentStream.showText("Updated At: " + order.getUpdatedAt().format(dateFormatter));
-                contentStream.newLine();
-                contentStream.newLine();
-
-                // Add order items
-                contentStream.showText("Order Items:");
-                contentStream.newLine();
-                for (OrderItem item : order.getOrderItems()) {
-                    contentStream.showText("- Product: " + item.getProduct().getName());
-                    contentStream.newLine();
-                    contentStream.showText("  Quantity: " + item.getQuantity());
-                    contentStream.newLine();
-                    contentStream.showText("  Unit Price: $" + item.getUnitPrice());
-                    contentStream.newLine();
-                    contentStream.showText("  Subtotal: $" + item.getSubtotal());
-                    contentStream.newLine();
+                
+                // Add location details
+                if (order.getShippingAddress() != null && !order.getShippingAddress().isEmpty()) {
+                    contentStream.showText("Shipping Address: " + order.getShippingAddress());
                     contentStream.newLine();
                 }
 
@@ -156,19 +184,18 @@ public class OrderDetailsController {
                 contentStream.close();
 
                 document.save(file);
-                showAlert("Success", "PDF downloaded successfully.");
+                showAlert("Success", "PDF generated successfully!");
             } catch (IOException e) {
-                e.printStackTrace();
-                showAlert("Error", "Failed to download PDF: " + e.getMessage());
+                showAlert("Error", "Could not generate PDF: " + e.getMessage());
             }
         }
     }
 
-    private void showAlert(String title, String message) {
+    private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText(content);
         alert.showAndWait();
     }
 }

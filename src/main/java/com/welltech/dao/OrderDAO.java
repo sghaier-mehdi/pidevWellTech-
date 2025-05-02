@@ -5,15 +5,53 @@ import com.welltech.model.OrderItem;
 import com.welltech.model.User;
 import com.welltech.util.DatabaseConnection;
 
+import java.io.OutputStream;
+import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class OrderDAO {
     
+    private static final String MEASUREMENT_ID = "G-W2BBWH4S30";
+    private static final String API_SECRET = "7EieLrFFS3y471lPbccynQ";
+
+    private void sendAnalyticsEvent(Order order) {
+        try {
+            URL url = new URL("https://www.google-analytics.com/mp/collect?measurement_id=" + MEASUREMENT_ID + "&api_secret=" + API_SECRET);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setDoOutput(true);
+
+            String payload = "{\"client_id\": \"javafx-app\", \"events\": [{\"name\": \"purchase\", \"params\": {\"transaction_id\": \"" + order.getId() + "\", \"value\": " + order.getTotalAmount() + ", \"currency\": \"USD\", \"items\": [";
+
+            for (OrderItem item : order.getOrderItems()) {
+                payload += "{\"item_name\": \"" + item.getProduct().getName() + "\", \"quantity\": " + item.getQuantity() + ", \"price\": " + item.getUnitPrice() + "},";
+            }
+
+            payload = payload.replaceAll(",]", "]"); // Remove trailing comma
+            payload += "]}}]}";
+
+            try (OutputStream os = connection.getOutputStream()) {
+                os.write(payload.getBytes());
+                os.flush();
+            }
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                System.err.println("Failed to send analytics event. Response code: " + responseCode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public Order save(Order order) {
         String sql = "INSERT INTO orders (user_id, total_amount, status, shipping_address, payment_method, payment_status, created_at, updated_at) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -40,6 +78,7 @@ public class OrderDAO {
                 if (generatedKeys.next()) {
                     order.setId(generatedKeys.getLong(1));
                     saveOrderItems(order);
+                    sendAnalyticsEvent(order);
                     return order;
                 } else {
                     throw new SQLException("Creating order failed, no ID obtained.");
@@ -77,11 +116,21 @@ public class OrderDAO {
     }
     
     public void delete(Order order) {
+        // First delete order items
+        String deleteOrderItemsSql = "DELETE FROM order_items WHERE order_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmtItems = conn.prepareStatement(deleteOrderItemsSql)) {
+            pstmtItems.setLong(1, order.getId());
+            pstmtItems.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error deleting order items", e);
+        }
+
+        // Then delete the order
         String sql = "DELETE FROM orders WHERE id = ?";
-        
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
             pstmt.setLong(1, order.getId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -283,4 +332,4 @@ public class OrderDAO {
             throw new RuntimeException("Error loading order items", e);
         }
     }
-} 
+}

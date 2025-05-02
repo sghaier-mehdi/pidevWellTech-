@@ -21,6 +21,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
+
 public class OrderListController {
     @FXML
     private FlowPane orderFlowPane;
@@ -39,6 +44,8 @@ public class OrderListController {
     private ObservableList<Order> orders = FXCollections.observableArrayList();
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private Order selectedOrder; // To track the selected order
+
+    private static final String STRIPE_SECRET_KEY = "sk_test_51RGS2eIVlAFxxphB6rdKqy1KsraPWwsl4ApwIQwjY3pilDxIjVkQXFhB3nPoFb5P9vWCLt1RHNwqHLcufNOX4XK700BmH4iJTP";
 
     @FXML
     public void initialize() {
@@ -203,16 +210,68 @@ public class OrderListController {
     }
 
     private void handlePay(Order order) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Payment");
-        alert.setHeaderText(null);
-        alert.setContentText("Proceeding to payment for Order ID: " + order.getId() + "\nTotal: $" + order.getTotalAmount());
-        alert.showAndWait();
-        // Simulate payment success
-        order.setPaymentStatus("PAID");
-        orderDAO.update(order);
-        loadOrders();
-        // Add actual payment logic here (e.g., integrate with a payment API)
+        try {
+            System.out.println("Current payment status: " + order.getPaymentStatus());
+            
+            // Set payment status to PAID immediately
+            order.setPaymentStatus("PAID");
+            order.setUpdatedAt(LocalDateTime.now());
+            
+            System.out.println("New payment status: " + order.getPaymentStatus());
+            
+            // Update in database
+            orderDAO.update(order);
+            System.out.println("Order updated in database");
+            
+            // Refresh the UI
+            loadOrders();
+            System.out.println("UI refreshed");
+            
+            // Continue with Stripe redirection
+            Stripe.apiKey = STRIPE_SECRET_KEY;
+            SessionCreateParams params = SessionCreateParams.builder()
+                .setMode(SessionCreateParams.Mode.PAYMENT)
+                .setSuccessUrl("http://localhost:8080/success")
+                .setCancelUrl("http://localhost:8080/cancel")
+                .addLineItem(
+                    SessionCreateParams.LineItem.builder()
+                        .setQuantity(1L)
+                        .setPriceData(
+                            SessionCreateParams.LineItem.PriceData.builder()
+                                .setCurrency("usd")
+                                .setUnitAmount(order.getTotalAmount().multiply(new java.math.BigDecimal(100)).longValue())
+                                .setProductData(
+                                    SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                        .setName("Order #" + order.getId())
+                                        .setDescription("Order payment for user: " + order.getUser().getUsername())
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
+                )
+                .build();
+
+            Session session = Session.create(params);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Stripe Payment");
+            alert.setHeaderText("Redirecting to Stripe Checkout");
+            alert.setContentText("Please complete the payment in the browser.");
+            alert.showAndWait();
+
+            javafx.application.HostServices hostServices = new javafx.application.Application() {
+                @Override
+                public void start(javafx.stage.Stage primaryStage) {
+                    // No implementation needed
+                }
+            }.getHostServices();
+            hostServices.showDocument(session.getUrl());
+        } catch (StripeException e) {
+            showError("Payment Error", "Failed to initiate payment: " + e.getMessage(), e);
+        } catch (Exception e) {
+            showError("Payment Error", "Failed to open browser: " + e.getMessage(), e);
+        }
     }
 
     @FXML

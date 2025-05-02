@@ -67,4 +67,9 @@ public class Product {
     public LocalDateTime getUpdatedAt() { return updatedAt.get(); }
     public ObjectProperty<LocalDateTime> updatedAtProperty() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime value) { updatedAt.set(value); }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 } 

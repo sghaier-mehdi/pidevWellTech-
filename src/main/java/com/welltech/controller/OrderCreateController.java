@@ -13,6 +13,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.scene.web.WebView;
+import javafx.scene.web.WebEngine;
+import javafx.scene.Scene;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -42,6 +47,8 @@ public class OrderCreateController {
     private TableColumn<OrderItem, BigDecimal> subtotalColumn;
     @FXML
     private Label totalAmountLabel;
+    @FXML
+    private TextField phoneNumberField;
 
     private OrderDAO orderDAO;
     private ProductDAO productDAO;
@@ -145,15 +152,20 @@ public class OrderCreateController {
                 order.setPaymentStatus("UNPAID");
                 order.setCreatedAt(LocalDateTime.now());
                 order.setUpdatedAt(LocalDateTime.now());
+                order.setPhoneNumber(phoneNumberField.getText().trim());
+                
                 order.calculateTotalAmount();
 
                 // Save order
                 orderDAO.save(order);
 
+                // Send SMS notification
+                sendOrderConfirmationSms(order.getPhoneNumber(), order);
+
                 // Close window
                 closeWindow();
             } catch (Exception e) {
-                showError("Error", "Could not save the order bechtaa999", e);
+                showError("Error", "Could not save the order", e);
             }
         }
     }
@@ -217,5 +229,29 @@ public class OrderCreateController {
         alert.setHeaderText(null);
         alert.setContentText(content + "\n" + e.getMessage());
         alert.showAndWait();
+    }
+
+    // Twilio SMS sending method
+    private static final String ACCOUNT_SID = "AC44cfddddb4a75b849c354653026b999d";
+    private static final String AUTH_TOKEN = "c692e7c36cf0ad65d2831bc2f15aa656";
+    private static final String FROM_PHONE = "+19086766358";
+
+    private void sendOrderConfirmationSms(String toPhone, Order order) {
+        if (toPhone == null || toPhone.isEmpty()) return;
+        try {
+            Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+            String messageBody = "Thank you for placing your order!\n" +
+                "Order ID: " + order.getId() + "\n" +
+                "Total: $" + order.getTotalAmount() + "\n" +
+                "Shipping Address: " + order.getShippingAddress();
+            Message.creator(
+                new com.twilio.type.PhoneNumber(toPhone),
+                new com.twilio.type.PhoneNumber(FROM_PHONE),
+                messageBody
+            ).create();
+        } catch (Exception e) {
+            // Optionally log or show error, but don't block order creation
+            System.err.println("Failed to send SMS: " + e.getMessage());
+        }
     }
 } 

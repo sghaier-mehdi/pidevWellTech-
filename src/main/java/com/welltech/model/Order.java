@@ -17,6 +17,9 @@ public class Order {
     private final StringProperty paymentStatus = new SimpleStringProperty();
     private final ObjectProperty<LocalDateTime> createdAt = new SimpleObjectProperty<>();
     private final ObjectProperty<LocalDateTime> updatedAt = new SimpleObjectProperty<>();
+    private final StringProperty locationName = new SimpleStringProperty();
+    private final StringProperty city = new SimpleStringProperty();
+    private final StringProperty phoneNumber = new SimpleStringProperty();
 
     public Order() {
         this.createdAt.set(LocalDateTime.now());
@@ -65,6 +68,18 @@ public class Order {
     public LocalDateTime getUpdatedAt() { return updatedAt.get(); }
     public ObjectProperty<LocalDateTime> updatedAtProperty() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime value) { updatedAt.set(value); }
+
+    public String getLocationName() { return locationName.get(); }
+    public StringProperty locationNameProperty() { return locationName; }
+    public void setLocationName(String value) { locationName.set(value); }
+
+    public String getCity() { return city.get(); }
+    public StringProperty cityProperty() { return city; }
+    public void setCity(String value) { city.set(value); }
+
+    public String getPhoneNumber() { return phoneNumber.get(); }
+    public StringProperty phoneNumberProperty() { return phoneNumber; }
+    public void setPhoneNumber(String value) { phoneNumber.set(value); }
 
     public void calculateTotalAmount() {
         BigDecimal total = BigDecimal.ZERO;

@@ -3,6 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -26,9 +28,20 @@
         <TextField fx:id="stockField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
         <Label text="Image URL:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-        <TextField fx:id="imageUrlField" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        <HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1">
+            <TextField fx:id="imageUrlField" HBox.hgrow="ALWAYS"/>
+            <Button fx:id="uploadImageButton" text="Upload" onAction="#handleUploadImage"/>
+        </HBox>
 
-        <CheckBox fx:id="activeCheckBox" text="Active" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        <Label text="Image Preview:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+        <StackPane GridPane.rowIndex="5" GridPane.columnIndex="1" style="-fx-border-color: #e0e0e0; -fx-border-radius: 5; -fx-padding: 5; -fx-background-color: #f8f8f8; -fx-min-height: 170;">
+            <ImageView fx:id="imagePreview" fitHeight="150" fitWidth="200" preserveRatio="true">
+                <!-- Default placeholder image -->
+                <Image url="@../../../images/product-placeholder.png"/>
+            </ImageView>
+        </StackPane>
+
+        <CheckBox fx:id="activeCheckBox" text="Active" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
     </GridPane>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">

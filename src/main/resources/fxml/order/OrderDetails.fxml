@@ -3,6 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -39,6 +40,13 @@
         
         <Label text="Updated At:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
         <Label fx:id="updatedAtLabel" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+        <Label text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+        <VBox GridPane.columnIndex="1" GridPane.rowIndex="9" spacing="5">
+            <Label fx:id="locationNameLabel" />
+            <Label fx:id="cityLabel" />
+            <ImageView fx:id="qrCodeImageView" fitWidth="200" fitHeight="200" preserveRatio="true" />
+        </VBox>
     </GridPane>
 
     <Label text="Order Items" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
