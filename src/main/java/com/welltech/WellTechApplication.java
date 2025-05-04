@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert; // *** ADD THIS IMPORT ***
 import javafx.scene.control.Alert.AlertType; // *** ADD THIS IMPORT ***
+import javafx.stage.Window;
 
 import java.io.IOException;
 // Remove if not explicitly used here, relies on DAOs
@@ -60,6 +61,10 @@ public class WellTechApplication extends Application {
      */
     public static void removeTempData(String key) {
         tempData.remove(key);
+    }
+
+    public static Window getPrimaryStage() {
+        return null;
     }
 
     @Override
