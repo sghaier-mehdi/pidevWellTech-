@@ -234,7 +234,7 @@ public class ConsultationDetailController implements Initializable {
         if (consultation == null) return null; // Return null if consultation is null
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Consultation ID: ").append(consultation.getId()).append("\n");
+
         sb.append("Time: ").append(consultation.getConsultationTime() != null ? consultation.getConsultationTime().format(DATE_FORMATTER) : "N/A").append("\n");
         sb.append("Patient: ").append(consultation.getPatientName()).append("\n");
         sb.append("Psychiatrist: ").append(consultation.getPsychiatristName()).append("\n");

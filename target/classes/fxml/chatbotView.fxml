@@ -29,7 +29,7 @@
                 <children>
                     <Button fx:id="dashboardButton" onAction="#navigateToDashboard" styleClass="sidebar-button" text="Dashboard" />
                     <Button fx:id="articlesButton" onAction="#navigateToArticles" styleClass="sidebar-button" text="Articles" />
-                    <Button fx:id="consultationsButton" onAction="#navigateToConsultations" styleClass="sidebar-button" text="Appointments" />
+
                     <Button fx:id="chatbotButton" onAction="#navigateToChatbot" styleClass="sidebar-button active" text="AI Chatbot" />
                     <Button fx:id="profileButton" onAction="#navigateToProfile" styleClass="sidebar-button" text="Profile" />
                 </children>
@@ -70,6 +70,7 @@
                                     <TextField fx:id="userInputField" promptText="Type your question here..." HBox.hgrow="ALWAYS" onAction="#handleSendAction" styleClass="form-input"/>
                                     <Button fx:id="sendButton" text="Send" onAction="#handleSendAction" styleClass="button-primary"/>
 
+                                    <Label fx:id="statusMessage" text="" visible="false" />
 
                                 </HBox>
                                 <Label fx:id="typingIndicator" text="AI is typing..." visible="false" styleClass="typing-indicator" />

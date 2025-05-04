@@ -32,7 +32,7 @@
                 <Button fx:id="dashboardButton" onAction="#navigateToDashboard" styleClass="sidebar-button" text="Dashboard" />
                 <Button fx:id="articlesButton" onAction="#navigateToArticles" styleClass="sidebar-button" text="Articles" />
                 <!-- THIS is the active button for this view (Consultations/Appointments) -->
-                <Button fx:id="consultationsButton" onAction="#navigateToConsultations" styleClass="sidebar-button active" text="Appointments" /> <!-- Active style -->
+                <Button fx:id="consultationsButton" onAction="#navigateToConsultationsList" styleClass="sidebar-button active" text="Appointments" /> <!-- Active style -->
                 <Button fx:id="profileButton" onAction="#navigateToProfile" styleClass="sidebar-button" text="Profile" />
                 <!-- Add other sidebar buttons if applicable -->
                 <!-- <Button fx:id="patientsButton" onAction="#navigateToPatients" styleClass="sidebar-button" text="Patients" /> -->

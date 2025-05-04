@@ -5,45 +5,67 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.web.WebView?>
 
-<!-- Basic detail view structure - can be integrated into a main layout or shown in a dialog -->
-<BorderPane styleClass="main-content-area" stylesheets="@../css/style.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.ConsultationDetailController">
+<!-- Apply detail-view-container style class -->
+<BorderPane styleClass="detail-view-container" stylesheets="@../css/style.css" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.ConsultationDetailController">
+    <!-- Padding is already on the root BorderPane -->
     <padding>
         <Insets top="30" right="30" bottom="30" left="30"/>
     </padding>
 
     <center>
+        <!-- ScrollPane for the details content -->
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="scroll-pane" BorderPane.alignment="CENTER">
             <content>
+                <!-- VBox holding the QR and details -->
                 <VBox spacing="20">
                     <children>
                         <!-- QR Code Image Display Area -->
-                        <StackPane fx:id="qrCodeContainer" alignment="CENTER" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f0f0f0; -fx-border-color: #ccc; -fx-border-width: 1px;"> <!-- Placeholder style -->
+                        <!-- Apply qr-code-container style class -->
+                        <StackPane fx:id="qrCodeContainer" alignment="CENTER" prefHeight="200.0" prefWidth="200.0" styleClass="qr-code-container">
                             <ImageView fx:id="qrCodeImageView" fitHeight="180.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true" smooth="true"/>
                         </StackPane>
 
                         <!-- Consultation Details -->
-                        <VBox spacing="8">
+                        <!-- Apply consultation-details-box style class -->
+                        <VBox styleClass="consultation-details-box">
                             <children>
-                                <Label fx:id="statusLabel" styleClass="card-status-info"/> <!-- Status label, reuse style -->
-                                <Label fx:id="dateTimeLabel" styleClass="article-detail-title"/> <!-- Reuse title style -->
-                                <HBox spacing="15" styleClass="article-meta-box">
+                                <!-- Status Label -->
+                                <!-- Apply consultation-status-label style class -->
+                                <Label fx:id="statusLabel" styleClass="consultation-status-label"/>
+
+                                <!-- Date and Time Label -->
+                                <!-- Apply consultation-datetime-label style class -->
+                                <Label fx:id="dateTimeLabel" styleClass="consultation-datetime-label"/>
+
+                                <!-- Patient & Psychiatrist Meta Line -->
+                                <!-- Apply consultation-meta-hbox style class -->
+                                <HBox spacing="15" styleClass="consultation-meta-hbox">
                                     <children>
-                                        <Label fx:id="patientLabel" styleClass="article-detail-meta" text="Patient: Name"/>
-                                        <Label fx:id="psychiatristLabel" styleClass="article-detail-meta" text="Psychiatrist: Name"/>
+                                        <!-- Apply consultation-detail-meta style class -->
+                                        <Label fx:id="patientLabel" styleClass="consultation-detail-meta" text="Patient: Name"/>
+                                        <!-- Apply consultation-detail-meta style class -->
+                                        <Label fx:id="psychiatristLabel" styleClass="consultation-detail-meta" text="Psychiatrist: Name"/>
                                     </children>
                                 </HBox>
-                                <Label fx:id="purposeLabel" styleClass="article-detail-meta" text="Purpose: ..."/>
-                                <Label fx:id="durationLabel" styleClass="article-detail-meta" text="Duration: ... minutes"/>
+                                <!-- Purpose Label -->
+                                <!-- Apply consultation-detail-meta style class -->
+                                <Label fx:id="purposeLabel" styleClass="consultation-detail-meta" text="Purpose: ..."/>
+                                <!-- Duration Label -->
+                                <!-- Apply consultation-detail-meta style class -->
+                                <Label fx:id="durationLabel" styleClass="consultation-detail-meta" text="Duration: ... minutes"/>
 
                                 <Separator/> <!-- Visual separator -->
 
                                 <!-- Notes Section -->
-                                <Label text="Notes:" styleClass="form-label"/> <!-- Reuse form label style -->
-                                <TextFlow fx:id="notesFlow" styleClass="article-content-flow"> <!-- Reuse content flow style -->
+                                <!-- Apply consultation-notes-label style class -->
+                                <Label text="Notes:" styleClass="consultation-notes-label"/>
+                                <!-- Apply consultation-notes-flow style class -->
+                                <TextFlow fx:id="notesFlow" styleClass="consultation-notes-flow">
                                     <children>
-                                        <!-- Notes text will be added here -->
-                                        <Text text="Notes content will be displayed here."/>
+                                        <!-- Notes text will be added here by controller -->
+                                        <!-- <Text text="Notes content will be displayed here."/> -->
                                     </children>
                                 </TextFlow>
 
@@ -56,7 +78,8 @@
     </center>
 
     <bottom>
-        <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
+        <!-- Apply detail-view-actions style class -->
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" BorderPane.alignment="CENTER_RIGHT" styleClass="detail-view-actions">
             <children>
                 <!-- Optional: Add a 'Generate QR Code' Button if not automatic -->
                 <!-- <Button text="Generate QR Code" onAction="#handleGenerateQrCode"/> -->

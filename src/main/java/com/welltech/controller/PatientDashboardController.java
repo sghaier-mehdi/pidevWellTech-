@@ -129,4 +129,10 @@ public class PatientDashboardController implements Initializable {
         System.out.println("PatientDashboardController: Navigating to Chatbot.");
         WellTechApplication.loadFXML("chatbotView");
     }
+
+    @FXML
+    private void navigateToConsultationsList(ActionEvent event) {
+        System.out.println("PatientDashboardController: Navigating to Appointments List."); // Debug print
+        WellTechApplication.loadFXML("consultationsList"); // <<< ENSURE THIS IS CORRECT
+    }
 }

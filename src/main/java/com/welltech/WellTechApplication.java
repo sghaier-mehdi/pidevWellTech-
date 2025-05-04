@@ -30,7 +30,14 @@ public class WellTechApplication extends Application {
     // --- ADD THIS STATIC FIELD FOR CONSULTATION ---
     private static Consultation currentConsultation;
     // ----------------------------------------------
-
+    /**
+     * Get the primary stage of the application.
+     * Useful for setting window owners for dialogs.
+     * @return The primary Stage.
+     */
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
     @Override
     public void start(Stage stage) throws IOException {
         // Initialize database

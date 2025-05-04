@@ -561,67 +561,320 @@
 .consultation-card:hover {
   -fx-border-color: derive(#cbd5e1, -10%); /* Derived from Slate 300 */
   -fx-effect: dropshadow(gaussian, rgba(51, 65, 85, 0.1), 16, 0, 0, 5);
-  -fx-translate-y: -4px; /* Optional hover effect */
+  -fx-translate-y: -4px;
 }
 .consultation-card-selected {
   -fx-border-color: #14b8a6; /* Teal 500 */
   -fx-border-width: 2px;
   -fx-effect: dropshadow(gaussian, derive(#14b8a6, 50%, 1, 0.3), 15, 0, 0, 0);
-  -fx-translate-y: -2px; /* Adjust hover effect slightly */
+  -fx-translate-y: -2px;
 }
+/* --- Calendar Styles --- */
+
+/* Container for Month Navigation and Calendar Grid (likely VBox in center) */
+/* If you have a specific style for this VBox, add it here */
+
+
+/* Calendar Header (Month Navigation HBox) */
+/* You have an HBox containing buttons and month label */
+/* Add styleClass="month-navigation" to this HBox in FXML */
+.month-navigation {
+  -fx-padding: 10px 0 20px 0; /* Add padding above/below nav */
+  -fx-alignment: center; /* Center the elements */
+  -fx-spacing: 20px; /* Space between nav elements */
+}
+
+/* Month/Year Label within the Calendar Header */
+/* You have a Label fx:id="currentMonthLabel" */
+/* Add styleClass="calendar-month-year-label" to this label in FXML */
+.calendar-month-year-label {
+  -fx-font-size: 1.6em;
+  -fx-font-weight: bold;
+  -fx-text-fill: #333;
+}
+
+/* Calendar Navigation Buttons (<, >) */
+/* You have Buttons fx:id="prevMonthButton", fx:id="nextMonthButton" */
+/* Reusing .button-secondary is fine */
+
+
+/* Day of Week Headers GridPane */
+/* You have a GridPane fx:id="dayOfWeekGrid" */
+/* Add styleClass="day-of-week-headers" to this GridPane in FXML */
+.day-of-week-headers {
+  -fx-background-color: #f8f9fa; /* Very light background */
+  -fx-border-color: #ddd;
+  -fx-border-width: 0 0 1px 0; /* Only a bottom border */
+  -fx-padding: 0; /* Remove padding if labels have padding */
+}
+
+/* Individual Day of Week Header Labels (Mon, Tue, etc.) */
+/* Labels added by controller to dayOfWeekGrid */
+/* Add styleClass="calendar-day-header" to these labels in the controller */
+.calendar-day-header {
+  -fx-font-weight: bold;
+  -fx-alignment: center;
+  -fx-padding: 8px 0; /* More padding */
+  -fx-text-fill: #555;
+  -fx-font-size: 0.9em;
+}
+
+/* === Style for Weekend Day Headers === */
+.calendar-day-header.weekend-header { /* Added by controller for Sat, Sun */
+  -fx-text-fill: #dc3545; /* Danger/Red color for weekend headers */
+}
+
+
+/* Main Calendar Grid GridPane */
+/* You have a GridPane fx:id="calendarGrid" */
+/* Add styleClass="calendar-grid" to this GridPane in FXML */
 .calendar-grid {
-  -fx-background-color: #ffffff; /* White background */
-  -fx-border-color: #cbd5e1; /* Light border */
+  -fx-background-color: #fff;
+  -fx-border-color: #ddd;
   -fx-border-width: 1px;
   -fx-border-radius: 6px;
   -fx-background-radius: 6px;
-  -fx-padding: 5px; /* Inner padding */
+  -fx-padding: 0; /* Padding on cells */
+  -fx-hgap: 1px; /* Thin grid lines */
+  -fx-vgap: 1px; /* Thin grid lines */
+  /* Grid lines visible property is set in the controller */
 }
 
+/* Day Cell container (VBox created by createDayCell) */
+/* Add styleClass="day-cell" to this VBox in createDayCell */
 .day-cell {
-  -fx-background-color: #f8fafc; /* Slate 50 for day cells */
+  -fx-background-color: #f8fafc; /* Slate 50 background */
   -fx-border-color: #e2e8f0; /* Subtle separator lines */
-  -fx-border-width: 0 1px 1px 0; /* Border bottom and right */
-  /* Top and left border on first row/column can be handled by grid padding or specific styles */
+  -fx-border-width: 0 1px 1px 0; /* Default: Border bottom and right */
+  -fx-padding: 8px;
+  -fx-spacing: 4px;
+  -fx-min-height: 100px;
+  -fx-pref-height: Region.USE_COMPUTED_SIZE;
+  -fx-max-width: Double.MAX_VALUE;
 }
 
-/* Remove right border on the last column */
-.day-cell:right {
-  -fx-border-width: 0 0 1px 0;
+/* Remove specific borders based on position in grid (adjust based on your exact grid setup) */
+/* If using GridPane's setGridLinesVisible(true), these borders might be redundant */
+/* .calendar-grid .day-cell:nth-child(7n) { -fx-border-width: 0 0 1px 0; } */ /* Remove right border for last column */
+/* .calendar-grid .day-cell:nth-last-child(-n+7) { -fx-border-width: 0 1px 0 0; } */ /* Remove bottom border for last row */
+/* .calendar-grid .day-cell:nth-last-child(1) { -fx-border-width: 0; } */ /* Remove borders for bottom-right cell */
+
+
+/* === Style for Weekend Day Cells === */
+.day-cell.calendar-weekend { /* Added by controller for Sat, Sun */
+  -fx-background-color: #fff3cd; /* Light yellow/warning color for weekends */
+  -fx-border-color: #ffeeba; /* Slightly darker yellow border */
+}
+/* Ensure weekend style doesn't completely override today/other month */
+.day-cell.calendar-weekend.calendar-today {
+  /* Styles when it's both a weekend AND today */
+  -fx-background-color: derive(#fff3cd, -10%); /* Darker yellow */
+  -fx-border-color: derive(#ffeeba, -10%);
+}
+.day-cell.calendar-weekend.calendar-other-month {
+  /* Styles when it's a weekend in another month */
+  -fx-background-color: derive(#f8f9fa, -5%); /* Darker grey */
 }
 
-/* Remove bottom border on the last row (approx) */
-/* This is tricky in pure CSS for a variable grid, might need code or ignore */
-.day-cell:bottom {
-  -fx-border-width: 0 1px 0 0; /* Border only right */
-}
 
-
+/* Day Number label within the cell */
+/* Label created by controller in createDayCell */
+/* Add styleClass="day-label" to this label */
 .day-label {
-  -fx-font-size: 12px;
   -fx-font-weight: bold;
-  -fx-text-fill: #334155; /* Slate 700 */
+  -fx-font-size: 1.1em;
+  -fx-text-fill: #333;
+  -fx-alignment: top-left;
+  -fx-padding: 0;
 }
 
-.current-day-label {
-  -fx-text-fill: #14b8a6; /* Teal 500 */
-  /* Optional: add a background circle or border */
-  /* -fx-background-color: derive(#14b8a6, 90%); -fx-background-radius: 12px; -fx-padding: 2px 4px; */
+/* Style for days outside the currently displayed month */
+/* Added by controller to dayCell */
+.day-cell.calendar-other-month .day-label {
+  -fx-text-fill: #aaa;
 }
 
-.consultation-entry {
-  -fx-font-size: 10px;
-  -fx-text-fill: #334155; /* Slate 700 */
-  -fx-background-color: #e0f2f7; /* Very light blue/teal */
+/* Style for today's cell and day number */
+/* Added by controller to dayCell */
+.day-cell.calendar-today {
+  -fx-background-color: #cce5ff;
+  -fx-border-color: #b8daff;
+  -fx-border-width: 1px;
+}
+.day-cell.calendar-today .day-label {
+  -fx-text-fill: #004085;
+}
+
+
+/* Appointment entry labels within a day cell */
+/* Labels created by controller in createDayCell */
+/* Add styleClass="calendar-appointment-entry" to these labels */
+.calendar-appointment-entry {
+  -fx-font-size: 0.85em;
+  -fx-text-fill: #334155; /* Dark text */
+  -fx-underline: false;
+  -fx-cursor: hand;
+  -fx-padding: 3px 5px;
+  -fx-background-color: #e2e8f0; /* Light gray background for entries */
   -fx-background-radius: 4px;
-  -fx-padding: 2px 5px;
-  -fx-wrap-text: true;
-  -fx-cursor: hand; /* Indicate clickable */
+  -fx-border-color: #cbd5e1;
+  -fx-border-width: 1px;
+  -fx-border-radius: 4px;
+  -fx-max-width: Double.MAX_VALUE;
+}
+.calendar-appointment-entry:hover {
+  -fx-underline: true;
+  -fx-background-color: derive(#e2e8f0, -10%);
+}
+.calendar-appointment-entry:pressed {
+  -fx-background-color: derive(#e2e8f0, -20%);
 }
 
-.consultation-entry:hover {
-  -fx-background-color: derive(#e0f2f7, -10%);
+
+/* --- Calendar Navigation Button Styles --- */
+/* You have buttons for prev/next month */
+/* Reusing .button-secondary is fine */
+
+
+/* --- Consultation Detail View Styles --- */
+/* Style for the BorderPane root of the detail dialog/view */
+/* Add styleClass="detail-view-container" to the BorderPane in consultationDetailView.fxml */
+.detail-view-container {
+  -fx-background-color: #f8fafc; /* Light background */
+  -fx-padding: 30px;
 }
+
+/* Style for the QR Code container (StackPane) */
+/* Add styleClass="qr-code-container" to the StackPane in consultationDetailView.fxml */
+.qr-code-container {
+  -fx-background-color: #ffffff; /* White background for the QR area */
+  -fx-border-color: #e2e8f0;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8px;
+  -fx-background-radius: 8px;
+  -fx-padding: 15px; /* Padding around the ImageView */
+  -fx-alignment: center;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 8, 0, 0, 2);
+  /* Size can be set in FXML */
+}
+/* Style for the ImageView inside the container */
+.qr-code-container ImageView {
+  /* Size set in FXML */
+}
+
+
+/* Style for the main details VBox below the QR code */
+/* Add styleClass="consultation-details-box" to the VBox holding labels/textflow */
+.consultation-details-box {
+  -fx-spacing: 8px; /* Space between detail lines */
+  -fx-padding-top: 20px; /* Space between QR and details */
+}
+
+/* Style for the Status Label */
+/* Add styleClass="consultation-status-label" to the statusLabel */
+/* Reuse card-status-info/success/danger etc. for background color pills */
+.consultation-status-label {
+  -fx-font-weight: bold;
+  -fx-padding: 5px 10px;
+  -fx-background-radius: 15px; /* Pill shape */
+  -fx-font-size: 1em; /* Base font size */
+  -fx-text-fill: #333; /* Default text color */
+  -fx-background-color: #e9ecef; /* Default background */
+}
+/* Ensure these styles exist for coloring the status label */
+.consultation-status-label.card-status-info { /* Scheduled */
+  -fx-background-color: #dbeafe; -fx-text-fill: #3b82f6;
+}
+.consultation-status-label.card-status-success { /* Completed */
+  -fx-background-color: #d1fae5; -fx-text-fill: #10b981;
+}
+.consultation-status-label.card-status-danger { /* Cancelled */
+  -fx-background-color: #ffe4e6; -fx-text-fill: #f43f5e;
+}
+.consultation-status-label.card-status-warning { /* Rescheduled */
+  -fx-background-color: #fef3c7; -fx-text-fill: #f59e0b;
+}
+.consultation-status-label.card-status-draft { /* Default/Other */
+  -fx-background-color: #e9ecef; -fx-text-fill: #64748b;
+}
+
+
+/* Style for the Date & Time Label */
+/* Add styleClass="consultation-datetime-label" to dateTimeLabel */
+.consultation-datetime-label {
+  -fx-font-size: 1.5em;
+  -fx-font-weight: bold;
+  -fx-text-fill: #1e293b;
+  -fx-padding-bottom: 5px;
+}
+
+/* Style for other detail Labels (Patient, Psychiatrist, Purpose, Duration) */
+/* Add styleClass="consultation-detail-meta" to patientLabel, psychiatristLabel, purposeLabel, durationLabel */
+.consultation-detail-meta {
+  -fx-font-size: 1em;
+  -fx-text-fill: #555;
+}
+/* Optional: Style for HBox containing Patient/Psychiatrist meta */
+/* Add styleClass="consultation-meta-hbox" to that HBox */
+.consultation-meta-hbox {
+  -fx-spacing: 15px;
+}
+
+
+/* Style for the Separator */
+.separator {
+  -fx-padding-top: 10px;
+  -fx-padding-bottom: 10px;
+  -fx-border-color: #eee;
+  -fx-border-width: 1px 0 0 0;
+}
+
+
+/* Style for the "Notes:" Label */
+/* Reuse .form-label or add new styleClass="consultation-notes-label" */
+.consultation-notes-label {
+  -fx-font-size: 1.1em;
+  -fx-font-weight: bold;
+  -fx-text-fill: #333;
+  -fx-padding-bottom: 5px;
+}
+
+
+/* Style for the Notes TextFlow */
+/* Reuse .article-content-flow or add new styleClass="consultation-notes-flow" */
+.consultation-notes-flow {
+  -fx-padding-top: 0; /* Adjust as needed */
+  -fx-text-fill: #555;
+}
+/* Style for Text nodes inside the Notes TextFlow */
+.consultation-notes-flow Text {
+  -fx-font-size: 1em;
+  -fx-fill: #555;
+  -fx-line-spacing: 4px;
+}
+
+
+/* Style for the bottom HBox containing the Close button */
+/* Add styleClass="detail-view-actions" to this HBox in FXML */
+.detail-view-actions {
+  -fx-padding-top: 20px;
+  -fx-alignment: center-right;
+  -fx-spacing: 10px;
+}
+
+
+/* --- Other existing styles (keep) --- */
+/* .button-primary, .button-secondary, etc. */
+/* .form-container, .form-label, .form-input, .error-message etc. */
+/* .chat-bubble, .user-bubble, .ai-bubble etc. */
+/* .table-view styles */
+/* .tab-pane styles */
+
+/* Ensure status-message styles are defined */
+/* Ensure scroll-pane and flow-pane-container styles exist if reused */
+/* Ensure button styles are defined */
+/* Ensure form-input and form-label styles are defined */
+
 /* --- Chatbot Styles (Refined) --- */
 
 /* === Main Chat Area === */
@@ -649,7 +902,7 @@
 }
 
 .user-bubble {
-  -fx-background-color: #0d6efd; /* Bootstrap Primary Color */
+  -fx-background-color: #87d8b0; /* Bootstrap Primary Color */
   -fx-text-fill: white;
   -fx-background-radius: 18px 18px 0 18px;
 }
@@ -672,7 +925,7 @@
 
 /* === Send Button === */
 .button-primary {
-  -fx-background-color: #0d6efd;
+  -fx-background-color: #9ebce4;
   -fx-text-fill: white;
   -fx-background-radius: 20px;
   -fx-padding: 8px 16px;
@@ -712,11 +965,21 @@
 .status-message.error-message { -fx-text-fill: #dc3545; }
 .status-message.info-message { -fx-text-fill: #17a2b8; }
 .chat-history-container {
-  -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #9ebce4, #87d8b0);
+  -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,  #87d8b0 , #9ebce4);
 }
 #particleCanvas {
   -fx-opacity: 0.3;
 }
 .scroll-pane .viewport {
   -fx-background-color: transparent;
+}
+.small-read-button {
+  -fx-background-color: #0d6efd;
+  -fx-text-fill: white;
+  -fx-font-size: 10px;
+  -fx-background-radius: 15px;
+  -fx-padding: 2px 8px;
+}
+.small-read-button:hover {
+  -fx-background-color: #0b5ed7;
 }

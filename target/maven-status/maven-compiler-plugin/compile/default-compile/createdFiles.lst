@@ -17,7 +17,6 @@ com\welltech\controller\PatientConsultationsCalendarController$1.class
 com\welltech\model\Article.class
 com\welltech\controller\ConsultationEditController$1.class
 com\welltech\controller\ArticlesListController$1.class
-com\welltech\controller\ChatbotController$2.class
 com\welltech\controller\ConsultationDetailController$1.class
 com\welltech\controller\ArticleEditController.class
 com\welltech\controller\ArticlesListController.class
