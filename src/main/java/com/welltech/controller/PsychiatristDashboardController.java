@@ -9,10 +9,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn; // Keep if you still have a table on the dashboard
 import javafx.scene.control.TableView;    // Keep if you still have a table on the dashboard
-
+import com.welltech.service.NotificationService;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.net.HttpURLConnection;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Controller for the psychiatrist dashboard
@@ -53,12 +64,21 @@ public class PsychiatristDashboardController implements Initializable {
     @FXML private TableColumn<?, ?> actionColumn;
     // End TableView injections
 
+    @FXML
+    private Button articlesButton;
+    
+    @FXML
+    private Button couponsButton;
+    
+    @FXML
+    private Button objectivesButton;
+
+    @FXML
+    private Button notificationsButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            System.out.println("Initializing PsychiatristDashboardController");
-
             // Get current user
             User currentUser = LoginController.getCurrentUser();
 
@@ -142,12 +162,29 @@ public class PsychiatristDashboardController implements Initializable {
         System.out.println("Navigating back to Psychiatrist dashboard");
         WellTechApplication.loadFXML("psychiatristDashboard"); // Reloads the current view
     }
+
+    @FXML
+    private void navigateToCoupons(ActionEvent event) {
+        System.out.println("Navigating to coupons");
+        WellTechApplication.loadFXML("coupon");
+    }
+    
+    @FXML
+    private void navigateToObjectives(ActionEvent event) {
+        System.out.println("Navigating to objectives");
+        WellTechApplication.loadFXML("objectives");
+    }
+
     @FXML
     private void navigateToChatbot(ActionEvent event) {
         System.out.println("PsychiatristDashboardController: Navigating to Chatbot.");
         WellTechApplication.loadFXML("chatbotView");
     }
 
+    @FXML
+    private void showNotifications(ActionEvent event) {
+        NotificationService.showGlobalNotifications();
+    }
     // --- Add other navigation handlers if they exist in your FXML ---
     // @FXML private void navigateToPatients(ActionEvent event) { ... }
     // @FXML private void navigateToMessages(ActionEvent event) { ... }

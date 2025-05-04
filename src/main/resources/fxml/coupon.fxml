@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.CouponController">
+    <top>
+        <VBox spacing="10.0" style="-fx-background-color: #2c3e50;">
+            <padding>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+            </padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
+                    <children>
+                        <Label style="-fx-text-fill: white;" text="WellTech - Coupon Management">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Label fx:id="userNameLabel" style="-fx-text-fill: white;" text="Welcome, User">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <Button mnemonicParsing="false" onAction="#handleLogout" style="-fx-background-color: #e74c3c;" text="Logout" textFill="WHITE" />
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#navigateToDashboard" style="-fx-background-color: #3498db;" text="Dashboard" textFill="WHITE" />
+                        <Button mnemonicParsing="false" onAction="#navigateToObjectives" style="-fx-background-color: #3498db;" text="Objectives" textFill="WHITE" />
+                        <Button mnemonicParsing="false" onAction="#navigateToProfile" style="-fx-background-color: #3498db;" text="Profile" textFill="WHITE" />
+                        <Button mnemonicParsing="false" onAction="#navigateToArticles" style="-fx-background-color: #3498db;" text="Articles" textFill="WHITE" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.6" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <items>
+                <VBox prefHeight="200.0" prefWidth="100.0">
+                    <children>
+                        <HBox spacing="10.0" style="-fx-background-color: #f5f5f5;">
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
+                            <children>
+                                <TextField fx:id="searchField" prefHeight="30.0" prefWidth="300.0" promptText="Search coupons by name or code" />
+                                <Button mnemonicParsing="false" onAction="#handleSearch" style="-fx-background-color: #3498db;" text="Search" textFill="WHITE" />
+                                <Button mnemonicParsing="false" onAction="#handleShowActiveOnly" style="-fx-background-color: #2ecc71;" text="Show Active Only" textFill="WHITE" />
+                                <Button mnemonicParsing="false" onAction="#handleShowAll" style="-fx-background-color: #95a5a6;" text="Show All" textFill="WHITE" />
+                            </children>
+                        </HBox>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+                            <content>
+                                <VBox fx:id="couponsContainer" spacing="10.0">
+                                    <padding>
+                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                    </padding>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+                <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #f5f5f5;">
+                    <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                    </padding>
+                    <children>
+                        <Label fx:id="formTitle" text="Add New Coupon">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets bottom="10.0" />
+                            </VBox.margin>
+                        </Label>
+                        <Label text="Coupon Name" />
+                        <TextField fx:id="nameField" promptText="Enter coupon name">
+                            <VBox.margin>
+                                <Insets bottom="10.0" />
+                            </VBox.margin>
+                        </TextField>
+                        <Label text="Discount Percentage" />
+                        <TextField fx:id="discountField" promptText="Enter discount percentage (0-100)">
+                            <VBox.margin>
+                                <Insets bottom="10.0" />
+                            </VBox.margin>
+                        </TextField>
+                        <Label text="Coupon Code" />
+                        <TextField fx:id="codeField" promptText="Enter unique coupon code">
+                            <VBox.margin>
+                                <Insets bottom="10.0" />
+                            </VBox.margin>
+                        </TextField>
+                        <Label text="Expiration Date" />
+                        <DatePicker fx:id="expirationDatePicker" promptText="Select expiration date (optional)">
+                            <VBox.margin>
+                                <Insets bottom="10.0" />
+                            </VBox.margin>
+                        </DatePicker>
+                        <CheckBox fx:id="activeCheckbox" mnemonicParsing="false" selected="true" text="Active">
+                            <VBox.margin>
+                                <Insets bottom="20.0" />
+                            </VBox.margin>
+                        </CheckBox>
+                        <HBox spacing="10.0">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#handleSave" prefWidth="120.0" style="-fx-background-color: #2ecc71;" text="Save" textFill="WHITE" />
+                                <Button mnemonicParsing="false" onAction="#handleClear" prefWidth="120.0" style="-fx-background-color: #95a5a6;" text="Clear" textFill="WHITE" />
+                            </children>
+                        </HBox>
+                        <Separator>
+                            <VBox.margin>
+                                <Insets bottom="20.0" top="20.0" />
+                            </VBox.margin>
+                        </Separator>
+                        <Button fx:id="assignCouponButton" disable="true" mnemonicParsing="false" onAction="#handleAssignCoupon" prefWidth="250.0" style="-fx-background-color: #3498db;" text="Assign Selected Coupon to Objective" textFill="WHITE" />
+                    </children>
+                </VBox>
+            </items>
+        </SplitPane>
+    </center>
+</BorderPane> 

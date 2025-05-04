@@ -17,6 +17,8 @@ import java.io.IOException;
 // Remove if not explicitly used here, relies on DAOs
 // import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -30,14 +32,36 @@ public class WellTechApplication extends Application {
     // --- ADD THIS STATIC FIELD FOR CONSULTATION ---
     private static Consultation currentConsultation;
     // ----------------------------------------------
+
+    // Add temporary data storage
+    private static final Map<String, Object> tempData = new HashMap<>();
+
     /**
-     * Get the primary stage of the application.
-     * Useful for setting window owners for dialogs.
-     * @return The primary Stage.
+     * Store temporary data with a key
+     * @param key The key to store the data under
+     * @param value The data to store
      */
-    public static Stage getPrimaryStage() {
-        return primaryStage;
+    public static void setTempData(String key, Object value) {
+        tempData.put(key, value);
     }
+
+    /**
+     * Retrieve temporary data by key
+     * @param key The key to retrieve data for
+     * @return The stored data or null if not found
+     */
+    public static Object getTempData(String key) {
+        return tempData.get(key);
+    }
+
+    /**
+     * Remove temporary data by key
+     * @param key The key to remove
+     */
+    public static void removeTempData(String key) {
+        tempData.remove(key);
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         // Initialize database
