@@ -18,28 +18,84 @@ public class CloudinaryUtil {
 
     static {
         try {
-            // Load configuration from properties file
-            String configPath = "src/main/resources/config.properties";
-            try (FileInputStream fis = new FileInputStream(configPath)) {
-                properties.load(fis);
-            }
+            // Initialize Cloudinary with configuration from properties/environment
+            String cloudName = loadConfigProperty("cloudinary.cloud_name", "cloud_name_placeholder");
+            String apiKey = loadConfigProperty("cloudinary.api_key", "api_key_placeholder");
+            String apiSecret = loadConfigProperty("cloudinary.api_secret", "api_secret_placeholder");
             
-            // Use direct string values for Cloudinary initialization to avoid any formatting issues
-            String cloudName = "dmeyuv2o5";
-            String apiKey = "815165984455313";
-            String apiSecret = "XsaOrB8hBnKYIMobGrUUc3CbfT0";
-            
-            // Initialize Cloudinary with hardcoded configuration
+            // Initialize Cloudinary with loaded configuration
             cloudinary = new Cloudinary(
                 "cloudinary://" + apiKey + ":" + apiSecret + "@" + cloudName
             );
             
             System.out.println("Cloudinary initialized with cloud name: " + cloudName);
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println("Failed to initialize Cloudinary: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Cloudinary initialization failed", e);
         }
+    }
+    
+    /**
+     * Load configuration from environment variables or properties files
+     */
+    private static String loadConfigProperty(String key, String defaultValue) {
+        try {
+            // Try to load from environment variables first
+            String envKey = key.replace('.', '_').toUpperCase();
+            String envValue = System.getenv(envKey);
+            if (envValue != null && !envValue.trim().isEmpty()) {
+                // Mask the value in logs for security
+                System.out.println("Loaded " + key + " from environment variable " + envKey);
+                return envValue;
+            }
+            
+            // Then try to load from properties file
+            java.util.Properties props = new java.util.Properties();
+            java.io.FileInputStream fis = null;
+            
+            try {
+                // Try to load from .env file in the project root
+                fis = new java.io.FileInputStream(".env");
+                props.load(fis);
+                String propValue = props.getProperty(key);
+                
+                if (propValue != null && !propValue.trim().isEmpty()) {
+                    System.out.println("Loaded " + key + " from .env file");
+                    return propValue;
+                }
+            } catch (Exception e) {
+                // Silently fail and try next option
+            } finally {
+                if (fis != null) {
+                    try { fis.close(); } catch (Exception ignored) {}
+                }
+            }
+            
+            // Finally try application properties
+            try {
+                fis = new java.io.FileInputStream("src/main/resources/config.properties");
+                props.load(fis);
+                String propValue = props.getProperty(key);
+                
+                if (propValue != null && !propValue.trim().isEmpty()) {
+                    System.out.println("Loaded " + key + " from config.properties");
+                    return propValue;
+                }
+            } catch (Exception e) {
+                // Silently fail and use default
+            } finally {
+                if (fis != null) {
+                    try { fis.close(); } catch (Exception ignored) {}
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading property " + key + ": " + e.getMessage());
+        }
+        
+        // Fall back to default
+        System.out.println("Using default value for " + key);
+        return defaultValue;
     }
 
     /**
@@ -177,8 +233,10 @@ public class CloudinaryUtil {
         }
         
         try {
+            // Get the cloud name from configuration
+            String cloudName = loadConfigProperty("cloudinary.cloud_name", "cloud_name_placeholder");
+            
             // Example URL: https://res.cloudinary.com/cloud_name/image/upload/v1234567890/folder/public_id.jpg
-            String cloudName = "dmeyuv2o5";
             String pattern = "https://res.cloudinary.com/" + cloudName + "/image/upload/";
             
             if (url.startsWith(pattern)) {
