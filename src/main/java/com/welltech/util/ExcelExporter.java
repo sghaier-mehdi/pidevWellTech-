@@ -1,53 +1,55 @@
 package com.welltech.util;
 
 import com.welltech.model.Consultation;
+import com.welltech.model.Consultation.ConsultationStatus; // Need ConsultationStatus enum
 
-// === Apache POI Imports for Styling ===
-import org.apache.poi.ss.usermodel.*; // Contains Workbook, Sheet, Row, Cell, CellStyle, Font, IndexedColors, etc.
-import org.apache.poi.xssf.usermodel.XSSFWorkbook; // Specific class for .xlsx format
-// You might need these for more advanced colors:
-// import org.apache.poi.xssf.usermodel.Default******olor;
-// import org.apache.poi.xssf.usermodel.XSSFColor;
-// import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
-// ======================================
+// === Apache POI Imports for Styling and Formatting ===
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook; // For .xlsx format
+// For date formatting in cells
+import org.apache.poi.ss.util.CellUtil; // Useful for getting/creating cells safely and applying styles
+import org.apache.poi.ss.usermodel.CreationHelper; // For date data format
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter; // For formatting LocalDateTime to String for N/A
 import java.util.List;
+import java.util.Map; // For storing status styles
+import java.util.HashMap; // For storing status styles
 
 public class ExcelExporter {
 
+    private static final DateTimeFormatter DISPLAY_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); // Format for displaying dates as strings
+
     /**
-     * Exports a list of Consultations to an Excel (.xlsx) file with styling.
+     * Exports a list of Consultations to an Excel (.xlsx) file with enhanced styling.
      *
      * @param consultations List of consultations to export.
      * @param filePath      The full path including filename where the Excel file will be saved.
      * @throws IOException If an I/O error occurs during writing.
      */
     public static void exportConsultationsToExcel(List<Consultation> consultations, String filePath) throws IOException {
-        // Create a new workbook (for .xlsx format)
-        Workbook workbook = new XSSFWorkbook();
+        System.out.println("ExcelExporter: Starting export to Excel: " + filePath); // Debug
 
-        // Create a sheet named "Consultations"
+        Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Consultations");
 
         // --- Create Styles ---
 
-        // Style for Header Row
+        // Font for Header
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
-        headerFont.setColor(IndexedColors.WHITE.getIndex()); // White text for headers
+        headerFont.setColor(IndexedColors.BLACK.getIndex()); // White text
 
+        // Cell Style for Header Row
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
-        // Background color (using IndexedColors for simplicity)
-        headerCellStyle.setFillForegroundColor(IndexedColors.GREY_80_PERCENT.getIndex()); // Dark grey background
+        headerCellStyle.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex()); // Dark blue background for header
         headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        // Alignment
         headerCellStyle.setAlignment(HorizontalAlignment.CENTER);
         headerCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        // Borders (optional, but adds structure)
-        headerCellStyle.setBorderBottom(BorderStyle.THIN);
+        // Borders
+        headerCellStyle.setBorderBottom(BorderStyle.MEDIUM); // Thicker bottom border for header
         headerCellStyle.setBottomBorderColor(IndexedColors.WHITE.getIndex());
         headerCellStyle.setBorderTop(BorderStyle.THIN);
         headerCellStyle.setTopBorderColor(IndexedColors.WHITE.getIndex());
@@ -57,124 +59,184 @@ public class ExcelExporter {
         headerCellStyle.setRightBorderColor(IndexedColors.WHITE.getIndex());
 
 
-        // Style for Data Rows (basic style)
-        CellStyle dataCellStyle = workbook.createCellStyle();
-        dataCellStyle.setAlignment(HorizontalAlignment.LEFT);
-        dataCellStyle.setVerticalAlignment(VerticalAlignment.TOP); // Align text top for better readability in rows
-        // Borders
-        dataCellStyle.setBorderBottom(BorderStyle.THIN);
-        dataCellStyle.setBottomBorderColor(IndexedColors.GREY_25_PERCENT.getIndex()); // Light grey separator
-        dataCellStyle.setBorderLeft(BorderStyle.THIN);
-        dataCellStyle.setLeftBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
-        dataCellStyle.setBorderRight(BorderStyle.THIN);
-        dataCellStyle.setRightBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
-        dataCellStyle.setBorderTop(BorderStyle.THIN); // Add top border for consistency
-        dataCellStyle.setTopBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        // --- Styles for Data Rows (Alternating Colors) ---
+        CellStyle evenRowStyle = workbook.createCellStyle();
+        evenRowStyle.setAlignment(HorizontalAlignment.LEFT);
+        evenRowStyle.setVerticalAlignment(VerticalAlignment.TOP);
+        evenRowStyle.setBorderBottom(BorderStyle.THIN);
+        evenRowStyle.setBottomBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        evenRowStyle.setBorderLeft(BorderStyle.THIN);
+        evenRowStyle.setLeftBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        evenRowStyle.setBorderRight(BorderStyle.THIN);
+        evenRowStyle.setRightBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        evenRowStyle.setBorderTop(BorderStyle.THIN);
+        evenRowStyle.setTopBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        evenRowStyle.setFillForegroundColor(IndexedColors.WHITE.getIndex()); // White background for even rows
+        evenRowStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        CellStyle oddRowStyle = workbook.createCellStyle();
+        oddRowStyle.cloneStyleFrom(evenRowStyle); // Copy initial style
+        oddRowStyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex()); // Light yellow background for odd rows
+        oddRowStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
 
-        // Style for Notes Column (requires text wrapping)
-        CellStyle notesCellStyle = workbook.createCellStyle();
-        notesCellStyle.cloneStyleFrom(dataCellStyle); // Start with data cell style
-        notesCellStyle.setWrapText(true); // Enable text wrapping for notes
+        // --- Style for Notes Column (with wrapping) ---
+        CellStyle notesStyleEven = workbook.createCellStyle();
+        notesStyleEven.cloneStyleFrom(evenRowStyle);
+        notesStyleEven.setWrapText(true);
+
+        CellStyle notesStyleOdd = workbook.createCellStyle();
+        notesStyleOdd.cloneStyleFrom(oddRowStyle);
+        notesStyleOdd.setWrapText(true);
 
 
-        // Style for Date/Time Column (can add date format if needed)
-        // CellStyle dateCellStyle = workbook.createCellStyle();
-        // dateCellStyle.cloneStyleFrom(dataCellStyle);
-        // CreationHelper createHelper = workbook.getCreationHelper();
-        // dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-MM-dd HH:mm")); // Example date format
+        // --- Styles for Status Column (Color-coded by Status) ---
+        Map<ConsultationStatus, CellStyle> statusStyles = new HashMap<>();
+        Font statusFont = workbook.createFont(); // Optional: A different font for status
+        statusFont.setBold(true);
+        statusFont.setFontHeightInPoints((short) 10); // Smaller font for status
+
+        // Helper to create a basic status style
+        java.util.function.Function<IndexedColors, CellStyle> createStatusStyle = (color) -> {
+            CellStyle style = workbook.createCellStyle();
+            style.setFont(statusFont);
+            style.setFillForegroundColor(color.getIndex());
+            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            style.setAlignment(HorizontalAlignment.CENTER); // Center status text
+            style.setVerticalAlignment(VerticalAlignment.CENTER);
+            style.setBorderBottom(BorderStyle.THIN); style.setBottomBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            style.setBorderLeft(BorderStyle.THIN); style.setLeftBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            style.setBorderRight(BorderStyle.THIN); style.setRightBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            style.setBorderTop(BorderStyle.THIN); style.setTopBorderColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            return style;
+        };
+
+        // Define styles for each status color (use colors that visually align with your app's CSS)
+        statusStyles.put(ConsultationStatus.SCHEDULED, createStatusStyle.apply(IndexedColors.SKY_BLUE)); // Light blue for Scheduled
+        statusStyles.put(ConsultationStatus.COMPLETED, createStatusStyle.apply(IndexedColors.LIGHT_GREEN)); // Light green for Completed
+        statusStyles.put(ConsultationStatus.CANCELLED, createStatusStyle.apply(IndexedColors.ROSE)); // Light red for Cancelled
+        statusStyles.put(ConsultationStatus.RESCHEDULED, createStatusStyle.apply(IndexedColors.LIGHT_ORANGE)); // Light orange for Rescheduled
+        // Default style for status if not matched
+        CellStyle defaultStatusStyle = createStatusStyle.apply(IndexedColors.GREY_25_PERCENT);
 
 
         // --- Create the header row ---
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"ID", "Date & Time", "Patient", "Psychiatrist", "Purpose", "Duration (min)", "Status", "Notes"};
+        // === Headers - Removed "ID" ===
+        String[] headers = {"Date & Time", "Patient", "Psychiatrist", "Purpose", "Duration (min)", "Status", "Notes"};
+        // ==============================
+
         for (int i = 0; i < headers.length; i++) {
             Cell headerCell = headerRow.createCell(i);
             headerCell.setCellValue(headers[i]);
-            headerCell.setCellStyle(headerCellStyle); // Apply header style
+            headerCell.setCellStyle(headerCellStyle);
         }
-        // Optional: Set header row height
-        headerRow.setHeightInPoints(20); // Height in points (1 point = 1/72 inch)
+        headerRow.setHeightInPoints(25); // Increased header row height
 
 
         // --- Populate the data rows ---
         int rowNum = 1;
-        // Optional: Set a default row height for data rows
-        // sheet.setDefaultRowHeightInPoints(15); // Applies to all rows unless overridden
+        // Optional: Set a default row height for data rows (especially since notes wrap)
+        sheet.setDefaultRowHeightInPoints(40); // Default to a taller row
 
 
         for (Consultation consultation : consultations) {
             Row row = sheet.createRow(rowNum++);
 
-            // Apply data cell style to all cells in this row
-            for (int i = 0; i < headers.length; i++) {
-                Cell cell = row.createCell(i);
-                cell.setCellStyle(dataCellStyle); // Default data style
-            }
+            // Determine which row style to use (even or odd)
+            CellStyle rowBaseStyle = (row.getRowNum() % 2 == 0) ? evenRowStyle : oddRowStyle;
+            CellStyle rowNotesStyle = (row.getRowNum() % 2 == 0) ? notesStyleEven : notesStyleOdd;
 
-            // Set cell values and apply specific styles where needed
-            row.getCell(0).setCellValue(consultation.getId());
-            row.getCell(1).setCellValue(consultation.getConsultationTime() != null ? consultation.getConsultationTime().toString() : "N/A"); // Use a format if needed
-            row.getCell(2).setCellValue(consultation.getPatientName());
-            row.getCell(3).setCellValue(consultation.getPsychiatristName());
-            row.getCell(4).setCellValue(consultation.getPurpose() != null ? consultation.getPurpose() : "");
-            // Handle duration as a number or string
+
+            // --- Populate cells and apply styles ---
+            // Cell 0: Date & Time
+            Cell cellDateTime = row.createCell(0);
+            cellDateTime.setCellValue(consultation.getConsultationTime() != null ? consultation.getConsultationTime().format(DISPLAY_DATE_FORMATTER) : "N/A");
+            cellDateTime.setCellStyle(rowBaseStyle); // Apply base style
+
+
+            // Cell 1: Patient
+            Cell cellPatient = row.createCell(1);
+            cellPatient.setCellValue(consultation.getPatientName());
+            cellPatient.setCellStyle(rowBaseStyle);
+
+
+            // Cell 2: Psychiatrist
+            Cell cellPsychiatrist = row.createCell(2);
+            cellPsychiatrist.setCellValue(consultation.getPsychiatristName());
+            cellPsychiatrist.setCellStyle(rowBaseStyle);
+
+
+            // Cell 3: Purpose
+            Cell cellPurpose = row.createCell(3);
+            cellPurpose.setCellValue(consultation.getPurpose() != null ? consultation.getPurpose() : "");
+            cellPurpose.setCellStyle(rowBaseStyle);
+
+
+            // Cell 4: Duration (min)
+            Cell cellDuration = row.createCell(4);
             if (consultation.getDurationMinutes() > 0) {
-                row.getCell(5).setCellValue(consultation.getDurationMinutes()); // Numeric value
+                cellDuration.setCellValue(consultation.getDurationMinutes()); // Numeric value
             } else {
-                row.getCell(5).setCellValue("N/A"); // Text "N/A"
-                // Or leave as 0 if you setCellStyle(dataCellStyle) which defaults to numeric
-                // row.getCell(5).setCellValue(0);
+                cellDuration.setCellValue("N/A"); // Text "N/A"
             }
-
-            row.getCell(6).setCellValue(consultation.getStatusDisplayValue());
-
-            // Apply notes specific style (with wrapping) to the notes cell
-            Cell notesCell = row.getCell(7);
-            notesCell.setCellValue(consultation.getNotes() != null ? consultation.getNotes() : "");
-            notesCell.setCellStyle(notesCellStyle); // Apply the notes style
+            cellDuration.setCellStyle(rowBaseStyle);
 
 
-            // Optional: Adjust row height based on content (especially for notes)
-            // This is complex and often requires calculation based on font, width, and content
-            // POI doesn't auto-size row height based on wrap text automatically.
-            // You can set a fixed height: row.setHeightInPoints(50);
+            // Cell 5: Status
+            Cell cellStatus = row.createCell(5);
+            String statusDisplay = consultation.getStatusDisplayValue();
+            cellStatus.setCellValue(statusDisplay);
+            // Apply status-specific style
+            CellStyle statusSpecificStyle = statusStyles.getOrDefault(consultation.getStatus(), defaultStatusStyle);
+            // Clone the status specific style and apply the base row style's borders to it for consistency
+            CellStyle finalStatusStyle = workbook.createCellStyle();
+            finalStatusStyle.cloneStyleFrom(statusSpecificStyle);
+            finalStatusStyle.setBorderBottom(rowBaseStyle.getBorderBottom()); finalStatusStyle.setBottomBorderColor(rowBaseStyle.getBottomBorderColor());
+            finalStatusStyle.setBorderLeft(rowBaseStyle.getBorderLeft()); finalStatusStyle.setLeftBorderColor(rowBaseStyle.getLeftBorderColor());
+            finalStatusStyle.setBorderRight(rowBaseStyle.getBorderRight()); finalStatusStyle.setRightBorderColor(rowBaseStyle.getRightBorderColor());
+            finalStatusStyle.setBorderTop(rowBaseStyle.getBorderTop()); finalStatusStyle.setTopBorderColor(rowBaseStyle.getTopBorderColor());
+            cellStatus.setCellStyle(finalStatusStyle); // Apply the final combined style
 
+
+            // Cell 6: Notes
+            Cell cellNotes = row.createCell(6);
+            cellNotes.setCellValue(consultation.getNotes() != null ? consultation.getNotes() : "");
+            cellNotes.setCellStyle(rowNotesStyle); // Apply the notes style (with wrapping)
+
+
+            // Optional: Manually adjust row height based on notes content if needed
+            // String notes = consultation.getNotes() != null ? consultation.getNotes() : "";
+            // int estimatedLines = (notes.length() / 50) + 1; // Very rough estimate
+            // row.setHeightInPoints(estimatedLines * sheet.getDefaultRowHeightInPoints() / 15); // Adjust based on default row height
         }
 
         // --- Final Touches ---
 
-        // Auto-size columns based on content AFTER all data is populated
+        // Auto-size columns based on content
         for (int i = 0; i < headers.length; i++) {
             sheet.autoSizeColumn(i);
         }
 
-        // Optional: Adjust width of specific columns manually if auto-size is not sufficient
-        // sheet.setColumnWidth(1, 20 * 256); // Set Date/Time column width (width in characters * 256)
-        // sheet.setColumnWidth(7, 50 * 256); // Set Notes column width to 50 characters wide
+        // Optional: Manually adjust width of specific columns if auto-size is not sufficient
+        // sheet.setColumnWidth(0, 18 * 256); // Date/Time
+        // sheet.setColumnWidth(3, 30 * 256); // Purpose
+        // sheet.setColumnWidth(6, 60 * 256); // Notes column (needs more width due to wrapping)
 
-
-        // Optional: Freeze the header row so it's always visible when scrolling
-        sheet.createFreezePane(0, 1); // Freeze 0 columns and the first row (row 0)
+        // Optional: Freeze the header row
+        sheet.createFreezePane(0, 1);
 
 
         // Write the workbook to a file
         try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
             workbook.write(fileOut);
+            System.out.println("ExcelExporter: Export successful: " + filePath); // Debug
         } finally {
             // Close the workbook to free resources
             workbook.close();
+            System.out.println("ExcelExporter: Workbook closed."); // Debug
         }
     }
 
-    // No changes needed for other potential generic methods if you add them
-    /*
-    public static <T> void exportDataToExcel(List<T> data, String sheetName, String[] headers, ValueExtractor<T>[] valueExtractors, String filePath) throws IOException {
-       // More complex generic export logic
-    }
-
-    interface ValueExtractor<T> {
-        Object getValue(T item);
-    }
-    */
+    // No changes needed for other potential generic methods
 }
