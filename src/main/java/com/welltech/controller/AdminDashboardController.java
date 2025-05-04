@@ -28,7 +28,8 @@ public class AdminDashboardController implements Initializable {
     
     @FXML
     private Button logoutButton;
-    
+    @FXML
+    private Button chatbotButton;
     @FXML
     private Button dashboardButton;
     
@@ -102,6 +103,11 @@ public class AdminDashboardController implements Initializable {
     private void navigateToArticles(ActionEvent event) {
         System.out.println("Navigating to articles");
         WellTechApplication.loadFXML("articlesList");
+    }
+    @FXML
+    private void navigateToChatbot(ActionEvent event) {
+        System.out.println("AdminDashboardController: Navigating to Chatbot.");
+        WellTechApplication.loadFXML("chatbotView");
     }
     
     @FXML
