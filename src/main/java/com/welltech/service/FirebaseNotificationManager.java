@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class FirebaseNotificationManager implements NotificationManager {
-    private static final String FIREBASE_URL = "https://welltech-58ee3-default-rtdb.firebaseio.com";
+    private static final String FIREBASE_URL = "https://welltech-920e5-default-rtdb.firebaseio.com";
 
     @Override
     public boolean sendNotification(String message, String userId) {

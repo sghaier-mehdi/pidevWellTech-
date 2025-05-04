@@ -17,7 +17,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class NotificationService {
-    private static final String FIREBASE_URL = "https://welltech-58ee3-default-rtdb.firebaseio.com";
+    private static final String FIREBASE_URL = "https://welltech-920e5-default-rtdb.firebaseio.com";
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy HH:mm");
 
