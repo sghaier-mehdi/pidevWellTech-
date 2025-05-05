@@ -1,25 +1,61 @@
+# === Maven ===
+# Compiled class file directory
+target/
+# Log Files
+*.log
+# Mavan Wrapper Classfiles
+.mvn/wrapper/maven-wrapper.jar
 
-###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
-###< symfony/framework-bundle ###
+# === Java ===
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
 
-###> phpunit/phpunit ###
-/phpunit.xml
-.phpunit.result.cache
-###< phpunit/phpunit ###
+# === IDE ===
+# IntelliJ IDEA specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+build/ # Sometimes used by IDEs
 
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
+# NetBeans specific files
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
 
-###> symfony/asset-mapper ###
-/public/assets/
-/assets/vendor/
-###< symfony/asset-mapper ###
+# Eclipse specific files
+.classpath
+.project
+.settings/
+bin/ # Sometimes used by Eclipse
+
+# VS Code specific files
+.vscode/
+
+# === Operating System Files ===
+# Mac OS X
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# === Other ===
+# Environment variables file (if using properties file method)
+# config.properties
+# secrets.properties
+# *.secret
