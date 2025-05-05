@@ -18,10 +18,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
-
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -171,14 +172,25 @@ public class AdminDashboardController implements Initializable {
         grid.setVgap(10);
         grid.setStyle("-fx-padding: 20 150 10 10;");
 
-        TextField userIdField = new TextField();
-        userIdField.setPromptText("Leave empty for global notification");
+        // Create ComboBox for user selection
+        ComboBox<String> userSelector = new ComboBox<>();
+        userSelector.setPromptText("Select recipient");
+        
+        // Add "Global Notification" as first option
+        userSelector.getItems().add("Global Notification");
+        
+        // Add all users to the ComboBox
+        List<User> allUsers = userDAO.getAllUsers();
+        for (User user : allUsers) {
+            userSelector.getItems().add(user.getFullName() + " (ID: " + user.getId() + ")");
+        }
+
         TextArea messageArea = new TextArea();
         messageArea.setPromptText("Enter notification message");
         messageArea.setPrefRowCount(3);
 
-        grid.add(new Label("User ID:"), 0, 0);
-        grid.add(userIdField, 1, 0);
+        grid.add(new Label("Recipient:"), 0, 0);
+        grid.add(userSelector, 1, 0);
         grid.add(new Label("Message:"), 0, 1);
         grid.add(messageArea, 1, 1);
 
@@ -191,9 +203,15 @@ public class AdminDashboardController implements Initializable {
         dialog.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 String message = messageArea.getText().trim();
-                String userId = userIdField.getText().trim();
+                String selectedOption = userSelector.getValue();
                 
                 if (!message.isEmpty()) {
+                    String userId = null;
+                    if (selectedOption != null && !selectedOption.equals("Global Notification")) {
+                        // Extract user ID from the selected option
+                        userId = selectedOption.substring(selectedOption.lastIndexOf("(ID: ") + 5, selectedOption.length() - 1);
+                    }
+                    
                     boolean success = notificationManager.sendNotification(message, userId);
                     
                     Alert alert = new Alert(success ? AlertType.INFORMATION : AlertType.ERROR);

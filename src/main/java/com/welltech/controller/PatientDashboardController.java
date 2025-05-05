@@ -2,6 +2,7 @@ package com.welltech.controller;
 
 import com.welltech.WellTechApplication;
 import com.welltech.model.User;
+import com.welltech.service.NotificationService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,6 +42,9 @@ public class PatientDashboardController implements Initializable {
 
     @FXML
     private Button profileButton;
+
+    @FXML
+    private Button notificationsButton;
 
 
     @Override
@@ -134,5 +138,9 @@ public class PatientDashboardController implements Initializable {
     private void navigateToConsultationsList(ActionEvent event) {
         System.out.println("PatientDashboardController: Navigating to Appointments List."); // Debug print
         WellTechApplication.loadFXML("consultationsList"); // <<< ENSURE THIS IS CORRECT
+    }
+    @FXML
+    private void showNotifications(ActionEvent event) {
+        NotificationService.showNotifications();
     }
 }
