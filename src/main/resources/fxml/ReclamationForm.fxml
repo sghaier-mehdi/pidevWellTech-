@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.collections.FXCollections?>
+
+<?import java.lang.String?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.welltech.controller.ReclamationFormController"
+            prefWidth="600" prefHeight="450"
+            stylesheets="@../css/style.css">
+
+    <center>
+        <VBox spacing="15" alignment="CENTER" styleClass="form-container">
+            <children>
+                <Label text="📝 Nouvelle Réclamation" styleClass="view-title"/>
+
+                <TextField fx:id="titreField" promptText="Titre" styleClass="form-input"/>
+                <TextArea fx:id="contenuArea" promptText="Décrivez votre problème..." wrapText="true" styleClass="form-input"/>
+
+                <ComboBox fx:id="typeReclamationComboBox" promptText="Type de Réclamation" styleClass="form-input">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Problème technique (ex : impossibilité de rejoindre une session)"/>
+                            <String fx:value="Comportement du thérapeute"/>
+                            <String fx:value="Planification de session"/>
+                            <String fx:value="Problème de facturation"/>
+                            <String fx:value="Utilisation de la plateforme"/>
+                            <String fx:value="Autre"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+                <!-- Sentiment with Emojis -->
+                <Label text="Sentiment face à cette situation" styleClass="form-label"/>
+
+                <HBox spacing="20" alignment="CENTER">
+                    <children>
+                        <ImageView fx:id="emoji1"  fitHeight="80" fitWidth="80"  pickOnBounds="true" styleClass="emoji" />
+                        <ImageView fx:id="emoji2"   fitHeight="80" fitWidth="80" pickOnBounds="true" styleClass="emoji" />
+                        <ImageView fx:id="emoji3"   fitHeight="80" fitWidth="80" pickOnBounds="true" styleClass="emoji" />
+                    </children>
+                </HBox>
+
+                <CheckBox fx:id="urgentCheckBox" text="Considérez-vous ce problème comme urgent ?" styleClass="urgent-checkbox"/>
+                <CheckBox fx:id="followUpCheckBox" text="Souhaitez-vous être contacté pour un suivi ?" styleClass="form-input"/>
+
+                <Button text="✅ Envoyer" onAction="#envoyerReclamation" styleClass="button button-success"/>
+                <Button fx:id="retourButton" mnemonicParsing="false" onAction="#handleRetour" style="-fx-background-color: #6c757d; -fx-text-fill: white;" text="Retour" />
+                <Label fx:id="statusLabel" styleClass="success-message"/>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>

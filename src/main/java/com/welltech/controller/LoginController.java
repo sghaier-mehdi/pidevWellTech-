@@ -4,6 +4,7 @@ import com.welltech.WellTechApplication;
 import com.welltech.dao.UserDAO;
 import com.welltech.model.User;
 
+import com.welltech.util.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -88,7 +89,9 @@ public class LoginController implements Initializable {
                 
                 // Store current user
                 currentUser = user;
-                
+                SessionManager.setCurrentUser(user);
+
+
                 // Navigate to dashboard based on user role
                 navigateToDashboard(user);
             } else {
@@ -157,6 +160,7 @@ public class LoginController implements Initializable {
      */
     public static void logout() {
         currentUser = null;
+        SessionManager.clear();
         WellTechApplication.loadFXML("login");
     }
 } 

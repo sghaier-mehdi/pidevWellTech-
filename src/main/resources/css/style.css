@@ -545,3 +545,375 @@
   -fx-fill: #334155; /* Slate 700 */
   -fx-line-spacing: 5px; /* Increase line spacing */
 }
+/* src/main/resources/css/style.css */
+
+.root-pane {
+  -fx-background-color: #f0f4f8; /* Light grayish-blue background */
+}
+
+.menu-title {
+  -fx-font-size: 28px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #2c3e50; /* Dark blue-gray */
+}
+
+.menu-button {
+  -fx-background-color: #3498db; /* Primary blue */
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+  -fx-padding: 15px 30px;
+  -fx-background-radius: 8px;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 5, 0, 1, 2);
+  -fx-cursor: hand;
+}
+
+.menu-button:hover {
+  -fx-background-color: #2980b9; /* Darker blue on hover */
+}
+
+.secondary-menu-button {
+  -fx-background-color: #95a5a6; /* Gray for secondary actions */
+  -fx-text-fill: white;
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-padding: 10px 20px;
+  -fx-background-radius: 5px;
+  -fx-cursor: hand;
+}
+
+.secondary-menu-button:hover {
+  -fx-background-color: #7f8c8d; /* Darker gray on hover */
+}
+
+.back-button {
+  -fx-background-color: transparent;
+  -fx-padding: 5px;
+  -fx-cursor: hand;
+  -fx-graphic-text-gap: 5px;
+  -fx-font-size: 14px;
+  -fx-text-fill: #555;
+}
+
+.back-button:hover {
+  -fx-text-fill: #000;
+}
+
+/* Optional: Style for icons if using FontAwesomeFX or similar */
+.glyph-icon {
+  -fx-fill: white; /* Default for icons inside primary buttons */
+}
+
+.back-button .glyph-icon {
+  -fx-fill: #555; /* Color for back button icon */
+}
+
+.back-button:hover .glyph-icon {
+  -fx-fill: #000;
+}
+/* === Notification Popup Styles === */
+
+.notification-popup-content {
+  -fx-background-color: #ffffff;
+  -fx-border-color: #e0e0e0;
+  -fx-border-width: 1px;
+  -fx-background-radius: 8px;
+  -fx-border-radius: 8px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0.1, 0, 3);
+  -fx-padding: 15px;
+}
+
+.notification-popup-title {
+  -fx-font-size: 18px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #333;
+  -fx-padding-bottom: 10px;
+  -fx-border-color: transparent transparent #e0e0e0 transparent; /* Bottom border */
+  -fx-border-width: 1px;
+}
+
+/* Style for the ScrollPane holding notifications */
+.notification-scroll-pane {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0;
+  -fx-padding: 0;
+}
+
+/* Style for the VBox list inside the ScrollPane */
+.notification-list-vbox {
+  -fx-padding: 5px 0 0 0; /* Padding top */
+}
+
+/* Individual Notification Entry */
+.notification-entry {
+  -fx-padding: 10px;
+  -fx-spacing: 10px; /* Spacing between icon and text */
+  -fx-alignment: top-left; /* Align items to the top */
+  -fx-border-color: transparent transparent #f0f0f0 transparent; /* Light bottom border */
+  -fx-border-width: 1px;
+}
+
+.notification-entry:hover {
+  -fx-background-color: #f9f9f9; /* Subtle hover effect */
+}
+
+.notification-entry:last-child {
+  -fx-border-width: 0px; /* No border for the last item */
+}
+
+
+/* Icon Placeholder Style (replace with actual icon style) */
+.notification-icon-placeholder {
+  -fx-fill: #555; /* Or use -fx-background-color with a shape */
+  -fx-font-family: "Arial"; /* Or specific icon font */
+  -fx-font-size: 18px;
+  -fx-padding: 2px 5px 0 0; /* Align icon slightly */
+}
+
+/* Main Notification Message Text */
+.notification-message {
+  -fx-font-size: 13px;
+  -fx-text-fill: #333;
+  -fx-wrap-text: true; /* Allow text wrapping */
+}
+
+/* Timestamp Text */
+.notification-timestamp {
+  -fx-font-size: 11px;
+  -fx-text-fill: #888;
+  -fx-padding: 3px 0 0 0; /* Add a bit of space above */
+}
+
+/* Optional: Styles for specific notification types based on message content */
+.notification-entry-new .notification-icon-placeholder { -fx-fill: #28a745; } /* Green for new */
+.notification-entry-update .notification-icon-placeholder { -fx-fill: #0d6efd; } /* Blue for update */
+.notification-entry-response .notification-icon-placeholder { -fx-fill: #0d6efd; } /* Blue for response */
+.notification-entry-delete .notification-icon-placeholder { -fx-fill: #dc3545; } /* Red for delete */
+
+
+/* Button at the bottom */
+.notification-mark-read-button {
+  -fx-background-color: #6c757d;
+  -fx-text-fill: white;
+  -fx-font-size: 12px;
+  -fx-padding: 5px 15px;
+  -fx-background-radius: 4px;
+  -fx-cursor: hand;
+  -fx-alignment: center;
+}
+
+.notification-mark-read-button:hover {
+  -fx-background-color: #5a6268;
+}
+
+.notification-placeholder-label {
+  -fx-padding: 20px;
+  -fx-text-fill: #888;
+  -fx-font-style: italic;
+  -fx-alignment: center;
+}
+/* style.css */
+
+/* Existing notification entry styles... */
+.notification-entry {
+  /* ... existing styles ... */
+  -fx-transition: background-color 0.2s ease-in-out; /* Smooth hover */
+}
+
+/* ... other specific entry styles ... */
+
+/* Style for URGENT Notifications (for Admin) */
+.notification-entry-urgent {
+  -fx-background-color: #fff8f8; /* Very light pinkish background */
+  -fx-border-color: #e6a8a8 transparent #f0f0f0 transparent; /* Light red top border */
+  -fx-border-width: 2px 0 1px 0; /* Make top border thicker */
+}
+.notification-entry-urgent .notification-icon-placeholder {
+  -fx-fill: #dc3545; /* Red icon */
+  /* Optional: Add subtle animation? */
+  /* -fx-animation: pulse 1.5s infinite ease-in-out; */
+}
+.notification-entry-urgent .notification-message {
+  -fx-font-weight: bold; /* Make text bold */
+  -fx-text-fill: #a02c2d; /* Darker red text */
+}
+
+
+/* Style for DELETED Reclamation Notifications (for User) */
+.notification-entry-deleted {
+  /* Similar to urgent, maybe slightly different color */
+  -fx-background-color: #fff8f8;
+  -fx-border-color: #e6a8a8 transparent #f0f0f0 transparent;
+  -fx-border-width: 2px 0 1px 0;
+  -fx-opacity: 0.9; /* Slightly faded maybe */
+}
+.notification-entry-deleted .notification-icon-placeholder {
+  -fx-fill: #dc3545; /* Red icon */
+}
+.notification-entry-deleted .notification-message {
+  /* -fx-font-style: italic; */ /* Optional italic */
+  -fx-text-fill: #8b2324; /* Darker red text */
+}
+/* style.css */
+.urgent-checkbox .text {
+  -fx-fill: #c0392b; /* Red text */
+  -fx-font-weight: bold;
+}
+.urgent-checkbox .box {
+  -fx-border-color: #c0392b;
+  -fx-border-width: 1.5px;
+}
+.urgent-checkbox:selected .mark {
+  -fx-background-color: #c0392b; /* Red check mark */
+}
+/* style.css */
+.stats-urgent-box { /* Style the VBox containing the label */
+  -fx-background-color: #fff5f5; /* Very light red */
+  -fx-border-color: #e6a8a8;
+  -fx-border-width: 1px;
+  -fx-padding: 10px 15px;
+  -fx-border-radius: 5px;
+  -fx-background-radius: 5px;
+}
+.stats-urgent-box .label { /* Style labels inside the box */
+  -fx-text-fill: #a02c2d; /* Dark red text */
+}
+.stats-urgent-box .stats-value-label { /* Style the number label specifically */
+  -fx-font-size: 20px; /* Make number bigger */
+  -fx-font-weight: bold;
+}
+.stats-view-container {
+  -fx-padding: 25px;
+  -fx-spacing: 30px; /* Spacing between sections */
+}
+
+.stats-header {
+  -fx-padding-bottom: 15px;
+  -fx-border-color: transparent transparent #e0e0e0 transparent;
+  -fx-border-width: 1px;
+}
+
+.stats-view-title {
+  -fx-font-size: 26px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #2c3e50; /* Dark blue-gray */
+}
+
+/* --- Stat Cards (for Total, Unanswered, Urgent) --- */
+.stats-summary-grid {
+  -fx-hgap: 25px; /* Horizontal gap between cards */
+  -fx-alignment: center-left;
+  -fx-padding-bottom: 20px;
+}
+
+.stat-card {
+  -fx-background-color: white;
+  -fx-padding: 20px;
+  -fx-background-radius: 8px;
+  -fx-border-radius: 8px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);
+  -fx-alignment: center-left; /* Align content left */
+  -fx-spacing: 5px; /* Spacing between label and number */
+  -fx-pref-width: 180px; /* Give cards a consistent width */
+  -fx-border-color: #e0e0e0; /* Subtle border */
+  -fx-border-width: 1px;
+}
+
+.stat-card-label {
+  -fx-font-size: 13px;
+  -fx-text-fill: #6c757d; /* Muted text */
+}
+
+.stat-card-value {
+  -fx-font-size: 28px; /* Larger number */
+  -fx-font-weight: bold;
+  -fx-text-fill: #343a40; /* Dark text */
+}
+
+/* Specific colors for values */
+.stat-card-value-total { -fx-text-fill: #0d6efd; } /* Blue */
+.stat-card-value-unanswered { -fx-text-fill: #dc3545; } /* Red */
+.stat-card-value-urgent { -fx-text-fill: #fd7e14; } /* Orange */
+
+/* Urgent Card Highlight */
+.stat-card-urgent {
+  -fx-border-color: #fd7e14; /* Orange border */
+  -fx-border-width: 2px;
+}
+
+/* --- Chart Section --- */
+.stats-chart-grid {
+  -fx-hgap: 30px; /* Gap between charts */
+  -fx-alignment: top-left;
+}
+
+.chart-container {
+  -fx-background-color: white;
+  -fx-padding: 15px 20px 20px 20px;
+  -fx-background-radius: 8px;
+  -fx-border-radius: 8px;
+  -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 6, 0, 0, 2);
+  -fx-border-color: #e0e0e0;
+  -fx-border-width: 1px;
+}
+
+.chart-title {
+  -fx-font-size: 16px;
+  -fx-font-weight: 600; /* Semibold */
+  -fx-text-fill: #343a40;
+  -fx-padding-bottom: 10px;
+}
+
+/* Pie Chart Styles */
+.pie-chart {
+  -fx-padding: 10px 0 0 0; /* Space above chart */
+}
+
+/* Style the chart legend */
+.chart-legend {
+  -fx-padding: 10px 0 0 0; /* Space above legend */
+  -fx-background-color: transparent;
+}
+
+.chart-legend .label {
+  -fx-font-size: 12px;
+  -fx-text-fill: #555;
+}
+
+/* Style the labels ON the chart (if using them) */
+.chart-pie-label-line {
+  -fx-stroke: #aaaaaa;
+  -fx-stroke-width: 1px;
+}
+
+.chart-pie-label {
+  -fx-fill: #333;
+  -fx-font-size: 11px;
+}
+
+
+/* --- Back Button --- */
+.stats-back-button-container {
+  -fx-padding: 20px 0 0 0; /* Space above button */
+  -fx-alignment: center-left;
+}
+
+/* Reuse existing button styles or define specific ones */
+.stats-back-button {
+  -fx-background-color: #6c757d;
+  -fx-text-fill: white;
+  -fx-font-weight: bold;
+  -fx-padding: 8px 18px;
+  -fx-cursor: hand;
+  -fx-background-radius: 5px;
+}
+.stats-back-button:hover {
+  -fx-background-color: #5a6268;
+}
+/* Optional pulsing animation definition */
+/* @keyframes pulse {
+    0% { -fx-opacity: 1; }
+    50% { -fx-opacity: 0.7; }
+    100% { -fx-opacity: 1; }
+} */
+

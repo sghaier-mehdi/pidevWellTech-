@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.welltech.controller.EditReponseController"
+            prefWidth="800" prefHeight="600"
+            stylesheets="@../css/style.css">
+
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
+                <Label text="✏️ Modifier Réponse" styleClass="view-title"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true">
+            <VBox spacing="15">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                <Label text="Contenu de la réponse :"
+                       styleClass="form-label"/>
+                <!-- The TextArea will be populated with the old response content by the controller -->
+                <TextArea fx:id="contenuField" wrapText="true" prefHeight="200"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <children>
+                <Button text="Enregistrer"
+                        onAction="#updateReponse"
+                        styleClass="button button-primary"/>
+                <Button text="Annuler"
+                        onAction="#annuler"
+                        styleClass="button button-outline"/>
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

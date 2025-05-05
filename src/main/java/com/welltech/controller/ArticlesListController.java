@@ -7,6 +7,7 @@ import com.welltech.dao.CategoryDAO;
 import com.welltech.model.Article;
 import com.welltech.model.User;
 // JavaFX Imports
+import com.welltech.model.UserRole;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings; // *** ADDED IMPORT ***
 import javafx.collections.FXCollections;
@@ -81,7 +82,7 @@ public class ArticlesListController implements Initializable {
                 setupSearchField();
                 loadArticles(); // Initial load
 
-                if (currentUser.getRole() == User.UserRole.PATIENT) {
+                if (currentUser.getRole() == UserRole.PATIENT) {
                     createArticleButton.setVisible(false);
                     createArticleButton.setManaged(false);
                 }
@@ -115,9 +116,9 @@ public class ArticlesListController implements Initializable {
         Runnable fetchTask = () -> {
             List<Article> articlesFromDB = new ArrayList<>();
             try {
-                if (currentUser.getRole() == User.UserRole.ADMIN) {
+                if (currentUser.getRole() == UserRole.ADMIN) {
                     articlesFromDB = articleDAO.getAllArticles();
-                } else if (currentUser.getRole() == User.UserRole.PSYCHIATRIST) {
+                } else if (currentUser.getRole() == UserRole.PSYCHIATRIST) {
                     List<Article> ownArticles = articleDAO.getArticlesByAuthor(currentUser.getId());
                     List<Article> publishedArticles = articleDAO.getPublishedArticles();
                     Set<Article> combinedSet = new LinkedHashSet<>(ownArticles);
@@ -258,7 +259,7 @@ public class ArticlesListController implements Initializable {
         deleteBtn.setOnAction(event -> deleteArticle(article));
 
         buttonBox.getChildren().add(viewBtn);
-        boolean canModify = currentUser.getRole() == User.UserRole.ADMIN || article.getAuthorId() == currentUser.getId();
+        boolean canModify = currentUser.getRole() == UserRole.ADMIN || article.getAuthorId() == currentUser.getId();
         if (canModify) {
             buttonBox.getChildren().addAll(editBtn, deleteBtn);
         }

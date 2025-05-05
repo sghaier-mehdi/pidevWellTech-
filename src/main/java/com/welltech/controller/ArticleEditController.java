@@ -9,6 +9,7 @@ import com.welltech.model.Article;
 import com.welltech.model.Category;   // *** Import Category ***
 import com.welltech.model.User;
 // JavaFX
+import com.welltech.model.UserRole;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList; // *** Import ObservableList ***
@@ -93,7 +94,7 @@ public class ArticleEditController implements Initializable {
                 }
 
                 // Permission check (Keep as is)
-                if (currentUser.getRole() == User.UserRole.PATIENT) {
+                if (currentUser.getRole() == UserRole.PATIENT) {
                     setFeedback("You don't have permission to create or edit articles", Color.RED);
                     saveButton.setDisable(true);
                     addCategoryButton.setDisable(true); // Disable category add for patients too

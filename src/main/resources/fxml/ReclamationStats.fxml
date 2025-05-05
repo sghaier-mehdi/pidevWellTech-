@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox styleClass="stats-view-container" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.welltech.controller.ReclamationStatsController">
+    <children>
+        <!-- Header -->
+        <HBox styleClass="stats-header">
+            <children>
+                <Label styleClass="stats-view-title" text="Reclamation Statistics" />
+            </children>
+        </HBox>
+
+        <!-- Summary Cards -->
+        <GridPane styleClass="stats-summary-grid">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" /> <!-- Fill remaining space -->
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <VBox styleClass="stat-card" GridPane.columnIndex="0">
+                    <children>
+                        <Label styleClass="stat-card-label" text="Total Reclamations" />
+                        <Label fx:id="totalCountLabel" styleClass="stat-card-value, stat-card-value-total" text="-" />
+                    </children>
+                </VBox>
+                <VBox styleClass="stat-card" GridPane.columnIndex="1">
+                    <children>
+                        <Label styleClass="stat-card-label" text="Unanswered" />
+                        <Label fx:id="unansweredCountLabel" styleClass="stat-card-value, stat-card-value-unanswered" text="-" />
+                    </children>
+                </VBox>
+                <VBox styleClass="stat-card, stat-card-urgent" GridPane.columnIndex="2"> <!-- Combined classes -->
+                    <children>
+                        <Label styleClass="stat-card-label" text="Urgent Priority" />
+                        <Label fx:id="urgentCountLabel" styleClass="stat-card-value, stat-card-value-urgent" text="-" />
+                    </children>
+                </VBox>
+            </children>
+        </GridPane>
+
+        <!-- Charts Section -->
+        <GridPane styleClass="stats-chart-grid">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" /> <!-- Each takes 50% -->
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" /> <!-- Give charts height -->
+            </rowConstraints>
+            <children>
+                <!-- Type Chart -->
+                <VBox styleClass="chart-container" GridPane.columnIndex="0">
+                    <children>
+                        <Label styleClass="chart-title" text="Reclamations by Type" />
+                        <PieChart fx:id="typePieChart" VBox.vgrow="ALWAYS" legendVisible="true" styleClass="pie-chart"/>
+                        <!-- Legend style controlled by CSS .chart-legend -->
+                    </children>
+                </VBox>
+                <!-- Sentiment Chart -->
+                <VBox styleClass="chart-container" GridPane.columnIndex="1">
+                    <children>
+                        <Label styleClass="chart-title" text="Reclamations by Sentiment" />
+                        <PieChart fx:id="sentimentPieChart" VBox.vgrow="ALWAYS" legendVisible="true" styleClass="pie-chart"/>
+                    </children>
+                </VBox>
+            </children>
+        </GridPane>
+
+        <!-- Back Button Container -->
+        <HBox styleClass="stats-back-button-container">
+            <children>
+                <Button fx:id="backButton" mnemonicParsing="false" onAction="#goBackToDashboard" styleClass="stats-back-button" text="Back to Dashboard" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

@@ -3,27 +3,47 @@ package com.welltech.controller;
 import com.welltech.WellTechApplication;
 import com.welltech.dao.UserDAO;
 import com.welltech.model.User;
+import com.welltech.model.UserRole;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import com.welltech.dao.NotificationDAO;
+import com.welltech.model.Notification;
+import javafx.scene.layout.HBox;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Popup;
 
+import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
  * Controller for the admin dashboard
  */
 public class AdminDashboardController implements Initializable {
-    
+    @FXML private Button notificationButton; // Button that triggers notification popup
+    @FXML private VBox notificationsBox;
+
     @FXML
     private Label userNameLabel;
+    @FXML
+    private Button reclamationsButton;
     
     @FXML
     private Button logoutButton;
+    @FXML private Button statsButton;
     
     @FXML
     private Button dashboardButton;
@@ -56,24 +76,32 @@ public class AdminDashboardController implements Initializable {
     private TableColumn<User, String> emailColumn;
     
     @FXML
-    private TableColumn<User, User.UserRole> roleColumn;
+    private TableColumn<User, UserRole> roleColumn;
     
     @FXML
     private TableColumn<User, Void> actionsColumn;
     
     private final UserDAO userDAO = new UserDAO();
-    
+    private final NotificationDAO notificationDAO = new NotificationDAO();
+
+    private Popup notificationPopup; // Popup window for notifications
+    private Label notificationCountLabel;
+    private User currentUser;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             // Get current user
-            User currentUser = LoginController.getCurrentUser();
+             currentUser = LoginController.getCurrentUser();
             
             if (currentUser != null) {
                 // Update welcome label with user's name
                 userNameLabel.setText("Welcome, " + currentUser.getFullName());
+                setupNotificationButton(); // Setup notification button and count
+                loadNotifications(); // Initial load of notification count
             } else {
                 System.err.println("No user is logged in");
+                notificationButton.setDisable(true);
             }
             
             // Set dashboard button as active
@@ -88,7 +116,245 @@ public class AdminDashboardController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+    private void setupNotificationButton() {
+        // Create a container (HBox) for the icon and count label
+        HBox buttonGraphic = new HBox(5); // 5px spacing
+        buttonGraphic.setAlignment(Pos.CENTER);
+
+        // You might use a real icon here, for now using text
+        Label iconLabel = new Label("🔔"); // Or load an Image/ImageView
+        iconLabel.setStyle("-fx-font-size: 16px;");
+
+        notificationCountLabel = new Label("0"); // Initialize count label
+        notificationCountLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: red; -fx-background-color: white; -fx-background-radius: 10; -fx-padding: 1 4 1 4;");
+        notificationCountLabel.setVisible(false); // Hide if count is 0
+
+        buttonGraphic.getChildren().addAll(iconLabel, notificationCountLabel);
+        notificationButton.setGraphic(buttonGraphic);
+        notificationButton.setText(""); // Remove text if you only want the graphic
+
+        // Action to show notifications
+        notificationButton.setOnAction(this::handleNotificationClick);
+
+        // Initialize the popup
+        createNotificationPopup();
+    }
+
+
+    private void loadNotifications() {
+        if (currentUser == null) return;
+
+        int unreadCount = notificationDAO.getUnreadNotificationCount(currentUser.getId());
+        Platform.runLater(() -> { // Ensure UI updates happen on the JavaFX Application Thread
+            if (unreadCount > 0) {
+                notificationCountLabel.setText(String.valueOf(unreadCount));
+                notificationCountLabel.setVisible(true);
+                // Optional: Add a visual cue like animation or color change
+                notificationButton.setStyle("-fx-background-color: #FFEB3B;"); // Yellowish highlight
+            } else {
+                notificationCountLabel.setText("0");
+                notificationCountLabel.setVisible(false);
+                notificationButton.setStyle(""); // Reset style
+            }
+        });
+    }
+
+
+    // In AdminDashboardController (and Patient/Psychiatrist)
+
+    private void createNotificationPopup() {
+        notificationPopup = new Popup();
+        notificationPopup.setAutoHide(true);
+
+        // Main content VBox - Apply style class ONLY
+        VBox popupContent = new VBox(5); // Adjust spacing if needed
+        popupContent.getStyleClass().add("notification-popup-content"); // Apply style class
+        popupContent.setMinWidth(350);
+        popupContent.setMaxWidth(450);
+        popupContent.setMaxHeight(500);
+        // Padding is handled by the CSS class now
+
+        // Title Label
+        Label title = new Label("Notifications");
+        title.getStyleClass().add("notification-popup-title");
+        title.setMaxWidth(Double.MAX_VALUE);
+        // Padding handled by CSS
+
+        // ScrollPane
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.getStyleClass().add("notification-scroll-pane"); // Apply class
+        // Remove inline style for transparency, let CSS handle it
+        // scrollPane.setStyle("-fx-background-color: transparent; ...");
+
+        // List VBox
+        VBox notificationList = new VBox(0);
+        notificationList.setId("notificationListVBox");
+        notificationList.getStyleClass().add("notification-list-vbox"); // Apply class
+        // Padding handled by CSS
+        scrollPane.setContent(notificationList);
+
+        // Button
+        Button markAllReadButton = new Button("Mark All as Read");
+        markAllReadButton.getStyleClass().add("notification-mark-read-button"); // Apply class
+        HBox buttonBox = new HBox(markAllReadButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        // Styling handled by CSS and container padding
+        buttonBox.setPadding(new Insets(10, 0, 5, 0)); // Adjusted padding for button box
+
+
+        markAllReadButton.setOnAction(e -> {
+            if (currentUser != null) {
+                notificationDAO.markAllAsReadByUserId(currentUser.getId());
+                loadNotifications();
+                notificationPopup.hide();
+            }
+        });
+
+        // Assemble
+        popupContent.getChildren().addAll(title, scrollPane, buttonBox);
+        notificationPopup.getContent().clear();
+        notificationPopup.getContent().add(popupContent);
+    }
+    @FXML
+    private void navigateToStats(ActionEvent event) {
+        System.out.println("Navigating to Reclamation Statistics...");
+        WellTechApplication.loadFXML("ReclamationStats"); // Load the new FXML
+    }
+
+    @FXML
+    private void handleNotificationClick(ActionEvent event) {
+        if (currentUser == null) return;
+
+        // Use the notificationButton itself to get coordinates
+        Button btn = notificationButton; // Use the @FXML reference directly
+
+        if (notificationPopup == null) {
+            createNotificationPopup(); // Ensure popup is created if null
+        }
+
+        if (notificationPopup.isShowing()) {
+            notificationPopup.hide();
+        } else {
+            populateNotificationPopup(); // Load content just before showing
+
+            // --- Calculate Position ---
+            // Get button's bounds in screen coordinates
+            javafx.geometry.Bounds screenBounds = btn.localToScreen(btn.getBoundsInLocal());
+            if (screenBounds == null) {
+                System.err.println("Cannot get screen bounds for notification button.");
+                // Show at default location as fallback
+                notificationPopup.show(btn.getScene().getWindow());
+                return;
+            }
+
+            // Position below and slightly to the left/aligned with the button's left edge
+            double popupX = screenBounds.getMinX(); // Align with left edge
+            double popupY = screenBounds.getMaxY() + 5; // 5px below button
+
+            // Optional: Check if popup goes off-screen and adjust X
+            // Screen screen = Screen.getPrimary();
+            // double screenWidth = screen.getVisualBounds().getWidth();
+            // if (popupX + notificationPopup.getWidth() > screenWidth) {
+            //     popupX = screenWidth - notificationPopup.getWidth() - 10; // Adjust with margin
+            // }
+
+            notificationPopup.show(btn.getScene().getWindow(), popupX, popupY);
+            // --- End Calculate Position ---
+
+
+            // Mark as read (keep this logic)
+            notificationDAO.markAllAsReadByUserId(currentUser.getId());
+            loadNotifications();
+        }
+    }
+    // In AdminDashboardController.java (and others)
+
+    // Import Region if not already imported
+    // Ensure HBox is imported
+
+    private void populateNotificationPopup() {
+        if (currentUser == null) return;
+
+        VBox popupRoot = (VBox) notificationPopup.getContent().get(0);
+        ScrollPane scrollPane = (ScrollPane) popupRoot.getChildren().get(1);
+        VBox notificationList = (VBox) scrollPane.getContent();
+
+        if (notificationList == null) return;
+        notificationList.getChildren().clear();
+
+        List<Notification> notifications = notificationDAO.getUnreadNotificationsByUserId(currentUser.getId());
+
+        if (notifications.isEmpty()) {
+            Label placeholder = new Label("No new notifications.");
+            placeholder.getStyleClass().add("notification-placeholder-label");
+            placeholder.setMaxWidth(Double.MAX_VALUE);
+            notificationList.getChildren().add(placeholder);
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM, HH:mm");
+
+            for (Notification n : notifications) {
+                // Main HBox entry container
+                // Inside populateNotificationPopup loop...
+
+                HBox notificationEntry = new HBox();
+                notificationEntry.getStyleClass().add("notification-entry");
+
+                Label iconPlaceholder = new Label("🔔");
+                iconPlaceholder.getStyleClass().add("notification-icon-placeholder");
+
+                String messageLower = n.getMessage().toLowerCase();
+                // --- Add check for URGENT ---
+                if (messageLower.contains("[urgent]") || messageLower.contains("urgent")) { // Check for keyword
+                    iconPlaceholder.setText("❗"); // Urgent icon
+                    notificationEntry.getStyleClass().add("notification-entry-urgent"); // Add specific class
+                }
+                // --- End check for URGENT ---
+                else if (messageLower.contains("submitted")) { // Keep other checks
+                    iconPlaceholder.setText("➕");
+                    notificationEntry.getStyleClass().add("notification-entry-new");
+                } else if (messageLower.contains("responded")) {
+                    iconPlaceholder.setText("💬");
+                    notificationEntry.getStyleClass().add("notification-entry-response");
+                } else if (messageLower.contains("updated")) {
+                    iconPlaceholder.setText("✎");
+                    notificationEntry.getStyleClass().add("notification-entry-update");
+                } else if (messageLower.contains("deleted")) {
+                    iconPlaceholder.setText("🗑️");
+                    notificationEntry.getStyleClass().add("notification-entry-deleted");
+                }
+
+                // ... rest of the method (text container, adding children) ...
+
+                // --- Text Content VBox ---
+                VBox textContainer = new VBox(2);
+                HBox.setHgrow(textContainer, Priority.ALWAYS);
+                // DEBUG: textContainer.setStyle("-fx-background-color: lightgreen;"); // Temporary background
+
+                Label msgLabel = new Label(n.getMessage());
+                msgLabel.getStyleClass().add("notification-message");
+
+                Label timeLabel = new Label(n.getCreatedAt().format(formatter));
+                timeLabel.getStyleClass().add("notification-timestamp");
+
+                textContainer.getChildren().addAll(msgLabel, timeLabel);
+
+                // --- Assemble Entry ---
+                notificationEntry.getChildren().addAll(iconPlaceholder, textContainer);
+
+                // Add Tooltips (AFTER adding entry to list maybe?)
+                String tooltipMsg = n.getMessage() + "\n" + n.getCreatedAt().format(formatter);
+                Tooltip tt = new Tooltip(tooltipMsg);
+                tt.setStyle("-fx-font-size: 12px;");
+                // Tooltip.install might be better applied outside loop after nodes are added
+
+                notificationList.getChildren().add(notificationEntry);
+
+            } // End for loop
+
+        }
+    }
     /**
      * Handle logout button click
      */
@@ -115,4 +381,9 @@ public class AdminDashboardController implements Initializable {
         System.out.println("Navigating to articles");
         WellTechApplication.loadFXML("articlesList");
     }
+    @FXML
+    private void ouvrirReclamations() {
+        WellTechApplication.loadFXML("AdminReclamation");
+    }
+
 } 

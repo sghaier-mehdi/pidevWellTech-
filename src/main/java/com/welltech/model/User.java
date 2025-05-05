@@ -11,14 +11,6 @@ public class User {
     private String email;
     private String phoneNumber;
     private UserRole role;
-    
-    // Enum for user roles
-    public enum UserRole {
-        PATIENT,
-        PSYCHIATRIST,
-        ADMIN
-    }
-    
     // Default constructor
     public User() {
     }

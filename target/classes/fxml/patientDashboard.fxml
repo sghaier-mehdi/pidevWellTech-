@@ -17,6 +17,7 @@
                <children>
                   <Label fx:id="userNameLabel" text="Welcome, [User]" />
                   <Button fx:id="logoutButton" onAction="#handleLogout" text="Logout" />
+                  <Button fx:id="notificationButton" layoutX="680.0" layoutY="15.0" mnemonicParsing="false" text="🔔" onAction="#handleNotificationClick" />
                </children>
             </HBox>
          </children>
@@ -31,6 +32,7 @@
             <Button fx:id="dashboardButton" maxWidth="Infinity" styleClass="sidebar-button, active" text="Dashboard" />
             <Button fx:id="appointmentsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Appointments" />
             <Button fx:id="historyButton" maxWidth="Infinity" styleClass="sidebar-button" text="History" />
+            <Button fx:id="reclamationsButton" text="Reclamations" onAction="#goToReclamations" styleClass="sidebar-button"/>
             <Button fx:id="articlesButton" maxWidth="Infinity" styleClass="sidebar-button" text="Articles" onAction="#navigateToArticles" />
             <Button fx:id="messagesButton" maxWidth="Infinity" styleClass="sidebar-button" text="Messages" />
             <Button fx:id="profileButton" maxWidth="Infinity" styleClass="sidebar-button" text="Profile" onAction="#navigateToProfile" />

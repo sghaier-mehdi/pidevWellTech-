@@ -21,6 +21,7 @@
                <children>
                   <Label fx:id="userNameLabel" text="Welcome, Admin" />
                   <Button fx:id="logoutButton" onAction="#handleLogout" text="Logout" />
+                   <Button fx:id="notificationButton" layoutX="750.0" layoutY="20.0" mnemonicParsing="false" text="Notifications" onAction="#handleNotificationClick" />
                </children>
             </HBox>
          </children>
@@ -38,7 +39,10 @@
             <Button fx:id="patientsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Patients" />
             <Button fx:id="articlesButton" maxWidth="Infinity" styleClass="sidebar-button" text="Articles" onAction="#navigateToArticles" />
             <Button fx:id="settingsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Settings" />
-            <Button fx:id="profileButton" maxWidth="Infinity" styleClass="sidebar-button" text="Profile" onAction="#navigateToProfile" />
+             <Button fx:id="reclamationsButton" text="Réclamations" onAction="#ouvrirReclamations" />
+             <!-- Example addition within a VBox in adminDashboard.fxml -->
+             <Button fx:id="statsButton" mnemonicParsing="false" onAction="#navigateToStats" text="View Statistics" styleClass="sidebar-button" />
+             <Button fx:id="profileButton" maxWidth="Infinity" styleClass="sidebar-button" text="Profile" onAction="#navigateToProfile" />
          </children>
          <padding>
             <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />

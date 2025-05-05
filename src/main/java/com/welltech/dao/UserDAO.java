@@ -1,6 +1,7 @@
 package com.welltech.dao;
 
 import com.welltech.model.User;
+import com.welltech.model.UserRole;
 import com.welltech.util.DatabaseConnection;
 
 import java.sql.Connection;
@@ -270,7 +271,7 @@ public class UserDAO {
         user.setFullName(rs.getString("full_name"));
         user.setEmail(rs.getString("email"));
         user.setPhoneNumber(rs.getString("phone_number"));
-        user.setRole(User.UserRole.valueOf(rs.getString("role")));
+        user.setRole(UserRole.valueOf(rs.getString("role")));
         return user;
     }
 } 

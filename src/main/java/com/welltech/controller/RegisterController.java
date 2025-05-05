@@ -3,6 +3,7 @@ package com.welltech.controller;
 import com.welltech.WellTechApplication;
 import com.welltech.dao.UserDAO;
 import com.welltech.model.User;
+import com.welltech.model.UserRole;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -130,7 +131,7 @@ public class RegisterController implements Initializable {
                     fullNameField.getText(),
                     emailField.getText(),
                     phoneField.getText(),
-                    User.UserRole.valueOf(roleComboBox.getValue())
+                    UserRole.valueOf(roleComboBox.getValue())
                 );
                 
                 System.out.println("Inserting user into database");
