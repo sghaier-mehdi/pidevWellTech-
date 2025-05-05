@@ -11,7 +11,10 @@ public class User {
     private String email;
     private String phoneNumber;
     private UserRole role;
-    
+
+    public User(int id, String username, String password, String fullName, String phoneNumber, UserRole role) {
+    }
+
     // Enum for user roles
     public enum UserRole {
         PATIENT,

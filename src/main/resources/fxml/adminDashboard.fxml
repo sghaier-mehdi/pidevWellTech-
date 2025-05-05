@@ -37,6 +37,10 @@
             <Button fx:id="psychiatristsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Psychiatrists" />
             <Button fx:id="patientsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Patients" />
             <Button fx:id="articlesButton" maxWidth="Infinity" styleClass="sidebar-button" text="Articles" onAction="#navigateToArticles" />
+            <Button fx:id="couponsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Coupons" onAction="#navigateToCoupons" />
+            <Button fx:id="objectivesButton" maxWidth="Infinity" styleClass="sidebar-button" text="Objectives" onAction="#navigateToObjectives" />
+            <Button fx:id="sendNotificationButton" maxWidth="Infinity" styleClass="sidebar-button" text="Send Notification" onAction="#showSendNotificationDialog" />
+             <Button fx:id="chatbotButton" onAction="#navigateToChatbot" styleClass="sidebar-button" text="AI Chatbot" maxWidth="Infinity"/>
             <Button fx:id="productsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Products" onAction="#handleProducts" />
             <Button fx:id="ordersButton" maxWidth="Infinity" styleClass="sidebar-button" text="Orders" onAction="#handleOrders" />
             <Button fx:id="settingsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Settings" />
