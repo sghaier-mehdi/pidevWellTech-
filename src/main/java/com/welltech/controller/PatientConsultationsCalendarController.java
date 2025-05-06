@@ -347,7 +347,7 @@ public class PatientConsultationsCalendarController implements Initializable {
                 System.out.println("PatientConsultationsCalendarController: Detail stage owner set from calendar grid scene."); // <-- Debug print
             } else {
                 // Fallback if calendarGrid is not yet in a scene (less likely for event handler)
-                detailStage.initOwner(WellTechApplication.getPrimaryStage()); // Use the primary stage
+                //detailStage.initOwner(WellTechApplication.getPrimaryStage()); // Use the primary stage
                 System.out.println("PatientConsultationsCalendarController: Detail stage owner set from primary stage."); // <-- Debug print
             }
 

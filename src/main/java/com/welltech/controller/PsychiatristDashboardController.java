@@ -183,7 +183,7 @@ public class PsychiatristDashboardController implements Initializable {
 
     @FXML
     private void showNotifications(ActionEvent event) {
-        NotificationService.showGlobalNotifications();
+        NotificationService.showNotifications();
     }
     // --- Add other navigation handlers if they exist in your FXML ---
     // @FXML private void navigateToPatients(ActionEvent event) { ... }

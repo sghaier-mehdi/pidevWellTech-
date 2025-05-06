@@ -16,6 +16,7 @@
             <HBox alignment="CENTER_RIGHT" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
                   <Label fx:id="userNameLabel" text="Welcome, [User]" />
+                  <Button fx:id="notificationsButton" maxWidth="Infinity" styleClass="sidebar-button" text="🔔" onAction="#showNotifications" />
                   <Button fx:id="logoutButton" onAction="#handleLogout" text="Logout" />
                </children>
             </HBox>
