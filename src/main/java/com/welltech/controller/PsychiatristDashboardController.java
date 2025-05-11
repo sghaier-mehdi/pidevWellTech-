@@ -2,6 +2,7 @@ package com.welltech.controller;
 
 import com.welltech.WellTechApplication;
 import com.welltech.model.User;
+import com.welltech.model.UserRole;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,12 +21,28 @@ import javafx.scene.layout.VBox;
 import com.welltech.dao.NotificationDAO; // Import NotificationDAO
 import com.welltech.model.Notification;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn; // Keep if you still have a table on the dashboard
+import javafx.scene.control.TableView;    // Keep if you still have a table on the dashboard
+import com.welltech.service.NotificationService;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.net.HttpURLConnection;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Controller for the psychiatrist dashboard
@@ -35,44 +52,49 @@ public class PsychiatristDashboardController implements Initializable {
     @FXML private Button notificationButton; // Button that triggers notification popup
     @FXML private VBox notificationsBox;
 
+
     @FXML
     private Label userNameLabel;
-    
+
     @FXML
     private Button logoutButton;
-    
+
     @FXML
     private Button dashboardButton;
-    
-    @FXML
-    private Button patientsButton;
-    
+
+    // --- Add this FXML injection for the Appointments button ---
     @FXML
     private Button appointmentsButton;
-    
+    // ----------------------------------------------------------
+
     @FXML
-    private Button messagesButton;
-    
+    private Button patientsButton; // Assuming this exists in your FXML
+
+    @FXML
+    private Button messagesButton; // Assuming this exists in your FXML
+
     @FXML
     private Button profileButton;
+    @FXML
+    private Button chatbotButton;
+
+    // Assuming these are part of a TableView on the dashboard (can be kept or removed if table is removed)
+    @FXML private TableView<?> appointmentsTable;
+    @FXML private TableColumn<?, ?> timeColumn;
+    @FXML private TableColumn<?, ?> patientColumn;
+    @FXML private TableColumn<?, ?> purposeColumn;
+    @FXML private TableColumn<?, ?> statusColumn;
+    @FXML private TableColumn<?, ?> actionColumn;
+    // End TableView injections
+
+    @FXML
+    private Button articlesButton;
     
     @FXML
-    private TableView<?> appointmentsTable;
+    private Button couponsButton;
     
     @FXML
-    private TableColumn<?, ?> timeColumn;
-    
-    @FXML
-    private TableColumn<?, ?> patientColumn;
-    
-    @FXML
-    private TableColumn<?, ?> purposeColumn;
-    
-    @FXML
-    private TableColumn<?, ?> statusColumn;
-    
-    @FXML
-    private TableColumn<?, ?> actionColumn;
+    private Button objectivesButton;
     private final NotificationDAO notificationDAO = new NotificationDAO(); // Instantiate DAO
     private User currentUser;
     private Popup notificationPopup; // Popup window for notifications
@@ -80,30 +102,49 @@ public class PsychiatristDashboardController implements Initializable {
     @FXML
     private Button reclamationsButton;
     
+    @FXML
+    private Button notificationsButton;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
             // Get current user
              currentUser = LoginController.getCurrentUser();
             
+            User currentUser = LoginController.getCurrentUser();
+
             if (currentUser != null) {
                 // Update welcome label with user's name
                 userNameLabel.setText("Welcome, Dr. " + currentUser.getFullName());
                 setupNotificationButton(); // Setup notification button and count
                 loadNotifications(); // Initial load of notification count
 
+                // Ensure correct role
+                if (currentUser.getRole() != UserRole.PSYCHIATRIST && currentUser.getRole() != UserRole.ADMIN) {
+                    System.err.println("User is not a Psychiatrist or Admin, redirecting from Psychiatrist Dashboard.");
+                    WellTechApplication.loadFXML("login"); // Or appropriate dashboard
+                    return;
+                }
             } else {
                 System.err.println("No user is logged in");
                 notificationButton.setDisable(true);
+                System.err.println("No user is logged in for PsychiatristDashboardController");
+                WellTechApplication.loadFXML("login");
+                return; // Stop initialization
             }
-            
-            // Set dashboard button as active
+
+            // Set dashboard button as active when on the dashboard view
             dashboardButton.getStyleClass().add("active");
-            
-            // Initialize appointment table (dummy data would be added here)
+            // --- Ensure Appointments button does NOT have 'active' style here ---
+            if (appointmentsButton != null) appointmentsButton.getStyleClass().remove("active");
+            // Make sure to remove 'active' from other buttons if they might have it
+            // ... remove 'active' from patientsButton, messagesButton, profileButton
+
+
+            // Initialize appointment table (dummy data would be added here if you still have a table)
             // For a real app, we would fetch appointments from database
-            
-            System.out.println("PsychiatristDashboardController initialized");
+
+            System.out.println("PsychiatristDashboardController initialized successfully");
         } catch (Exception e) {
             System.err.println("Error initializing PsychiatristDashboardController: " + e.getMessage());
             e.printStackTrace();
@@ -332,6 +373,7 @@ public class PsychiatristDashboardController implements Initializable {
             }
         }
     }
+
     /**
      * Handle logout button click
      */
@@ -340,7 +382,7 @@ public class PsychiatristDashboardController implements Initializable {
         System.out.println("Logging out");
         LoginController.logout();
     }
-    
+
     /**
      * Navigate to the profile page
      */
@@ -349,7 +391,7 @@ public class PsychiatristDashboardController implements Initializable {
         System.out.println("Navigating to profile");
         WellTechApplication.loadFXML("profile");
     }
-    
+
     /**
      * Navigate to the articles page
      */
@@ -371,4 +413,53 @@ public class PsychiatristDashboardController implements Initializable {
         }
     }
 
-} 
+
+
+    /**
+     * === ADD THIS METHOD ===
+     * Navigate to the consultations/appointments list page
+     */
+    @FXML
+    private void navigateToAppointments(ActionEvent event) { // Or navigateToConsultations
+        System.out.println("Navigating to appointments (consultations list)");
+        // Load the FXML for the consultations list view
+        WellTechApplication.loadFXML("consultationsList");
+    }
+    // =======================
+
+    /**
+     * Navigate back to the dashboard (likely reloads the current view)
+     */
+    @FXML
+    private void navigateToDashboard(ActionEvent event) {
+        System.out.println("Navigating back to Psychiatrist dashboard");
+        WellTechApplication.loadFXML("psychiatristDashboard"); // Reloads the current view
+    }
+
+    @FXML
+    private void navigateToCoupons(ActionEvent event) {
+        System.out.println("Navigating to coupons");
+        WellTechApplication.loadFXML("coupon");
+    }
+
+    @FXML
+    private void navigateToObjectives(ActionEvent event) {
+        System.out.println("Navigating to objectives");
+        WellTechApplication.loadFXML("objectives");
+    }
+
+    @FXML
+    private void navigateToChatbot(ActionEvent event) {
+        System.out.println("PsychiatristDashboardController: Navigating to Chatbot.");
+        WellTechApplication.loadFXML("chatbotView");
+    }
+
+    @FXML
+    private void showNotifications(ActionEvent event) {
+        NotificationService.showNotifications();
+    }
+    // --- Add other navigation handlers if they exist in your FXML ---
+    // @FXML private void navigateToPatients(ActionEvent event) { ... }
+    // @FXML private void navigateToMessages(ActionEvent event) { ... }
+    // -------------------------------------------------------------
+}

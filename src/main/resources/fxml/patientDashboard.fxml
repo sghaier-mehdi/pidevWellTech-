@@ -16,6 +16,7 @@
             <HBox alignment="CENTER_RIGHT" spacing="10.0" HBox.hgrow="ALWAYS">
                <children>
                   <Label fx:id="userNameLabel" text="Welcome, [User]" />
+                  <Button fx:id="notificationsButton" maxWidth="Infinity" styleClass="sidebar-button" text="🔔" onAction="#showNotifications" />
                   <Button fx:id="logoutButton" onAction="#handleLogout" text="Logout" />
                   <Button fx:id="notificationButton" layoutX="680.0" layoutY="15.0" mnemonicParsing="false" text="🔔" onAction="#handleNotificationClick" />
                </children>
@@ -30,10 +31,11 @@
       <VBox spacing="10.0" styleClass="sidebar">
          <children>
             <Button fx:id="dashboardButton" maxWidth="Infinity" styleClass="sidebar-button, active" text="Dashboard" />
-            <Button fx:id="appointmentsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Appointments" />
+            <Button fx:id="appointmentsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Appointments" onAction="#navigateToConsultationsList"/>
             <Button fx:id="historyButton" maxWidth="Infinity" styleClass="sidebar-button" text="History" />
             <Button fx:id="reclamationsButton" text="Reclamations" onAction="#goToReclamations" styleClass="sidebar-button"/>
             <Button fx:id="articlesButton" maxWidth="Infinity" styleClass="sidebar-button" text="Articles" onAction="#navigateToArticles" />
+            <Button fx:id="chatbotButton" onAction="#navigateToChatbot" styleClass="sidebar-button" text="AI Chatbot" maxWidth="Infinity"/>
             <Button fx:id="messagesButton" maxWidth="Infinity" styleClass="sidebar-button" text="Messages" />
             <Button fx:id="profileButton" maxWidth="Infinity" styleClass="sidebar-button" text="Profile" onAction="#navigateToProfile" />
          </children>

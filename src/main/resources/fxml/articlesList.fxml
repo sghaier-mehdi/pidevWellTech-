@@ -28,6 +28,7 @@
             <Button fx:id="dashboardButton" onAction="#navigateToDashboard" styleClass="sidebar-button" text="Dashboard" />
             <Button fx:id="articlesButton" styleClass="sidebar-button-active" text="Articles" /> <!-- Active -->
             <Button fx:id="profileButton" onAction="#navigateToProfile" styleClass="sidebar-button" text="Profile" />
+            <Button fx:id="chatbotButton" onAction="#navigateToChatbot" styleClass="sidebar-button" text="AI Chatbot" maxWidth="Infinity"/>
          </children>
       </VBox>
    </left>
@@ -46,6 +47,7 @@
                   <Label text="Filter:" alignment="CENTER_LEFT" minWidth="-Infinity"/>
                   <ComboBox fx:id="filterComboBox" prefWidth="150.0" promptText="All" styleClass="filter-combo-box" />
                   <Label fx:id="statusLabel" styleClass="status-label" text="..." minWidth="-Infinity"/>
+                  <Button fx:id="chatbotButton" onAction="#navigateToChatbot" styleClass="button-ai" text="AI Chatbot" maxWidth="Infinity"/>
                </children>
             </HBox>
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" pannable="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">

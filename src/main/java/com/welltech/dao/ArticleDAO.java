@@ -4,6 +4,7 @@ package com.welltech.dao;
 import com.welltech.db.DatabaseConnection;
 import com.welltech.model.Article;
 import com.welltech.model.Category; // *** Import Category ***
+import java.util.Arrays;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ import java.util.List;
 public class ArticleDAO {
 
     // --- Helper Method to Extract Article ---
-    // Updated to handle Category object and join results
+// Updated to handle Category object and join results
     private Article extractArticleFromResultSet(ResultSet rs) throws SQLException {
         int articleId = rs.getInt("a_id"); // Use alias
         String title = rs.getString("a_title");
@@ -45,7 +46,7 @@ public class ArticleDAO {
     }
 
     // --- Base SQL Query Fragment with Joins ---
-    // Define this once to avoid repetition and ensure consistency
+// Define this once to avoid repetition and ensure consistency
     private final String BASE_ARTICLE_QUERY =
             "SELECT " +
                     "a.id AS a_id, a.title AS a_title, a.content AS a_content, a.author_id AS a_author_id, " +
@@ -58,7 +59,7 @@ public class ArticleDAO {
                     "LEFT JOIN category c ON a.category_id = c.id "; // LEFT JOIN to include articles even if category is NULL
 
 
-    // --- CRUD Methods ---
+// --- CRUD Methods ---
 
     /**
      * Insert a new article into the database.
@@ -290,5 +291,65 @@ public class ArticleDAO {
         return articles;
     }
 
-    // Add other specific query methods if needed (e.g., search, filter by category)
+// Add other specific query methods if needed (e.g., search, filter by category)
+
+
+    // === ADD THIS METHOD FOR SEARCHING PUBLISHED ARTICLES ===
+    /**
+     * Searches published articles by keywords in title or content.
+     * @param keywords An array of keywords to search for.
+     * @param limit The maximum number of articles to return.
+     * @return A list of matching published articles.
+     */
+    public List<Article> searchPublishedArticlesByKeywords(String[] keywords, int limit) {
+        List<Article> articles = new ArrayList<>();
+        if (keywords == null || keywords.length == 0) {
+            System.out.println("ArticleDAO: No keywords provided for search."); // Debug
+            return articles; // Return empty list if no keywords
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder(BASE_ARTICLE_QUERY); // Start with base query
+        sqlBuilder.append(" WHERE a.is_published = TRUE AND ("); // Only search published articles
+
+        // Append conditions for each keyword (search in title OR content)
+        for (int i = 0; i < keywords.length; i++) {
+            sqlBuilder.append("(LOWER(a.title) LIKE ? OR LOWER(a.content) LIKE ?)");
+            if (i < keywords.length - 1) {
+                sqlBuilder.append(" OR ");
+            }
+        }
+        sqlBuilder.append(")"); // Close the WHERE clause parentheses
+
+        // Add ordering (e.g., by updated date) and limit
+        sqlBuilder.append(" ORDER BY a.updated_at DESC LIMIT ?");
+
+        String sql = sqlBuilder.toString();
+        System.out.println("ArticleDAO: Executing search query: " + sql + " with keywords: " + Arrays.toString(keywords)); // Debug query
+
+        try (Connection conn = DatabaseConnection.getConnection(); // Use your DB connection class
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            int paramIndex = 1;
+            // Set parameters for each keyword (two placeholders per keyword)
+            for (String keyword : keywords) {
+                String pattern = "%" + keyword.toLowerCase() + "%"; // Use lowercase for case-insensitive search
+                pstmt.setString(paramIndex++, pattern); // For title LIKE
+                pstmt.setString(paramIndex++, pattern); // For content LIKE
+            }
+            pstmt.setInt(paramIndex, limit); // Set the limit parameter
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    articles.add(extractArticleFromResultSet(rs)); // Use the helper method
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("ArticleDAO: SQL Error searching articles: " + e.getMessage());
+            e.printStackTrace(); // Handle appropriately
+        }
+        System.out.println("ArticleDAO: searchPublishedArticlesByKeywords returned " + articles.size() + " articles."); // Debug print
+        return articles;
+    }
+    // ==========================================================
 }

@@ -500,4 +500,10 @@ public class ArticlesListController implements Initializable {
     }
     @FXML private void navigateToProfile(ActionEvent event) { WellTechApplication.loadFXML("profile"); }
     @FXML private void handleLogout(ActionEvent event) { LoginController.logout(); }
+
+    @FXML
+    private void navigateToChatbot(ActionEvent event) {
+        System.out.println("AdminDashboardController: Navigating to Chatbot.");
+        WellTechApplication.loadFXML("chatbotView");
+    }
 }

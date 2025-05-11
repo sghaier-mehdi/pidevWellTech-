@@ -2,7 +2,9 @@ package com.welltech.dao;
 
 import com.welltech.model.User;
 import com.welltech.model.UserRole;
-import com.welltech.util.DatabaseConnection;
+// Adjust import if DatabaseConnection is in a different package
+import com.welltech.db.DatabaseConnection;
+// import com.welltech.util.DatabaseConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +18,7 @@ import java.util.List;
  * Data Access Object for User-related database operations
  */
 public class UserDAO {
-    
+
     /**
      * Insert a new user into the database
      * @param user User object to insert
@@ -24,254 +26,330 @@ public class UserDAO {
      */
     public int insertUser(User user) {
         String sql = "INSERT INTO users (username, password, full_name, email, phone_number, role) VALUES (?, ?, ?, ?, ?, ?)";
-        
+        // Input validation (basic)
+        if (user == null || user.getUsername() == null || user.getPassword() == null || user.getRole() == null) {
+            System.err.println("User object or essential fields (username, password, role) are null. Cannot insert.");
+            return -1;
+        }
+
         System.out.println("Attempting to insert user: " + user.getUsername());
-        
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        
-        try {
-            // Get connection
-            System.out.println("Getting database connection...");
-            conn = DatabaseConnection.getConnection();
-            System.out.println("Connection successful");
-            
-            // Prepare statement
-            System.out.println("Preparing SQL statement...");
-            pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            
-            // Set parameters
-            System.out.println("Setting parameters...");
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            if (conn == null) { System.err.println("DB Connection is null in insertUser."); return -1;}
+
             pstmt.setString(1, user.getUsername());
-            pstmt.setString(2, user.getPassword());
+            pstmt.setString(2, user.getPassword()); // Store HASHED password
             pstmt.setString(3, user.getFullName());
             pstmt.setString(4, user.getEmail());
-            pstmt.setString(5, user.getPhoneNumber());
-            pstmt.setString(6, user.getRole().toString());
-            
-            // Execute update
-            System.out.println("Executing SQL: " + sql);
+            pstmt.setString(5, user.getPhoneNumber()); // Ensure E.164 format
+            pstmt.setString(6, user.getRole().name()); // Use enum's name() method
+
             int affectedRows = pstmt.executeUpdate();
-            System.out.println("Update executed. Affected rows: " + affectedRows);
-            
+            System.out.println("Insert executed. Affected rows: " + affectedRows);
+
             if (affectedRows > 0) {
                 try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                    if (rs.next()) {
+                    if (rs != null && rs.next()) {
                         int id = rs.getInt(1);
                         System.out.println("User inserted with ID: " + id);
+                        user.setId(id); // Set the ID back on the original object
                         return id;
+                    } else {
+                        System.err.println("User insertion succeeded but failed to retrieve generated ID.");
                     }
                 }
             }
-            
+
         } catch (SQLException e) {
-            System.err.println("SQL Error inserting user: " + e.getMessage());
+            System.err.println("SQL Error inserting user '" + user.getUsername() + "': " + e.getMessage() + " (SQLState: " + e.getSQLState() + ", ErrorCode: " + e.getErrorCode() + ")");
+            // Only print stack trace during development/debugging
+            // e.printStackTrace();
+
+            if (e.getErrorCode() == 1062) { // Specific code for MySQL duplicate entry
+                System.err.println("-> Hint: Duplicate entry error - username or email likely already exists.");
+            }
+        } catch (Exception e) { // Catch other potential exceptions
+            System.err.println("Unexpected error inserting user: " + e.getMessage());
             e.printStackTrace();
-            
-            // Check for common MySQL error codes
-            if (e.getErrorCode() == 1062) {
-                System.err.println("Duplicate entry error - username or email already exists");
-            } else if (e.getErrorCode() == 1045) {
-                System.err.println("Access denied - check your MySQL credentials");
-            } else if (e.getErrorCode() == 1049) {
-                System.err.println("Unknown database - make sure the database exists");
-            } else if (e.getErrorCode() == 0) {
-                System.err.println("Connection error - ensure MySQL is running");
-            }
-        } finally {
-            // Clean up resources
-            try {
-                if (pstmt != null) pstmt.close();
-                // Don't close the connection here as it's managed by DatabaseConnection
-            } catch (SQLException e) {
-                System.err.println("Error closing resources: " + e.getMessage());
-            }
         }
-        
-        System.err.println("User insertion failed");
+
+        System.err.println("User insertion failed for username: " + user.getUsername());
         return -1;
     }
-    
+
     /**
      * Get a user by their ID
      * @param id User ID
      * @return User object if found, null otherwise
      */
     public User getUserById(int id) {
-        try {
-            // Get database connection
-            Connection connection = DatabaseConnection.getConnection();
-            
-            // Create query
-            String query = "SELECT * FROM users WHERE id = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-            
-            // Execute query
-            ResultSet resultSet = statement.executeQuery();
-            
-            // Process results
-            if (resultSet.next()) {
-                return extractUserFromResultSet(resultSet);
+        String sql = "SELECT id, username, password, full_name, email, phone_number, role FROM users WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            if (conn == null) { System.err.println("DB Connection is null in getUserById."); return null;}
+
+            pstmt.setInt(1, id);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return extractUserFromResultSet(rs); // Use the helper method
+                }
             }
-            
         } catch (SQLException e) {
-            System.err.println("Error getting user by ID: " + e.getMessage());
+            System.err.println("Error getting user by ID " + id + ": " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Unexpected error getting user by ID " + id + ": " + e.getMessage());
             e.printStackTrace();
         }
-        
         return null;
     }
-    
+
     /**
      * Get a user by their username
      * @param username Username
      * @return User object if found, null otherwise
      */
     public User getUserByUsername(String username) {
-        try {
-            // Get database connection
-            Connection connection = DatabaseConnection.getConnection();
-            
-            // Create query
-            String query = "SELECT * FROM users WHERE username = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, username);
-            
-            // Execute query
-            ResultSet resultSet = statement.executeQuery();
-            
-            // Process results
-            if (resultSet.next()) {
-                return extractUserFromResultSet(resultSet);
+        if (username == null || username.isBlank()) {
+            return null; // Cannot search for null/empty username
+        }
+        String sql = "SELECT id, username, password, full_name, email, phone_number, role FROM users WHERE username = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            if (conn == null) { System.err.println("DB Connection is null in getUserByUsername."); return null;}
+
+            pstmt.setString(1, username);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return extractUserFromResultSet(rs); // Use the helper method
+                }
             }
-            
         } catch (SQLException e) {
-            System.err.println("Error getting user by username: " + e.getMessage());
+            System.err.println("Error getting user by username '" + username + "': " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Unexpected error getting user by username '" + username + "': " + e.getMessage());
             e.printStackTrace();
         }
-        
         return null;
     }
-    
+
     /**
      * Get all users from the database
-     * @return List of User objects
+     * @return List of User objects, potentially empty.
      */
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM users";
-        
+        String sql = "SELECT id, username, password, full_name, email, phone_number, role FROM users ORDER BY full_name"; // Added ORDER BY
+
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-            
+
+            if (conn == null) { System.err.println("DB Connection is null in getAllUsers."); return users;}
+
+
             while (rs.next()) {
-                User user = extractUserFromResultSet(rs);
-                users.add(user);
+                User user = extractUserFromResultSet(rs); // Use the helper method
+                if (user != null) { // Check if extraction was successful
+                    users.add(user);
+                }
             }
-            
+
         } catch (SQLException e) {
             System.err.println("Error getting all users: " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Unexpected error getting all users: " + e.getMessage());
+            e.printStackTrace();
         }
-        
+        System.out.println("Retrieved " + users.size() + " users.");
         return users;
     }
-    
+
     /**
-     * Update a user in the database
-     * @param user User object to update
-     * @return true if successful, false otherwise
+     * Update basic user profile information (name, email, phone).
+     * Does NOT update password or role via this method.
+     * @param user User object with updated info and correct ID.
+     * @return true if successful, false otherwise.
      */
     public boolean updateUser(User user) {
-        try {
-            // Get database connection
-            Connection connection = DatabaseConnection.getConnection();
-            
-            // Create query
-            String query = "UPDATE users SET full_name = ?, email = ?, phone_number = ? WHERE id = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, user.getFullName());
-            statement.setString(2, user.getEmail());
-            statement.setString(3, user.getPhoneNumber());
-            statement.setInt(4, user.getId());
-            
-            // Execute query
-            int rowsAffected = statement.executeUpdate();
-            
-            return rowsAffected > 0;
-            
-        } catch (SQLException e) {
-            System.err.println("Error updating user: " + e.getMessage());
-            e.printStackTrace();
+        if (user == null || user.getId() <= 0) {
+            System.err.println("Cannot update user: User object is null or ID is invalid.");
             return false;
         }
-    }
-    
-    /**
-     * Delete a user from the database
-     * @param id User ID
-     * @return true if successful, false otherwise
-     */
-    public boolean deleteUser(int id) {
-        String sql = "DELETE FROM users WHERE id = ?";
-        
+        String sql = "UPDATE users SET full_name = ?, email = ?, phone_number = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setInt(1, id);
-            
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
-            
-        } catch (SQLException e) {
-            System.err.println("Error deleting user: " + e.getMessage());
-        }
-        
-        return false;
-    }
-    
-    /**
-     * Update user password in the database
-     * @param userId User ID
-     * @param newPassword New password (should be hashed in a real app)
-     * @return true if the update was successful
-     */
-    public boolean updateUserPassword(int userId, String newPassword) {
-        try {
-            // Get database connection
-            Connection connection = DatabaseConnection.getConnection();
-            
-            // Create query
-            String query = "UPDATE users SET password = ? WHERE id = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, newPassword); // In a real app, hash the password
-            statement.setInt(2, userId);
-            
-            // Execute query
-            int rowsAffected = statement.executeUpdate();
-            
+
+            if (conn == null) { System.err.println("DB Connection is null in updateUser."); return false;}
+
+            pstmt.setString(1, user.getFullName());
+            pstmt.setString(2, user.getEmail());
+            pstmt.setString(3, user.getPhoneNumber()); // Ensure E.164 format if setting
+            pstmt.setInt(4, user.getId());
+
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("User update executed for ID " + user.getId() + ". Rows affected: " + rowsAffected);
             return rowsAffected > 0;
-            
+
         } catch (SQLException e) {
-            System.err.println("Error updating user password: " + e.getMessage());
+            System.err.println("Error updating user ID " + user.getId() + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            System.err.println("Unexpected error updating user ID " + user.getId() + ": " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
-    
+
     /**
-     * Helper method to extract a User object from a ResultSet
+     * Delete a user from the database by ID.
+     * Note: Foreign key constraints should handle related data (reclamations, notifications) deletion.
+     * @param id User ID
+     * @return true if successful, false otherwise.
+     */
+    public boolean deleteUser(int id) {
+        if (id <= 0) {
+            System.err.println("Cannot delete user: Invalid ID " + id);
+            return false;
+        }
+        String sql = "DELETE FROM users WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            if (conn == null) { System.err.println("DB Connection is null in deleteUser."); return false;}
+
+            pstmt.setInt(1, id);
+
+            int affectedRows = pstmt.executeUpdate();
+            System.out.println("User delete executed for ID " + id + ". Rows affected: " + affectedRows);
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error deleting user ID " + id + ": " + e.getMessage());
+            // e.printStackTrace(); // Only log stack trace if really needed for delete
+        } catch (Exception e) {
+            System.err.println("Unexpected error deleting user ID " + id + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Update user password in the database.
+     * IMPORTANT: The new password should be securely HASHED before calling this method.
+     * @param userId User ID
+     * @param hashedPassword The new securely hashed password.
+     * @return true if the update was successful.
+     */
+    public boolean updateUserPassword(int userId, String hashedPassword) {
+        if (userId <= 0 || hashedPassword == null || hashedPassword.isBlank()) {
+            System.err.println("Cannot update password: Invalid user ID or password hash.");
+            return false;
+        }
+        String sql = "UPDATE users SET password = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            if (conn == null) { System.err.println("DB Connection is null in updateUserPassword."); return false;}
+
+            pstmt.setString(1, hashedPassword); // Store the HASH
+            pstmt.setInt(2, userId);
+
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("Password update executed for user ID " + userId + ". Rows affected: " + rowsAffected);
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error updating password for user ID " + userId + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            System.err.println("Unexpected error updating password for user ID " + userId + ": " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Helper method to extract a User object from a ResultSet row.
+     * Uses setters on a default-constructed object.
      */
     private User extractUserFromResultSet(ResultSet rs) throws SQLException {
-        User user = new User();
+        if (rs == null) return null;
+
+        User user = new User(); // Use default constructor
         user.setId(rs.getInt("id"));
         user.setUsername(rs.getString("username"));
-        user.setPassword(rs.getString("password"));
+        user.setPassword(rs.getString("password")); // Retrieving hash from DB
         user.setFullName(rs.getString("full_name"));
         user.setEmail(rs.getString("email"));
-        user.setPhoneNumber(rs.getString("phone_number"));
-        user.setRole(UserRole.valueOf(rs.getString("role")));
-        return user;
+        user.setPhoneNumber(rs.getString("phone_number")); // Retrieve as is
+
+        // Convert role string from DB back to Enum safely
+        String roleString = rs.getString("role");
+        try {
+            if (roleString != null) {
+                user.setRole(UserRole.valueOf(roleString.toUpperCase())); // Use separate UserRole enum
+            } else {
+                System.err.println("Warning: Null role found for user ID: " + user.getId());
+                // Handle null role case if necessary (e.g., set a default or throw exception)
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println("Warning: Invalid role string '" + roleString + "' found in database for user ID: " + user.getId());
+            // Handle invalid role case (e.g., set null, default, or throw exception)
+            user.setRole(null); // Example: set to null if invalid
+        }
+
+        return user; // Return the object populated via setters
+        // Removed the duplicate return statement that used the constructor
     }
-} 
+
+    /**
+     * Retrieves a list of users based on their role.
+     */
+    public List<User> getUsersByRole(UserRole role) {
+        List<User> users = new ArrayList<>();
+        if (role == null) {
+            System.err.println("Cannot get users by role: Role parameter is null.");
+            return users; // Return empty list
+        }
+        // Select specific columns to avoid retrieving potentially sensitive password hash unless needed
+        String sql = "SELECT id, username, password, full_name, email, phone_number, role FROM users WHERE role = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            if (conn == null) { System.err.println("DB Connection is null in getUsersByRole."); return users;}
+
+            pstmt.setString(1, role.name()); // Convert enum to string for query
+            System.out.println("Executing query in UserDAO: getUsersByRole with role: " + role.name());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    User user = extractUserFromResultSet(rs);
+                    if (user != null) {
+                        users.add(user);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting users by role " + role + ": " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Unexpected error getting users by role " + role + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+        System.out.println("UserDAO found " + users.size() + " users for role " + role.name());
+        return users;
+    }
+}
