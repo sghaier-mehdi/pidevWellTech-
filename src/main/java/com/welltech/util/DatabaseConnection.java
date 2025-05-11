@@ -10,7 +10,7 @@ import java.sql.Statement;
  */
 public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/";
-    private static final String DB_NAME = "pi";
+    private static final String DB_NAME = "pi_welltech";
     private static final String FULL_URL = URL + DB_NAME;
     private static final String USERNAME = "root";
     private static final String PASSWORD = ""; // Updated with your MySQL password

@@ -41,6 +41,8 @@
             <Button fx:id="objectivesButton" maxWidth="Infinity" styleClass="sidebar-button" text="Objectives" onAction="#navigateToObjectives" />
             <Button fx:id="sendNotificationButton" maxWidth="Infinity" styleClass="sidebar-button" text="Send Notification" onAction="#showSendNotificationDialog" />
              <Button fx:id="chatbotButton" onAction="#navigateToChatbot" styleClass="sidebar-button" text="AI Chatbot" maxWidth="Infinity"/>
+            <Button fx:id="productsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Products" onAction="#handleProducts" />
+            <Button fx:id="ordersButton" maxWidth="Infinity" styleClass="sidebar-button" text="Orders" onAction="#handleOrders" />
             <Button fx:id="settingsButton" maxWidth="Infinity" styleClass="sidebar-button" text="Settings" />
             <Button fx:id="profileButton" maxWidth="Infinity" styleClass="sidebar-button" text="Profile" onAction="#navigateToProfile" />
          </children>

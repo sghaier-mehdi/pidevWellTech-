@@ -7,7 +7,6 @@ module com.welltech {
     // Standard
     requires java.net.http;
     requires java.sql;
-    requires java.desktop;
 
     // Jackson
     requires com.fasterxml.jackson.databind;
@@ -29,6 +28,11 @@ module com.welltech {
     requires flexmark;
     requires flexmark.util;
     requires javafx.media;
+    requires twilio;
+    requires javafx.swing;
+    requires org.apache.pdfbox;
+    requires stripe.java;
+    requires cloudinary.core;
 
     // Open packages
     opens com.welltech.controller to javafx.fxml;
