@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.welltech.controller.ReponseFormController"
+            prefWidth="600" prefHeight="350"
+            stylesheets="@../css/style.css">
+
+    <center>
+        <VBox spacing="15" alignment="CENTER" styleClass="form-container">
+            <children>
+                <Label text="✏️ Réponse à la réclamation" styleClass="view-title"/>
+                <TextArea fx:id="contenuReponseArea" promptText="Votre réponse..." wrapText="true" styleClass="form-input"/>
+                <Button text="✅ Envoyer la réponse" onAction="#envoyerReponse" styleClass="button button-success"/>
+                <Label fx:id="statusLabel" styleClass="success-message"/>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>

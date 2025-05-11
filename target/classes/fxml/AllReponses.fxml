@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.welltech.controller.AllReponsesController"
+            prefWidth="800" prefHeight="600"
+            stylesheets="@../css/style.css"
+>
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
+            <Label text="📋 Toutes les Réponses" styleClass="view-title"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox fx:id="reponsesList" spacing="15" padding="20"/>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="10" padding="20">
+            <Button text="🏠 Retour" onAction="#retourDashboard" styleClass="button button-primary"/>
+        </HBox>
+    </bottom>
+</BorderPane>

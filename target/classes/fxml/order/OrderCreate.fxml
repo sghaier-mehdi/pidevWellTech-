@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.welltech.controller.OrderCreateController"
+      spacing="10">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Label text="Create New Order" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="User:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="userComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200"/>
+
+        <Label text="Shipping Address:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextArea fx:id="shippingAddressField" GridPane.rowIndex="1" GridPane.columnIndex="1" prefRowCount="3"/>
+
+        <Label text="Phone Number:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="phoneNumberField" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"/>
+
+        <Label text="Payment Method:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="paymentMethodComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="200"/>
+    </GridPane>
+
+    <Label text="Order Items" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+    
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <ComboBox fx:id="productComboBox" prefWidth="200" promptText="Select Product"/>
+        <TextField fx:id="quantityField" prefWidth="100" promptText="Quantity"/>
+        <Button text="Add Item" onAction="#handleAddItem"/>
+    </HBox>
+
+    <TableView fx:id="orderItemsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="productNameColumn" text="Product" prefWidth="200"/>
+            <TableColumn fx:id="quantityColumn" text="Quantity" prefWidth="100"/>
+            <TableColumn fx:id="unitPriceColumn" text="Unit Price" prefWidth="100"/>
+            <TableColumn fx:id="subtotalColumn" text="Subtotal" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Label text="Total Amount:" style="-fx-font-weight: bold;"/>
+        <Label fx:id="totalAmountLabel" style="-fx-font-weight: bold;"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Save Order" onAction="#handleSaveOrder"/>
+        <Button text="Cancel" onAction="#handleCancel"/>
+    </HBox>
+
+</VBox> 

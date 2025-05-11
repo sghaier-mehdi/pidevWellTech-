@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.welltech.controller.CardReponseController"
+      spacing="10" styleClass="card"
+      stylesheets="@../css/style.css">
+
+    <Label fx:id="contenuLabel" styleClass="card-content"/>
+    <Label fx:id="dateLabel" styleClass="card-sentiment"/>
+
+    <!-- Boutons admin -->
+    <HBox fx:id="adminButtons" spacing="10">
+        <Button text="✏️ Modifier" onAction="#modifierReponse" styleClass="button button-outline"/>
+        <Button text="🗑️ Supprimer" onAction="#supprimerReponse" styleClass="button button-danger"/>
+    </HBox>
+</VBox>

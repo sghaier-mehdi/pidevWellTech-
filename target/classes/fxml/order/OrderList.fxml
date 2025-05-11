@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.welltech.controller.OrderListController"
+      spacing="15"
+      minHeight="400">
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Search:" />
+        <TextField fx:id="searchField" promptText="Search by order ID or username" HBox.hgrow="ALWAYS" style="-fx-background-radius: 5;"/>
+        
+        <Label text="Status:" />
+        <ComboBox fx:id="statusFilter" prefWidth="150" style="-fx-background-radius: 5;"/>
+        
+        <Label text="Date Range:" />
+        <DatePicker fx:id="startDate" promptText="Start Date" style="-fx-background-radius: 5;"/>
+        <DatePicker fx:id="endDate" promptText="End Date" style="-fx-background-radius: 5;"/>
+    </HBox>
+
+    <ScrollPane fitToWidth="true" prefHeight="300" VBox.vgrow="ALWAYS" style="-fx-background-color: #f5f5f5;">
+        <content>
+            <FlowPane fx:id="orderFlowPane" hgap="15" vgap="15" alignment="TOP_CENTER" style="-fx-background-color: #f5f5f5; -fx-padding: 10;"/>
+        </content>
+    </ScrollPane>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="createOrderButton" text="Create Order" onAction="#handleCreateOrder" style="-fx-background-color: #388e3c; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        <Button fx:id="refreshButton" text="Refresh" onAction="#handleRefresh" style="-fx-background-color: #1976d2; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        <Button text="View Details" onAction="#handleViewDetails" style="-fx-background-color: #0288d1; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        <Button text="Update Status" onAction="#handleUpdateStatus" style="-fx-background-color: #f57c00; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        <Button text="Delete" onAction="#handleDelete" style="-fx-background-color: #d32f2f; -fx-text-fill: white; -fx-background-radius: 5;"/>
+    </HBox>
+
+</VBox>

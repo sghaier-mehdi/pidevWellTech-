@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.welltech.controller.OrderDetailsController"
+      spacing="10">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Order ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label fx:id="orderIdLabel" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        
+        <Label text="User:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <Label fx:id="userLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        
+        <Label text="Total Amount:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <Label fx:id="totalAmountLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        
+        <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <Label fx:id="statusLabel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        
+        <Label text="Payment Status:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Label fx:id="paymentStatusLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        
+        <Label text="Shipping Address:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <Label fx:id="shippingAddressLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        
+        <Label text="Payment Method:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <Label fx:id="paymentMethodLabel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        
+        <Label text="Created At:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <Label fx:id="createdAtLabel" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+        
+        <Label text="Updated At:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+        <Label fx:id="updatedAtLabel" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+        <Label text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+        <VBox GridPane.columnIndex="1" GridPane.rowIndex="9" spacing="5">
+            <Label fx:id="locationNameLabel" />
+            <Label fx:id="cityLabel" />
+            <ImageView fx:id="qrCodeImageView" fitWidth="200" fitHeight="200" preserveRatio="true" />
+        </VBox>
+    </GridPane>
+
+    <Label text="Order Items" style="-fx-font-weight: bold; -fx-font-size: 14px;" />
+    
+    <TableView fx:id="itemsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="productColumn" text="Product" prefWidth="200" />
+            <TableColumn fx:id="quantityColumn" text="Quantity" prefWidth="100" />
+            <TableColumn fx:id="unitPriceColumn" text="Unit Price" prefWidth="120" />
+            <TableColumn fx:id="subtotalColumn" text="Subtotal" prefWidth="120" />
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Download PDF" onAction="#handleDownloadPdf" />
+        <Button text="Close" onAction="#handleClose" />
+    </HBox>
+</VBox>

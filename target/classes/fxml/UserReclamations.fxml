@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.welltech.controller.UserReclamationsController"
+            prefWidth="800" prefHeight="600"
+            stylesheets="@../css/style.css">
+
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header">
+                <Label text="📋 Mes Réclamations" styleClass="view-title"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Filtrer par date :"/>
+                <DatePicker fx:id="dateFilterPicker"/>
+                <Button text="Appliquer"
+                        onAction="#filtrerParDate"
+                        styleClass="button button-outline"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true">
+            <VBox fx:id="listeReclamationsBox" spacing="15">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                <Label fx:id="noReclamationsMessage"
+                       text="Vous n'avez aucune réclamation pour le moment."
+                       visible="false"
+                       styleClass="no-reclamation-message"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox spacing="10" alignment="CENTER">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Button fx:id="refreshButton"
+                    text="🔄 Rafraîchir"
+                    styleClass="button button-outline"/>
+            <Button fx:id="homeButton"
+                    text="🏠 Retour"
+                    styleClass="button button-primary"/>
+        </HBox>
+    </bottom>
+</BorderPane>
